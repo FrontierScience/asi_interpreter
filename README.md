@@ -76,7 +76,7 @@ root level, there will be a mapping of drug class names to lists of
 drugs. All drugs will contain an evaluate method -- when provided a 
 list of mutations and a mutation comparator, this method will return
 a set of evaluated conditions. An evaluated condition is a wrapper 
-object for storing the original condition statement, the evalauted
+object for storing the original condition statement, the evaluated
 results, and a set of resistance definitions. For each condition 
 defined in the algorithm file for a particular drug, the condition 
 is pre-compiled into an ASI syntax tree (see below) for analysis. 
