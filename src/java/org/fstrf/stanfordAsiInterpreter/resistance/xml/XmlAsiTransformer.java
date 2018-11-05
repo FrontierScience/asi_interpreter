@@ -131,7 +131,7 @@ public class XmlAsiTransformer implements AsiTransformer {
 		this.validateXml = validateXml;
 	}
 	
-	public Map transform(InputStream is) throws ASIParsingException {
+	public Map<String, Gene> transform(InputStream is) throws ASIParsingException {
 		Document doc = null;
         try {
             SAXReader saxReader = new SAXReader(this.validateXml);
@@ -165,7 +165,7 @@ public class XmlAsiTransformer implements AsiTransformer {
         geneNames.addAll(geneNamesDrugs);
         geneNames.addAll(geneNamesComments);
         
-        Map genes = new HashMap();
+        Map<String, Gene> genes = new HashMap<String, Gene>();
         /*
          * TODO needs to be revised  
          * 
