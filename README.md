@@ -26,14 +26,6 @@ Requirements
 The ASI Interpreter is a platform-independent Java library, not a
 standalone application. 
 
-The ASI Interpreter requires the following additional libraries:
-
-+ [commons-cli-1.0.jar](https://commons.apache.org/proper/commons-cli/)
-+ [commons-collections-2.1.jar](https://commons.apache.org/proper/commons-collections/)
-+ [dom4j-1.6.1.jar](https://github.com/dom4j/dom4j)
-+ [jaxen-1.1-beta-7.jar](https://github.com/jaxen-xpath/jaxen)
-+ [junit-3.8.1.jar](http://junit.sourceforge.net/junit3.8.1/)
-
 The ASI Interpreter requires JRE 1.7 or higher.
 
 Background
