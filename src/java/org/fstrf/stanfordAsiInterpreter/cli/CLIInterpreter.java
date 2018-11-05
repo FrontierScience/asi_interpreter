@@ -29,7 +29,7 @@ import org.fstrf.stanfordAsiInterpreter.resistance.xml.XmlAsiTransformer;
 public class CLIInterpreter {
 	public static void main(String[] args) throws ASIParsingException, IOException, ASIEvaluationException {
 		if (args.length != 2) {
-			System.err.println("asi_interpreter asi.xml mutations.csv");
+			System.err.println("asi asi.xml mutations.csv");
 			System.exit(0);
 		}
 		

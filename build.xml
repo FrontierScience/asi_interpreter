@@ -37,7 +37,7 @@
      <jar destfile="${dist}/asi.jar" basedir="${build}">
        <zipgroupfileset dir="${lib}" includes="*.jar" />
        <manifest>
-	    <attribute name="Main-Class" value="TODO"/>
+	    <attribute name="Main-Class" value="org.fstrf.stanfordAsiInterpreter.cli.CLIInterpreter"/>
        </manifest>
      </jar>
   </target>
