@@ -29,13 +29,18 @@ package org.fstrf.stanfordAsiInterpreter.resistance.definition;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.fstrf.stanfordAsiInterpreter.resistance.ASIEvaluationException;
+import org.fstrf.stanfordAsiInterpreter.resistance.evaluate.EvaluatedDrug;
+import org.fstrf.stanfordAsiInterpreter.resistance.evaluate.EvaluatedDrugClass;
 import org.fstrf.stanfordAsiInterpreter.resistance.evaluate.EvaluatedGene;
+import org.fstrf.stanfordAsiInterpreter.resistance.evaluate.EvaluatedLevelCondition;
 import org.fstrf.stanfordAsiInterpreter.resistance.grammar.MutationComparator;
 
 public class Gene {
@@ -46,11 +51,17 @@ public class Gene {
 	 */
 	private Set drugClasses;
 	private List geneRules;
+	private Map<String,ResultCommentDrug> resultCommentDrugs;
 	
-	public Gene(String name, Set drugClasses, List geneRules) {
+	public Gene(String name, Set drugClasses, List geneRules, Map<String,ResultCommentDrug> resultCommentDrugs) {
 		this.name = name;
 		this.drugClasses = drugClasses;
 		this.geneRules = geneRules;
+		this.resultCommentDrugs = resultCommentDrugs;
+	}
+	
+	public Gene(String name, Set drugClasses, List geneRules) {
+		this(name,drugClasses,geneRules,new HashMap<String,ResultCommentDrug>());
 	}
 	
 	public Gene(String name, Set drugClasses) {
@@ -77,6 +88,14 @@ public class Gene {
 		return this.name;
 	}
 	
+	/**
+	 * Evaluates the mutations given in the mutations argument against the logic
+	 * 
+	 * @param mutations
+	 * @param comparator
+	 * @return
+	 * @throws ASIEvaluationException
+	 */
 	public EvaluatedGene evaluate(List mutations, MutationComparator comparator) throws ASIEvaluationException {
 		Collection evaluatedGeneRules = new ArrayList();	
 		for(Iterator iter = this.geneRules.iterator(); iter.hasNext();) {
@@ -90,6 +109,21 @@ public class Gene {
 			evaluatedDrugClasses.add(drugClass.evaluate(mutations, comparator));
 		}
 		
-		return new EvaluatedGene(this, evaluatedGeneRules, evaluatedDrugClasses);
+		//Evaluate result comments for each drug, if there are any
+		Collection<EvaluatedLevelCondition> evaluatedLevelConditions = new ArrayList<EvaluatedLevelCondition>();
+		for (Object evaluatedDrugClassObj: evaluatedDrugClasses){
+			EvaluatedDrugClass evaluatedDrugClass = (EvaluatedDrugClass) evaluatedDrugClassObj;
+			for (Object evaluatedDrugObj: evaluatedDrugClass.getEvaluatedDrugs()){
+				EvaluatedDrug evaluatedDrug = (EvaluatedDrug) evaluatedDrugObj;
+				//get the matching resultcommentdrug if applicable. 
+				ResultCommentDrug resultCommentDrug = resultCommentDrugs.get(evaluatedDrug.getDrug().getDrugName());
+				if (resultCommentDrug != null){
+					LevelDefinition resultLevel = evaluatedDrug.getHighestLevelDefinition();
+					evaluatedLevelConditions.addAll(resultCommentDrug.evaluate(resultLevel));
+				}
+			}
+		}
+		
+		return new EvaluatedGene(this, evaluatedGeneRules, evaluatedDrugClasses, evaluatedLevelConditions);
 	}
 }

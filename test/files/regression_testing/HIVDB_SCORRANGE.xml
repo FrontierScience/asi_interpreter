@@ -19,6 +19,7 @@
     	</GENE_DEFINITION>
     	<GENE_DEFINITION>
     		<NAME>PR</NAME>
+    		<DRUGCLASSLIST>PI</DRUGCLASSLIST>
     	</GENE_DEFINITION>
    
         <LEVEL_DEFINITION>
@@ -53,7 +54,7 @@
   
         <DRUGCLASS>
             <NAME>PI</NAME>
-            <DRUGLIST>FPV,IDV,LPV,NFV,SQV,ATV,TPV,DRV,DLV</DRUGLIST>
+            <DRUGLIST>FPV,IDV,LPV,NFV,SQV,ATV,TPV,DRV</DRUGLIST>
         </DRUGCLASS>
 
         <DRUGCLASS>
@@ -934,6 +935,7 @@
 
     <DRUG>
         <NAME>DLV</NAME>
+       
         <RULE>
             <CONDITION>
                 SCORE FROM (98G => 5,
@@ -1273,7 +1275,11 @@
                            )
             </CONDITION>
             <ACTIONS>
-                <SCORERANGE><USE_GLOBALRANGE/></SCORERANGE>
+                <SCORERANGE>(-INF TO 10     => 1, 
+             11 TO 15   => 2, 
+             16 TO 30   => 3,
+             31 TO 60   => 4,
+             61 TO INF  => 5)</SCORERANGE>
             </ACTIONS>
         </RULE>
     </DRUG>
@@ -2263,5 +2269,19 @@
 
 <!-- End the RT rules for mutation-dependent comment strings. -->
         </GENE>
+        
+        <GENE>
+            <NAME>PR</NAME>
+
+            <RULE>
+                <CONDITION>NOT M41LNK</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS333" /></ACTIONS>
+            </RULE>
+            <RULE>
+                <CONDITION>M73LKM</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS333" /></ACTIONS>
+            </RULE>
+    
+    	 </GENE>
     </MUTATION_COMMENTS>
 </ALGORITHM>

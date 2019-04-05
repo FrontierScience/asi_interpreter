@@ -1,0 +1,961 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE ALGORITHM SYSTEM
+   "http://hivdb6.stanford.edu/asi/xml/ASI.dtd">
+
+<!-- ANRS algorithm (version 16 2007) in XML format -->
+<!--
+History:
+01-OCT-07 TFL Updated algorithm based on the PDF version
+12-SEP-07 TFL Updated algorithm
+18-SEP-06 TFL Corrected algorithm
+08-AUG-06 MJO Updated algorithm
+06-SEP-04 TFL Updated algorithm
+25-OCT-04 TFL Updated algorithm
+11-JAN-04 TFL Updated algorithm
+08-NOV-03 TFL Updated algorithm
+06-JUL-02 BBE Added comment to DDC.
+13-NOV-01 BBE Added the history comment block.
+20-OCT-01 BBE Creation
+-->
+
+<ALGORITHM>
+     <ALGNAME>ANRS</ALGNAME>
+     <ALGVERSION>2007.10</ALGVERSION>
+
+     <DEFINITIONS>
+     	<GENE_DEFINITION>
+    		<NAME>RT</NAME>
+    		<DRUGCLASSLIST>NRTI,NNRTI</DRUGCLASSLIST>
+    	</GENE_DEFINITION>
+         <LEVEL_DEFINITION>
+             <ORDER>1</ORDER>
+             <ORIGINAL>Susceptible</ORIGINAL>
+             <SIR>S</SIR>
+         </LEVEL_DEFINITION>
+
+         <LEVEL_DEFINITION>
+             <ORDER>2</ORDER>
+             <ORIGINAL>Possible resistance</ORIGINAL>
+             <SIR>I</SIR>
+         </LEVEL_DEFINITION>
+
+         <LEVEL_DEFINITION>
+             <ORDER>3</ORDER>
+             <ORIGINAL>Resistance</ORIGINAL>
+             <SIR>R</SIR>
+         </LEVEL_DEFINITION>
+
+         <DRUGCLASS>
+             <NAME>PI</NAME>
+             <DRUGLIST>IDV,SQV/r,NFV,FosAPV/r,LPV/r,ATV/r,TPV/r,DRV/r</DRUGLIST>
+         </DRUGCLASS>
+
+         <DRUGCLASS>
+             <NAME>NRTI</NAME>
+             <DRUGLIST>ZDV,D4T,DDI,3TC,FTC,ABC,TDF</DRUGLIST>
+         </DRUGCLASS>
+
+         <DRUGCLASS>
+             <NAME>NNRTI</NAME>
+             <DRUGLIST>NVP,EFV,ETV</DRUGLIST>
+         </DRUGCLASS>
+
+         <DRUGCLASS>
+             <NAME>EI</NAME>
+             <DRUGLIST>T20</DRUGLIST>
+         </DRUGCLASS>
+
+         <DRUGCLASS>
+             <NAME>II</NAME>
+             <DRUGLIST>RAL</DRUGLIST>
+         </DRUGCLASS>
+     </DEFINITIONS>
+
+<!-- ********** Begin NRTI drugs ********** -->
+
+     <DRUG>
+         <NAME>ZDV</NAME>
+         <RULE>
+             <CONDITION>
+                 215YF
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>3</LEVEL>
+             </ACTIONS>
+         </RULE>
+         <RULE>
+             <CONDITION>
+                 SELECT ATLEAST 3 FROM (41L,67N,70R,210W,215ACDEGHILNSV,219QE)
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>3</LEVEL>
+             </ACTIONS>
+         </RULE>
+         <RULE>
+             <CONDITION>
+                 151M
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>3</LEVEL>
+             </ACTIONS>
+         </RULE>
+         <RULE>
+             <CONDITION>
+                 69i
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>3</LEVEL>
+             </ACTIONS>
+         </RULE>
+         <RULE>
+             <CONDITION>
+                 215ACDEGHILNSV
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>2</LEVEL>
+             </ACTIONS>
+         </RULE>
+     </DRUG>
+
+     <DRUG>
+         <NAME>D4T</NAME>
+         <RULE>
+             <CONDITION>
+                 75MSAT
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>3</LEVEL>
+             </ACTIONS>
+         </RULE>
+         <RULE>
+             <CONDITION>
+                 215YF
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>3</LEVEL>
+             </ACTIONS>
+         </RULE>
+         <RULE>
+             <CONDITION>
+                 SELECT ATLEAST 3 FROM (41L,67N,70R,210W,215ACDEGHILNSV,219QE)
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>3</LEVEL>
+             </ACTIONS>
+         </RULE>
+         <RULE>
+             <CONDITION>
+                 151M
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>3</LEVEL>
+             </ACTIONS>
+         </RULE>
+         <RULE>
+             <CONDITION>
+                 69i
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>3</LEVEL>
+             </ACTIONS>
+         </RULE>
+         <RULE>
+             <CONDITION>
+                 215ACDEGHILNSV
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>2</LEVEL>
+             </ACTIONS>
+         </RULE>
+     </DRUG>
+
+     <DRUG>
+         <NAME>DDI</NAME>
+<!-- ***** the following 3 rules for ddi are an interpretation of the following anrs rule ***** -->
+<!-- ***** at least a score of +2 among: M41L +T69D +L74VI +T215FY +K219QE -K70R -M184VI ***** -->
+         <RULE>
+             <CONDITION>
+                 EXCLUDE 70R AND EXCLUDE 184VI AND
+                 SELECT ATLEAST 2 FROM (41L,69D,74VI,215FY,219QE)
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>3</LEVEL>
+             </ACTIONS>
+         </RULE>
+         <RULE>
+             <CONDITION>
+                 SELECT ATLEAST 1 AND NOTMORETHAN 1 FROM (70R,184VI) AND
+                 SELECT ATLEAST 3 FROM (41L,69D,74VI,215FY,219QE)
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>3</LEVEL>
+             </ACTIONS>
+         </RULE>
+         <RULE>
+             <CONDITION>
+                 70R AND 184VI AND
+                 SELECT ATLEAST 4 FROM (41L,69D,74VI,215FY,219QE)
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>3</LEVEL>
+             </ACTIONS>
+         </RULE>
+         <RULE>
+             <CONDITION>
+                 151M
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>3</LEVEL>
+             </ACTIONS>
+         </RULE>
+         <RULE>
+             <CONDITION>
+                 69i
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>3</LEVEL>
+             </ACTIONS>
+         </RULE>
+         <RULE>
+             <CONDITION>
+                 74VI AND EXCLUDE 41L AND EXCLUDE 69D AND EXCLUDE 70R 
+ AND EXCLUDE 184VI AND EXCLUDE 215FY AND EXCLUDE 219QE
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>3</LEVEL>
+             </ACTIONS>
+         </RULE>
+         <RULE>
+             <CONDITION>
+                 65R
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>2</LEVEL>
+             </ACTIONS>
+         </RULE>
+     </DRUG>
+
+     <DRUG>
+         <NAME>3TC</NAME>
+         <RULE>
+             <CONDITION>
+                 184VI
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>3</LEVEL>
+             </ACTIONS>
+         </RULE>
+         <RULE>
+             <CONDITION>
+                 69i
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>3</LEVEL>
+             </ACTIONS>
+         </RULE>
+         <RULE>
+             <CONDITION>
+                 65R
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>2</LEVEL>
+             </ACTIONS>
+         </RULE>
+         <RULE>
+             <CONDITION>
+                 151M
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>2</LEVEL>
+             </ACTIONS>
+         </RULE>
+     </DRUG>
+
+     <DRUG>
+         <NAME>FTC</NAME>
+         <RULE>
+             <CONDITION>
+                 184VI
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>3</LEVEL>
+             </ACTIONS>
+         </RULE>
+         <RULE>
+             <CONDITION>
+                 69i
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>3</LEVEL>
+             </ACTIONS>
+         </RULE>
+         <RULE>
+             <CONDITION>
+                 65R
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>2</LEVEL>
+             </ACTIONS>
+         </RULE>
+         <RULE>
+             <CONDITION>
+                 151M
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>2</LEVEL>
+             </ACTIONS>
+         </RULE>
+     </DRUG>
+
+     <DRUG>
+         <NAME>ABC</NAME>
+         <RULE>
+             <CONDITION>
+                 SELECT ATLEAST 5 FROM (41L,67N,74VI,184VI,210W,215YF)
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>3</LEVEL>
+             </ACTIONS>
+         </RULE>
+         <RULE>
+             <CONDITION>
+                 SELECT ATLEAST 2 FROM (65R, 74VI, 115F, 184VI)
+                 AND EXCLUDE 41L AND EXCLUDE 67N AND EXCLUDE 70R 
+                 AND EXCLUDE 210W AND EXCLUDE 215FY AND EXCLUDE 219QE
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>3</LEVEL>
+             </ACTIONS>
+         </RULE>
+         <RULE>
+             <CONDITION>
+                 151M
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>3</LEVEL>
+             </ACTIONS>
+         </RULE>
+         <RULE>
+             <CONDITION>
+                 69i
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>3</LEVEL>
+             </ACTIONS>
+         </RULE>
+         <RULE>
+             <CONDITION>
+                 SELECT ATLEAST 4 AND NOTMORETHAN 4 FROM 
+ (41L,67N,74VI,184VI,210W,215YF)
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>2</LEVEL>
+             </ACTIONS>
+         </RULE>
+         <RULE>
+             <CONDITION>
+                 65R
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>2</LEVEL>
+             </ACTIONS>
+         </RULE>
+     </DRUG>
+
+     <DRUG>
+         <NAME>TDF</NAME>
+         <RULE>
+             <CONDITION>
+                 SELECT ATLEAST 6 FROM (41L,44D,67N,69DNS,74V,210W,215YF)
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>3</LEVEL>
+             </ACTIONS>
+         </RULE>
+         <RULE>
+             <CONDITION>
+                 65R
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>3</LEVEL>
+             </ACTIONS>
+         </RULE>
+         <RULE>
+             <CONDITION>
+                 69i
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>3</LEVEL>
+             </ACTIONS>
+         </RULE>
+         <RULE>
+             <CONDITION>
+                 SELECT ATLEAST 3 AND NOTMORETHAN 5 FROM 
+ (41L,44D,67N,69DNS,74V,210W,215YF)
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>2</LEVEL>
+             </ACTIONS>
+         </RULE>
+         <RULE>
+             <CONDITION>
+                 70E
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>2</LEVEL>
+             </ACTIONS>
+         </RULE>
+     </DRUG>
+
+<!-- ********** Begin NNRTI drugs ********** -->
+
+     <DRUG>
+         <NAME>EFV</NAME>
+         <RULE>
+             <CONDITION>
+                 100I
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>3</LEVEL>
+             </ACTIONS>
+         </RULE>
+         <RULE>
+             <CONDITION>
+                 101E
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>3</LEVEL>
+             </ACTIONS>
+         </RULE>
+         <RULE>
+             <CONDITION>
+                 103HNST
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>3</LEVEL>
+             </ACTIONS>
+         </RULE>
+         <RULE>
+             <CONDITION>
+                 106M
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>3</LEVEL>
+             </ACTIONS>
+         </RULE>
+         <RULE>
+             <CONDITION>
+                 181CI
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>3</LEVEL>
+             </ACTIONS>
+         </RULE>
+         <RULE>
+             <CONDITION>
+                 188CL
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>3</LEVEL>
+             </ACTIONS>
+         </RULE>
+         <RULE>
+             <CONDITION>
+                 190ACEQSTV
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>3</LEVEL>
+             </ACTIONS>
+         </RULE>
+         <RULE>
+             <CONDITION>
+                 225H
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>3</LEVEL>
+             </ACTIONS>
+         </RULE>
+         <RULE>
+             <CONDITION>
+                 230L
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>3</LEVEL>
+             </ACTIONS>
+         </RULE>
+     </DRUG>
+
+     <DRUG>
+         <NAME>NVP</NAME>
+         <RULE>
+             <CONDITION>
+                 98S
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>3</LEVEL>
+             </ACTIONS>
+         </RULE>
+         <RULE>
+             <CONDITION>
+                 100I
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>3</LEVEL>
+             </ACTIONS>
+         </RULE>
+         <RULE>
+             <CONDITION>
+                 101E
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>3</LEVEL>
+             </ACTIONS>
+         </RULE>
+         <RULE>
+             <CONDITION>
+                 103HNST
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>3</LEVEL>
+             </ACTIONS>
+         </RULE>
+         <RULE>
+             <CONDITION>
+                 106AM
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>3</LEVEL>
+             </ACTIONS>
+         </RULE>
+         <RULE>
+             <CONDITION>
+                 181CI
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>3</LEVEL>
+             </ACTIONS>
+         </RULE>
+         <RULE>
+             <CONDITION>
+                 188CHL
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>3</LEVEL>
+             </ACTIONS>
+         </RULE>
+         <RULE>
+             <CONDITION>
+                 190ACEQSTV
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>3</LEVEL>
+             </ACTIONS>
+         </RULE>
+         <RULE>
+             <CONDITION>
+                 230L
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>3</LEVEL>
+             </ACTIONS>
+         </RULE>
+     </DRUG>
+     <DRUG>
+         <NAME>ETV</NAME>
+         <RULE>
+             <CONDITION>
+                 SELECT ATLEAST 4 FROM 
+                 (90I,98G,100I,101EP,106I,179DF,181CIV,190AS)
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>3</LEVEL>
+             </ACTIONS>
+         </RULE>
+         <RULE>
+             <CONDITION>
+                 SELECT ATLEAST 3 FROM 
+                 (90I,98G,100I,101EP,106I,179DF,181CIV,190AS)
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>2</LEVEL>
+             </ACTIONS>
+         </RULE>
+     </DRUG>
+<!-- ********** Begin PI drugs ********** -->
+
+     <DRUG>
+         <NAME>IDV</NAME>
+         <RULE>
+             <CONDITION>
+                 46IL
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>3</LEVEL>
+             </ACTIONS>
+         </RULE>
+         <RULE>
+             <CONDITION>
+                 82ATFSM
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>3</LEVEL>
+             </ACTIONS>
+         </RULE>
+         <RULE>
+             <CONDITION>
+                 84AV
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>3</LEVEL>
+             </ACTIONS>
+         </RULE>
+         <RULE>
+             <CONDITION>
+                 90M AND
+                  SELECT ATLEAST 2 FROM 
+ (20MR,24I,32I,36I,54VLMT,71VT,73SA,77I)
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>3</LEVEL>
+             </ACTIONS>
+         </RULE>
+         <RULE>
+             <CONDITION>
+                 90M
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>2</LEVEL>
+             </ACTIONS>
+         </RULE>
+     </DRUG>
+
+     <DRUG>
+         <NAME>SQV/r</NAME>
+         <RULE>
+             <CONDITION>
+                 48V
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>3</LEVEL>
+             </ACTIONS>
+         </RULE>
+         <RULE>
+             <CONDITION>
+                 SELECT ATLEAST 4 FROM 
+ (10FIMRV,15AV,20IMRT,24I,62V,73ST,82AFTS,84V,90M)
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>3</LEVEL>
+             </ACTIONS>
+         </RULE>
+         <RULE>
+             <CONDITION>
+                 SELECT ATLEAST 3 AND NOTMORETHAN 3 FROM 
+ (10FIMRV,15AV,20IMRT,24I,62V,73ST,82AFTS,84V,90M)
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>2</LEVEL>
+             </ACTIONS>
+         </RULE>
+     </DRUG>
+
+     <DRUG>
+         <NAME>NFV</NAME>
+         <RULE>
+             <CONDITION>
+                 30N
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>3</LEVEL>
+             </ACTIONS>
+         </RULE>
+         <RULE>
+             <CONDITION>
+                 84AV
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>3</LEVEL>
+             </ACTIONS>
+         </RULE>
+         <RULE>
+             <CONDITION>
+                 88SD
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>3</LEVEL>
+             </ACTIONS>
+         </RULE>
+         <RULE>
+             <CONDITION>
+                 90M
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>3</LEVEL>
+             </ACTIONS>
+         </RULE>
+         <RULE>
+             <CONDITION>
+                 82ATFS AND
+                 SELECT ATLEAST 2 FROM (10I,36I,46IL,54VLMT,71VT,77I)
+              </CONDITION>
+              <ACTIONS>
+                  <LEVEL>2</LEVEL>
+              </ACTIONS>
+         </RULE>
+     </DRUG>
+
+     <DRUG>
+         <NAME>FosAPV/r</NAME>
+         <RULE>
+             <CONDITION>
+                 50V
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>3</LEVEL>
+             </ACTIONS>
+         </RULE>
+         <RULE>
+             <CONDITION>
+                 SELECT ATLEAST 4 FROM 
+ (10IFV,33F,36I,54ALMSTV,62V,82ACFG,84V,90M)
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>3</LEVEL>
+             </ACTIONS>
+         </RULE>
+         <RULE>
+             <CONDITION>
+                 32I AND 47AV
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>3</LEVEL>
+             </ACTIONS>
+         </RULE>
+     </DRUG>
+
+     <DRUG>
+         <NAME>LPV/r</NAME>
+         <RULE>
+             <CONDITION>
+                 SELECT ATLEAST 8 FROM 
+ (10FIRV,20MR,24I,33F,46IL,50V,53L,54MLTV,63P,71ILTV,82AFST,84V,90M)
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>3</LEVEL>
+             </ACTIONS>
+         </RULE>
+         <RULE>
+             <CONDITION>
+                 47A
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>3</LEVEL>
+             </ACTIONS>
+         </RULE>
+         <RULE>
+             <CONDITION>
+                 76V
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>3</LEVEL>
+             </ACTIONS>
+         </RULE>
+         <RULE>
+             <CONDITION>
+                 SELECT ATLEAST 6 AND NOTMORETHAN 7 FROM 
+ (10FIRV,20MR,24I,33F,46IL,50V,53L,54MLTV,63P,71ILTV,82AFST,84V,90M)
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>2</LEVEL>
+             </ACTIONS>
+         </RULE>
+     </DRUG>
+
+     <DRUG>
+         <NAME>ATV/r</NAME>
+         <RULE>
+             <CONDITION>
+                 50L
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>3</LEVEL>
+             </ACTIONS>
+         </RULE>
+         <RULE>
+             <CONDITION>
+                 SELECT ATLEAST 3 FROM (10FIV,16E,33FIV,46IL,60E,84V,85V,90M)
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>3</LEVEL>
+             </ACTIONS>
+         </RULE>
+     </DRUG>
+
+     <DRUG>
+         <NAME>TPV/r</NAME>
+<!-- ***** the following 2 rules for ddi are an interpretation of the following anrs rule ***** -->
+<!-- ***** at least a score of +3 among: 36ILV +58E +69IKNQRY +89IMRTV -53LWY ***** -->
+<!-- ***** for HIV1 subtype B only ***** -->
+         <RULE>
+             <CONDITION>
+                 53LWY AND SELECT ATLEAST 4 FROM 
+                 (36ILV, 58E, 69IKNQRY, 89IMRTV)
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>3</LEVEL>
+             </ACTIONS>
+         </RULE>
+         <RULE>
+             <CONDITION>
+                 EXCLUDE 53LWY AND SELECT ATLEAST 3 FROM 
+                 (36ILV, 58E, 69IKNQRY, 89IMRTV)
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>3</LEVEL>
+             </ACTIONS>
+         </RULE>
+<!-- ***** the following 2 rules for ddi are an interpretation of the following anrs rule ***** -->
+<!-- ***** at least a score of +2 among: 36ILV +58E +69IKNQRY +89IMRTV -53LWY ***** -->
+<!-- ***** for HIV1 subtype B only ***** -->
+         <RULE>
+             <CONDITION>
+                 53LWY AND SELECT ATLEAST 3 FROM 
+                 (36ILV, 58E, 69IKNQRY, 89IMRTV)
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>2</LEVEL>
+             </ACTIONS>
+         </RULE>
+         <RULE>
+             <CONDITION>
+                 EXCLUDE 53LWY AND SELECT ATLEAST 2 FROM 
+                 (36ILV, 58E, 69IKNQRY, 89IMRTV)
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>2</LEVEL>
+             </ACTIONS>
+         </RULE>
+     </DRUG>
+     <DRUG>
+         <NAME>DRV/r</NAME>
+         <RULE>
+             <CONDITION>
+                 SELECT ATLEAST 4 FROM 
+ (11I,32I,33F,47V,50V,54LM,73S,76V,84V,89V)
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>3</LEVEL>
+             </ACTIONS>
+         </RULE>
+         <RULE>
+             <CONDITION>
+                 SELECT ATLEAST 3 AND NOTMORETHAN 3 FROM 
+ (11I,32I,33F,47V,50V,54LM,73S,76V,84V,89V)
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>2</LEVEL>
+             </ACTIONS>
+         </RULE>
+     </DRUG>
+<!-- ********** Begin EI drugs ********** -->
+
+     <DRUG>
+         <NAME>T20</NAME>
+         <RULE>
+             <CONDITION>
+                 36ADESV
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>3</LEVEL>
+             </ACTIONS>
+         </RULE>
+         <RULE>
+             <CONDITION>
+                 38AEKM
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>3</LEVEL>
+             </ACTIONS>
+         </RULE>
+         <RULE>
+             <CONDITION>
+                 40HKPT
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>3</LEVEL>
+             </ACTIONS>
+         </RULE>
+         <RULE>
+             <CONDITION>
+                 42DT
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>3</LEVEL>
+             </ACTIONS>
+         </RULE>
+         <RULE>
+             <CONDITION>
+                 43DHKS
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>3</LEVEL>
+             </ACTIONS>
+         </RULE>
+         <RULE>
+             <CONDITION>
+                 44M
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>3</LEVEL>
+             </ACTIONS>
+         </RULE>
+         <RULE>
+             <CONDITION>
+                 45QM
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>3</LEVEL>
+             </ACTIONS>
+         </RULE>
+     </DRUG>
+
+<!-- ********** Begin II drugs ********** -->
+
+     <DRUG>
+         <NAME>RAL</NAME>
+         <RULE>
+             <CONDITION>
+                 Q148HGKRE 
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>3</LEVEL>
+             </ACTIONS>
+         </RULE>
+         <RULE>
+             <CONDITION>
+                 N155H
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>3</LEVEL>
+             </ACTIONS>
+         </RULE>
+         <RULE>
+             <CONDITION>
+                 E157Q
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>3</LEVEL>
+             </ACTIONS>
+         </RULE>
+         <RULE>
+             <CONDITION>
+                 E92Q
+             </CONDITION>
+             <ACTIONS>
+                 <LEVEL>3</LEVEL>
+             </ACTIONS>
+         </RULE>
+     </DRUG>
+	
+</ALGORITHM>
+

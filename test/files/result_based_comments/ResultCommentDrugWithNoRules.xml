@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE ALGORITHM SYSTEM "http://sierra2.stanford.edu/sierra/ASI2.2.dtd">
+<ALGORITHM>
+  <ALGNAME>KPL</ALGNAME>
+  <ALGVERSION>1.0</ALGVERSION>
+  <ALGDATE>2018-11-20</ALGDATE>
+  <DEFINITIONS>
+    <GENE_DEFINITION>
+      <NAME>PR</NAME>
+      <DRUGCLASSLIST>PI</DRUGCLASSLIST>
+    </GENE_DEFINITION>
+    
+    <LEVEL_DEFINITION>
+      <ORDER>1</ORDER>
+      <ORIGINAL>Susceptible</ORIGINAL>
+      <SIR>S</SIR>
+    </LEVEL_DEFINITION>
+    <LEVEL_DEFINITION>
+      <ORDER>2</ORDER>
+      <ORIGINAL>Potential Low-Level Resistance</ORIGINAL>
+      <SIR>S</SIR>
+    </LEVEL_DEFINITION>
+    <LEVEL_DEFINITION>
+      <ORDER>3</ORDER>
+      <ORIGINAL>Low-Level Resistance</ORIGINAL>
+      <SIR>I</SIR>
+    </LEVEL_DEFINITION>
+    <LEVEL_DEFINITION>
+      <ORDER>4</ORDER>
+      <ORIGINAL>Intermediate Resistance</ORIGINAL>
+      <SIR>I</SIR>
+    </LEVEL_DEFINITION>
+    <LEVEL_DEFINITION>
+      <ORDER>5</ORDER>
+      <ORIGINAL>High-Level Resistance</ORIGINAL>
+      <SIR>R</SIR>
+    </LEVEL_DEFINITION>
+    
+    <DRUGCLASS>
+      <NAME>PI</NAME>
+      <DRUGLIST>IDV/r</DRUGLIST>
+    </DRUGCLASS>
+    
+    <GLOBALRANGE><![CDATA[(-INF TO 9 => 1,  10 TO 14 => 2,  15 TO 29 => 3,  30 TO 59 => 4,  60 TO INF => 5)]]></GLOBALRANGE>
+    
+    <COMMENT_DEFINITIONS>
+      <COMMENT_STRING id="PR82L">
+      	<TEXT><![CDATA[Wow that's a pretty rad mutation. Love it.]]></TEXT>
+      	<SORT_TAG>1</SORT_TAG>
+      </COMMENT_STRING>
+      <COMMENT_STRING id="LowLevelWarning">
+      	<TEXT><![CDATA[Result was low level -- probably fine]]></TEXT>
+		<SORT_TAG>1</SORT_TAG>
+      </COMMENT_STRING>
+	  <COMMENT_STRING id="HighLevelWarning">
+		<TEXT><![CDATA[Result was high level -- better check that out]]></TEXT>
+		<SORT_TAG>1</SORT_TAG>
+	  </COMMENT_STRING>
+    </COMMENT_DEFINITIONS>
+    
+  </DEFINITIONS>
+  
+  <DRUG>
+    <NAME>IDV/r</NAME>
+    <FULLNAME>indinavir/r</FULLNAME>
+    <RULE>
+      <CONDITION><![CDATA[SCORE FROM(10F => 10,
+                         20T => 5,
+                         MAX ( 24F => 5, 24I => 15, 24M => 5 ),
+                         MAX ( 82A => 30, 82C => 15, 82F => 30, 82L => 10, 82M => 30, 82S => 30, 82T => 30 ),
+                         (11IL AND 32I) => 5)]]></CONDITION>
+      <ACTIONS>
+        <SCORERANGE>
+          <USE_GLOBALRANGE/>
+        </SCORERANGE>
+      </ACTIONS>
+    </RULE>
+  </DRUG>
+  
+  <MUTATION_COMMENTS>
+    <GENE>
+      <NAME>PR</NAME>
+      <RULE>
+        <CONDITION>82L</CONDITION>
+        <ACTIONS>
+          <COMMENT ref="PR82L"/>
+        </ACTIONS>
+      </RULE>
+    </GENE>
+  </MUTATION_COMMENTS>
+  
+  <RESULT_COMMENTS>
+  	<RESULT_COMMENT_DRUG>
+  		<NAME>IDV/r</NAME>
+		
+  	</RESULT_COMMENT_DRUG>
+  </RESULT_COMMENTS>
+</ALGORITHM>

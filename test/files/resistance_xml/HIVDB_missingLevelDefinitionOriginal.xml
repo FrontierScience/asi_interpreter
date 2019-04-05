@@ -23,7 +23,7 @@
    
         <LEVEL_DEFINITION>
             <ORDER>1</ORDER>
-            <ORIGINAL>Susceptible</ORIGINAL>
+            
             <SIR>S</SIR>
         </LEVEL_DEFINITION>
 
@@ -53,7 +53,7 @@
   
         <DRUGCLASS>
             <NAME>PI</NAME>
-            <DRUGLIST>FPV,IDV,LPV,NFV,SQV,ATV,TPV,DRV,DLV</DRUGLIST>
+            <DRUGLIST>FPV,IDV,LPV,NFV,SQV,ATV,TPV,DRV</DRUGLIST>
         </DRUGCLASS>
 
         <DRUGCLASS>

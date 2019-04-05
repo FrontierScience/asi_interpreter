@@ -14,14 +14,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 ADDITIONAL DISCLAIMER:
-In addition to the standard warranty exclusions and limitations of 
-liability set forth in sections 7, 8 and 9 of the Apache 2.0 license 
-that governs the use and development of this software, Frontier Science 
-& Technology Research Foundation disclaims any liability for use of 
-this software for patient care or in clinical settings. This software 
-was developed solely for use in medical and public health research, and 
+In addition to the standard warranty exclusions and limitations of
+liability set forth in sections 7, 8 and 9 of the Apache 2.0 license
+that governs the use and development of this software, Frontier Science
+& Technology Research Foundation disclaims any liability for use of
+this software for patient care or in clinical settings. This software
+was developed solely for use in medical and public health research, and
 was not intended, designed, or validated to guide patient care.
-*/ 
+*/
 
 
 
@@ -33,6 +33,7 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -51,45 +52,46 @@ import org.fstrf.stanfordAsiInterpreter.resistance.evaluate.EvaluatedCondition;
 import org.fstrf.stanfordAsiInterpreter.resistance.evaluate.EvaluatedDrug;
 import org.fstrf.stanfordAsiInterpreter.resistance.evaluate.EvaluatedDrugClass;
 import org.fstrf.stanfordAsiInterpreter.resistance.evaluate.EvaluatedGene;
+import org.fstrf.stanfordAsiInterpreter.resistance.evaluate.EvaluatedLevelCondition;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.AsiGrammarAdapter.ScoredItem;
 import org.fstrf.stanfordAsiInterpreter.resistance.grammar.MutationComparator;
 import org.fstrf.stanfordAsiInterpreter.resistance.grammar.StringMutationComparator;
-import org.fstrf.stanfordAsiInterpreter.resistance.grammar.AsiGrammarAdapter.ScoredItem;
 import org.fstrf.stanfordAsiInterpreter.resistance.xml.XmlAsiTransformer;
 
 public class AsiInterpreterClient {
-	
+
     private static Option ASI_FILE_OPTION, MUTATION_LIST_OPTION, STRICT_COMPARISON_OPTION, VALIDATE_XML_OPTION, GENE_OPTION;
     private static Options OPTIONS;
-    
+
     /**
      * Create the Options the login will be able to specify on the command line.
      */
     static {
         OPTIONS = new Options();
-        
+
         ASI_FILE_OPTION = new Option("f", "asi-xml-file", true, "asi xml file that defines the algorithm");
         ASI_FILE_OPTION.setArgName("asi_file");
         ASI_FILE_OPTION.setRequired(true);
         OPTIONS.addOption(ASI_FILE_OPTION);
-        
+
         GENE_OPTION = new Option("g", "gene", true, "name of the gene that the mutations represent, this must match the gene name specified in the asi xml file");
         GENE_OPTION.setArgName("gene");
         GENE_OPTION.setRequired(true);
         OPTIONS.addOption(GENE_OPTION);
-        
+
         MUTATION_LIST_OPTION = new Option("m", "mutations", true, "comma seperated list of mutations to interpret");
         MUTATION_LIST_OPTION.setArgName("mutations");
         MUTATION_LIST_OPTION.setRequired(false);
         OPTIONS.addOption(MUTATION_LIST_OPTION);
-        
+
         STRICT_COMPARISON_OPTION = new Option("s", "strict-comparison", false, "mutation amino acids sets must be exact matches");
         OPTIONS.addOption(STRICT_COMPARISON_OPTION);
-        
+
         VALIDATE_XML_OPTION = new Option("v", "validate-xml", false, "DTD file - validate the asi file by checking it against its dtd");
         VALIDATE_XML_OPTION.setArgName("DTD file");
         OPTIONS.addOption(VALIDATE_XML_OPTION);
     }
-	
+
     private File asiXmlFile;
     private String geneName;
     private List mutations;
@@ -97,21 +99,21 @@ public class AsiInterpreterClient {
     private boolean validateXml;
     private MutationComparator mutationComparator;
     private String arguments;
-    
+
     private AsiInterpreterClient(CommandLine commands, String argumentString) {
     	this.strictComparison = commands.hasOption(STRICT_COMPARISON_OPTION.getOpt());
     	this.validateXml = commands.hasOption(VALIDATE_XML_OPTION.getOpt());
     	this.geneName = commands.getOptionValue(GENE_OPTION.getOpt());
-    	
+
     	this.mutationComparator = new StringMutationComparator(this.strictComparison);
-    	
+
     	setAsiXmlFile(commands.getOptionValue(ASI_FILE_OPTION.getOpt()));
-    	
+
     	setMutations(commands.hasOption(MUTATION_LIST_OPTION.getOpt()) ? commands.getOptionValue(MUTATION_LIST_OPTION.getOpt()): null, this.mutationComparator);
-    	
+
     	this.arguments = argumentString;
     }
-    
+
     private void setAsiXmlFile(String filePath) {
     	try {
     		this.asiXmlFile = new File(filePath);
@@ -120,57 +122,57 @@ public class AsiInterpreterClient {
     		throw re;
     	}
     }
-    
+
     private void setMutations(String mutationsString, MutationComparator comparator) {
     	if (mutationsString == null || mutationsString.trim() == ""){
     	    this.mutations = new ArrayList<String>();}
     	else {
             this.mutations = Arrays.asList(mutationsString.split(","));
-        	
+
     	}
     	if(!comparator.areMutationsValid(this.mutations)) {
             throw new RuntimeException("Mutations are not valid: " + mutationsString);
         }
     }
-    
+
     private void run() throws Exception {
     	AsiTransformer transformer = new XmlAsiTransformer(this.validateXml);
-    	
-    	Map	geneMap = transformer.transform(new FileInputStream(this.asiXmlFile));    	
-    	
+
+    	Map	geneMap = transformer.transform(new FileInputStream(this.asiXmlFile));
+
     	Gene gene =  (Gene) geneMap.get(this.geneName);
     	if(gene == null) {
     		throw new Exception("Gene: " + this.geneName + ", has not be defined within the XML file: " + this.asiXmlFile);
     	}
-    	
+
     	MutationComparator mutationCompator = new StringMutationComparator(false);
     	if (!mutationComparator.areMutationsValid(this.mutations)){
     	    throw new RuntimeException("Invalid list of mutations: " + this.mutations.toString());
     	}
     	EvaluatedGene evaluatedGene = gene.evaluate(this.mutations, this.mutationComparator);
-    	
+
     	String buffer = renderEvaluatedGene(evaluatedGene);
-  
-    	Map algoInfo = (Map) ((Map) transformer.getAlgorithmInfo(new FileInputStream(this.asiXmlFile))).get("ALGNAME_ALGVERSION_ALGDATE");
+
+    	Map algoInfo = (Map) transformer.getAlgorithmInfo(new FileInputStream(this.asiXmlFile)).get("ALGNAME_ALGVERSION_ALGDATE");
     	System.out.println("ALGNAME:" + (algoInfo.get("ALGNAME") == null? "NA":algoInfo.get("ALGNAME")) + "\n");
     	System.out.println("ALGVERSION:" + (algoInfo.get("ALGVERSION") == null ? "NA":algoInfo.get("ALGVERSION"))+ "\n");
     	System.out.println("ALGDATE:" + (algoInfo.get("ALGDATE") == null ? "NA":algoInfo.get("ALGDATE")) + "\n");
-    	System.out.println("\n\n"); 
+    	System.out.println("\n\n");
     	System.out.println(buffer);
-    	
+
     	BufferedWriter outputStream = new BufferedWriter(new FileWriter("evaluatedGene.txt"));
     	outputStream.write("Arguments: " + this.arguments);
-    	outputStream.write("\n");    	 
+    	outputStream.write("\n");
     	outputStream.write("ALGNAME:" + algoInfo.get("ALGNAME")+ "\n");
     	outputStream.write("ALGVERSION:" + algoInfo.get("ALGVERSION")+ "\n");
     	outputStream.write("ALGDATE:" + algoInfo.get("ALGDATE")+ "\n");
-    	outputStream.write("\n\n"); 
+    	outputStream.write("\n\n");
 		outputStream.write(buffer.toString());
 		outputStream.flush();
 		outputStream.close();
-		
+
     }
-    
+
     private String renderEvaluatedGene(EvaluatedGene gene) {
     	StringBuffer buffer = new StringBuffer();
     	buffer.append("Gene: " + gene.getGene()).append('\n');
@@ -224,20 +226,38 @@ public class AsiInterpreterClient {
 			}
 			buffer.append('\n');
 		}
+    	buffer.append("Result Comments:").append('\n');
+    	for (Map.Entry<String,Collection<EvaluatedLevelCondition>> entry:gene.getEvaluatedLevelConditionsByDrug().entrySet()) {
+    		String drugName = entry.getKey();
+    		Collection<EvaluatedLevelCondition> evaluatedLevelConditions = entry.getValue();
+    		for (EvaluatedLevelCondition condition: evaluatedLevelConditions) {
+    			if (condition.getDefinitions().size() == 0){
+        			continue;
+        		}
+        		buffer.append("\t").append("Drug: "+drugName).append('\n');
+        		buffer.append("\t").append("LevelCondition: "+condition.getLevelCondition()).append('\n');
+        		buffer.append("\t").append("Scored Level: "+condition.getScoredLevel().toString()).append('\n');
+        		buffer.append("\t").append("Definitions: ").append('\n');
+    			for(Definition definition: condition.getDefinitions()) {
+    				buffer.append("\t\t").append("Comment: " + definition.toString()).append('\n');
+    			}
+    			buffer.append('\n');
+    		}
+    	}
 
     	return buffer.toString();
     }
-    
+
     /**
      * Print help for the Options given
-     * 
+     *
      * @param options the options to print help for
      */
     private static void printHelp(Options options) {
         HelpFormatter formatter = new HelpFormatter();
         formatter.printHelp("ASI Interpreter", options, true);
     }
-	
+
 	/**
 	 * @param args
 	 */
@@ -247,7 +267,7 @@ public class AsiInterpreterClient {
             CommandLine commands = new GnuParser().parse(OPTIONS, args);
             AsiInterpreterClient asiInterpreterClient = new AsiInterpreterClient(commands, Arrays.asList(args).toString());
             asiInterpreterClient.run();
-        } catch(ParseException pe) { 
+        } catch(ParseException pe) {
             System.err.println("Invalid parameter list.");
             printHelp(OPTIONS);
         } catch(Exception e) {

@@ -1,0 +1,62 @@
+<!-- 
+This DTD is being put together to indicate the format the various
+drug resistance algorithms should use.
+
+version 2.1  added ALGDATE
+by tliu
+-->
+
+
+<!ELEMENT ALGORITHM (ALGNAME, ALGVERSION?, ALGDATE?, DEFINITIONS, DRUG*, MUTATION_COMMENTS?)>
+
+<!-- *************************************************************** -->
+<!ELEMENT ALGNAME (#PCDATA)>
+<!-- *************************************************************** -->
+
+<!-- *************************************************************** -->
+<!ELEMENT ALGVERSION (#PCDATA)>
+<!-- *************************************************************** -->
+
+<!-- *************************************************************** -->
+<!ELEMENT ALGDATE (#PCDATA)>
+<!-- *************************************************************** -->
+
+<!-- *************************************************************** -->
+<!ELEMENT DEFINITIONS (GENE_DEFINITION*, LEVEL_DEFINITION*, DRUGCLASS*, GLOBALRANGE?,
+                       COMMENT_DEFINITIONS?)>
+<!ELEMENT GENE_DEFINITION (NAME, DRUGCLASSLIST?)>
+<!ELEMENT DRUGCLASSLIST (#PCDATA)>                    
+<!ELEMENT LEVEL_DEFINITION (ORDER, ORIGINAL, SIR)>
+<!ELEMENT ORDER (#PCDATA)>
+<!ELEMENT ORIGINAL (#PCDATA)>
+<!ELEMENT SIR (#PCDATA)>
+<!ELEMENT DRUGCLASS (NAME, DRUGLIST)>
+<!ELEMENT NAME (#PCDATA)>
+<!ELEMENT DRUGLIST (#PCDATA)>
+<!ELEMENT GLOBALRANGE (#PCDATA)>
+<!ELEMENT COMMENT_DEFINITIONS (COMMENT_STRING+)>
+<!ELEMENT COMMENT_STRING (TEXT, SORT_TAG?)>
+<!ATTLIST COMMENT_STRING   id ID #REQUIRED>     
+<!-- the html version of the HIVdb program expects the COMMENT_STRING id to be <geneName>_<mutation>_<commentType>
+     the commentType is used for grouping the comments (uppercased) and should match the name of the appropriate MutationClassification element in the virus definition -->
+<!ELEMENT TEXT (#PCDATA)>
+<!ELEMENT SORT_TAG (#PCDATA)>
+<!-- *************************************************************** -->
+
+<!-- *************************************************************** -->
+<!ELEMENT DRUG (NAME, FULLNAME?, RULE*)>
+<!ELEMENT FULLNAME (#PCDATA)>
+<!ELEMENT RULE (CONDITION, ACTIONS)>
+<!ELEMENT CONDITION (#PCDATA)>
+<!ELEMENT ACTIONS (LEVEL?, SCORERANGE?, COMMENT?)>
+<!ELEMENT LEVEL (#PCDATA)>
+<!ELEMENT SCORERANGE (#PCDATA | USE_GLOBALRANGE)*>
+<!ELEMENT USE_GLOBALRANGE EMPTY>
+<!ELEMENT COMMENT EMPTY>
+<!ATTLIST COMMENT   ref IDREF #REQUIRED>
+<!-- *************************************************************** -->
+
+<!-- *************************************************************** -->
+<!ELEMENT MUTATION_COMMENTS (GENE*)>
+<!ELEMENT GENE (NAME, RULE+)>
+<!-- *************************************************************** -->
