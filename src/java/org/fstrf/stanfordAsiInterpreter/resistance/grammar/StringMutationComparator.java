@@ -177,7 +177,7 @@ public class StringMutationComparator implements MutationComparator {
     /**
      * Return this String mutation with its amino acid list inverted.
      * 
-     * e.g. 41LF -> 41ACDEGHIKMNPQRSTVWYZdi
+     * e.g. 41LF -&gt; 41ACDEGHIKMNPQRSTVWYZdi
      * 
      * @param mutation the String mutation to invert
      * @return a String representation of an inverted mutation

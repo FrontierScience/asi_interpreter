@@ -69,3 +69,17 @@ task sourcesJar(type: Jar) {
     classifier 'sources'
     from sourceSets.main.allSource
 }
+
+task cleanJavadoc(type: Delete) {
+    delete 'javadoc'
+}
+
+task copyJavadoc(type: Copy) {
+    from 'build/docs/javadoc'
+    into 'javadoc'
+}
+
+javadoc.dependsOn copyJavadoc
+javadoc.dependsOn cleanJavadoc
+copyJavadoc.shouldRunAfter javadoc
+copyJavadoc.shouldRunAfter cleanJavadoc

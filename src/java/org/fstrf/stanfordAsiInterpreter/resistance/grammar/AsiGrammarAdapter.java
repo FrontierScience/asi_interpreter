@@ -369,7 +369,7 @@ public class AsiGrammarAdapter extends DepthFirstAdapter implements AsiGrammarEv
      * If the score item's residue has evaluated to TRUE, push on the score associated
      * with this item, otherwise push on a score of 0.
      * 
-	 * Node: e.g. 41L => -45
+	 * Node: e.g. 41L =&gt; -45
 	 * 
 	 * @see org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.DepthFirstAdapter#caseAStatementScoreitem(org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AStatementScoreitem)
 	 */
