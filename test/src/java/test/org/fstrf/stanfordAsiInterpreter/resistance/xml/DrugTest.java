@@ -29,6 +29,7 @@ package test.org.fstrf.stanfordAsiInterpreter.resistance.xml;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -47,7 +48,7 @@ import junit.framework.TestCase;
 
 @SuppressWarnings("all") public class DrugTest extends TestCase{
 
-	private File asiXmlFile;
+	private InputStream asiXmlFileStream;
     private String geneName;
     private List mutations;
     private boolean strictComparison;
@@ -65,7 +66,7 @@ import junit.framework.TestCase;
 	}
     private void setAsiXmlFile(String filePath) {
 		try {
-			this.asiXmlFile = new File(filePath);
+			this.asiXmlFileStream = DrugTest.class.getClassLoader().getResourceAsStream(filePath);
 		} catch(RuntimeException re) {
 			System.err.println("Invalid ASI XML File: " + filePath);
 			throw re;
@@ -81,9 +82,9 @@ import junit.framework.TestCase;
 	
 	public void testMissingDrugName(){
 		try{
-			setAsiXmlFile("test/files/resistance_xml/HIVDB_missingDrugName.xml");
+			setAsiXmlFile("resistance_xml/HIVDB_missingDrugName.xml");
 			AsiTransformer transformer = new XmlAsiTransformer(this.validateXml);
-			transformer.transform(new FileInputStream(this.asiXmlFile));
+			transformer.transform(this.asiXmlFileStream);
 		}
 		catch (ASIParsingException e){		
 			System.out.println("testMissingDrugName:"+"\n\t"+e.getMessage());
@@ -102,9 +103,9 @@ import junit.framework.TestCase;
 		 * (the drug is associated with no drug class)
 		 */
 		try{
-			setAsiXmlFile("test/files/resistance_xml/HIVDB_undefinedDrugWithinDrugClass.xml");
+			setAsiXmlFile("resistance_xml/HIVDB_undefinedDrugWithinDrugClass.xml");
 			AsiTransformer transformer = new XmlAsiTransformer(this.validateXml);
-			transformer.transform(new FileInputStream(this.asiXmlFile));
+			transformer.transform(this.asiXmlFileStream);
 		}
 		catch (ASIParsingException e){		
 			System.out.println("testUndefinedDrugWithinADrugClass:"+"\n\t"+e.getMessage());
@@ -122,9 +123,9 @@ import junit.framework.TestCase;
 		 * DLV drug defined in NNRTI and NRTI drug classes
 		 */
 		try{
-			setAsiXmlFile("test/files/resistance_xml/HIVDB_definedDrugWithinDifferentDrugClasses.xml");
+			setAsiXmlFile("resistance_xml/HIVDB_definedDrugWithinDifferentDrugClasses.xml");
 			AsiTransformer transformer = new XmlAsiTransformer(this.validateXml);
-			transformer.transform(new FileInputStream(this.asiXmlFile));
+			transformer.transform(this.asiXmlFileStream);
 		}
 		catch (ASIParsingException e){		
 			System.out.println("testDefinedDrugWithinDifferentDrugClasses:"+"\n\t"+e.getMessage());
@@ -142,9 +143,9 @@ import junit.framework.TestCase;
 		 * DLV drug is not defined under a DRUG tag 
 		 */
 		try{
-			setAsiXmlFile("test/files/resistance_xml/HIVDB_undefinedDrug.xml");
+			setAsiXmlFile("resistance_xml/HIVDB_undefinedDrug.xml");
 			AsiTransformer transformer = new XmlAsiTransformer(this.validateXml);
-			transformer.transform(new FileInputStream(this.asiXmlFile));
+			transformer.transform(this.asiXmlFileStream);
 		}
 		catch (ASIParsingException e){		
 			System.out.println("testUndefinedDrug:"+"\n\t"+e.getMessage());
@@ -163,9 +164,9 @@ import junit.framework.TestCase;
 		 * DLV drug does not have defined any rule 
 		 */
 		try{
-			setAsiXmlFile("test/files/resistance_xml/HIVDB_drugWithoutAnyRule.xml");
+			setAsiXmlFile("resistance_xml/HIVDB_drugWithoutAnyRule.xml");
 			AsiTransformer transformer = new XmlAsiTransformer(this.validateXml);
-			Map geneMap = transformer.transform(new FileInputStream(this.asiXmlFile));
+			Map geneMap = transformer.transform(this.asiXmlFileStream);
 			Gene gene =  (Gene) geneMap.get(this.geneName);
 			EvaluatedGene evaluatedGene = gene.evaluate(this.mutations, this.mutationComparator);
 			System.out.println("evaluated gene:" + evaluatedGene.toString());

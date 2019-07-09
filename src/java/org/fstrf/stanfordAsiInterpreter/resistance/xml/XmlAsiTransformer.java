@@ -136,19 +136,19 @@ import org.xml.sax.InputSource;
 	private static final EntityResolver RESOLVER = new EntityResolver() {
 		@Override
 		public InputSource resolveEntity(String publicId, String systemId) {
-			if(systemId.endsWith("stanford.edu/asi/xml/ASI.dtd")) {
+			if(systemId.endsWith("/ASI.dtd")) {
 				InputStream in = getClass().getClassLoader().getResourceAsStream(
 						"org/fstrf/stanfordAsiInterpreter/resistance/ASI.dtd");
 				return new InputSource(in);
-			}else if (systemId.endsWith("stanford.edu/sierra/ASI2.dtd")){
+			}else if (systemId.endsWith("/ASI2.dtd")){
 				InputStream in = getClass().getClassLoader().getResourceAsStream(
 						"org/fstrf/stanfordAsiInterpreter/resistance/ASI2.dtd");
 				return new InputSource(in);
-			}else if (systemId.endsWith("stanford.edu/sierra/ASI2.1.dtd")){
+			}else if (systemId.endsWith("/ASI2.1.dtd")){
                 InputStream in = getClass().getClassLoader().getResourceAsStream(
                         "org/fstrf/stanfordAsiInterpreter/resistance/ASI2.1.dtd");
                 return new InputSource(in);
-            } else if (systemId.endsWith("stanford.edu/sierra/ASI2.2.dtd")){
+            } else if (systemId.endsWith("/ASI2.2.dtd")){
             	InputStream in = getClass()
             			.getClassLoader()
             			.getResourceAsStream(

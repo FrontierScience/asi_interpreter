@@ -28,6 +28,7 @@ package test.org.fstrf.stanfordAsiInterpreter.resistance.xml;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
 
 import org.fstrf.stanfordAsiInterpreter.resistance.ASIParsingException;
 import org.fstrf.stanfordAsiInterpreter.resistance.AsiTransformer;
@@ -50,15 +51,15 @@ import junit.framework.TestCase;
 
     private void attemptTransformation(String filePath) throws FileNotFoundException, Exception {
     	AsiTransformer transformer = new XmlAsiTransformer(this.validateXml);
-    	File algorithmFile = new File(filePath);
-    	transformer.transform(new FileInputStream(algorithmFile));
+    	InputStream algorithmFileStream = XMLResultCommentsTest.class.getClassLoader().getResourceAsStream(filePath);
+    	transformer.transform(algorithmFileStream);
     }
 
     public void testValidResultComment() {
     	//Normal file -- Should be no errors
     	System.out.println("Normal Use Result Comments");
         try {
-        	attemptTransformation("test/files/result_based_comments/KPL_1.1.xml");
+        	attemptTransformation("result_based_comments/KPL_1.1.xml");
         } catch (Exception e) {
         	e.printStackTrace();
             fail(e.getMessage());
@@ -83,7 +84,7 @@ import junit.framework.TestCase;
     	//Empty Result Comments - should be no errors
     	System.out.println("Empty Result Comments");
     	try {
-    		attemptTransformation("test/files/result_based_comments/EmptyResultComments.xml");
+    		attemptTransformation("result_based_comments/EmptyResultComments.xml");
     	} catch (Exception e) {
             fail(e.getMessage());
             e.printStackTrace();
@@ -95,7 +96,7 @@ import junit.framework.TestCase;
     	boolean exceptionTriggered = false;
     	System.out.println("Result Comment Rule with no conditions");
     	try {
-    		attemptTransformation("test/files/result_based_comments/ResultCommentRuleWithNoCondition.xml");
+    		attemptTransformation("result_based_comments/ResultCommentRuleWithNoCondition.xml");
     	} catch (ASIParsingException e) {
     		System.out.println("\t==> "+e.getCause());
     		assert(e.getCause().getMessage().contains("The content of element type \"RESULT_COMMENT_RULE\" is incomplete"));
@@ -113,7 +114,7 @@ import junit.framework.TestCase;
     	boolean exceptionTriggered = false;
     	System.out.println("Result Comment Rule with Empty conditions");
     	try {
-    		attemptTransformation("test/files/result_based_comments/ResultCommentRuleWithEmptyConditions.xml");
+    		attemptTransformation("result_based_comments/ResultCommentRuleWithEmptyConditions.xml");
     	} catch (ASIParsingException e) {
     		System.out.println("\t==> "+e.getCause());
     		assert(e.getCause().getMessage().contains("The content of element type \"DRUG_LEVEL_CONDITIONS\" is incomplete"));
@@ -131,7 +132,7 @@ import junit.framework.TestCase;
     	boolean exceptionTriggered = false;
     	System.out.println("Result Comment Rule with no actions");
     	try {
-    		attemptTransformation("test/files/result_based_comments/ResultCommentRuleWithNoActions.xml");
+    		attemptTransformation("result_based_comments/ResultCommentRuleWithNoActions.xml");
     	} catch (ASIParsingException e) {
     		System.out.println("\t==> "+e.getCause());
     		assertEquals(e.getMessage(),"Not a Stanford resistance analysis XML file");
@@ -149,7 +150,7 @@ import junit.framework.TestCase;
     	boolean exceptionTriggered = false;
     	System.out.println("Empty Drug Level Condition");
     	try {
-    		attemptTransformation("test/files/result_based_comments/EmptyDrugLevelCondition.xml");
+    		attemptTransformation("result_based_comments/EmptyDrugLevelCondition.xml");
     	} catch (ASIParsingException e) {
     		System.out.println("\t==> "+e.getCause());
     		assert(e.getCause().getMessage().contains("The content of element type \"DRUG_LEVEL_CONDITION\" is incomplete"));
@@ -167,7 +168,7 @@ import junit.framework.TestCase;
     	boolean exceptionTriggered = false;
     	System.out.println("DrugLevelCondition with no drug");
     	try {
-    		attemptTransformation("test/files/result_based_comments/DrugLevelConditionWithNoDrug.xml");
+    		attemptTransformation("result_based_comments/DrugLevelConditionWithNoDrug.xml");
     	} catch (ASIParsingException e) {
     		System.out.println("\t==> "+e.getCause());
     		assert(e.getCause().getMessage().contains("The content of element type \"DRUG_LEVEL_CONDITION\" must match \"(DRUG_NAME,(LTE|LT|GTE|GT|EQ|NEQ)+)\"."));
@@ -185,7 +186,7 @@ import junit.framework.TestCase;
     	boolean exceptionTriggered = false;
     	System.out.println("DrugLevelCondition with no comparisons");
     	try {
-    		attemptTransformation("test/files/result_based_comments/DrugLevelConditionWithNoComparisons.xml");
+    		attemptTransformation("result_based_comments/DrugLevelConditionWithNoComparisons.xml");
     	} catch (ASIParsingException e) {
     		System.out.println("\t==> "+e.getCause());
     		assert(e.getCause().getMessage().contains("The content of element type \"DRUG_LEVEL_CONDITION\" is incomplete"));
@@ -203,7 +204,7 @@ import junit.framework.TestCase;
     	//Multiple Level Rules for a drug - should be no errors
     	System.out.println("Multiple Result Comment Rules");
     	try {
-    		attemptTransformation("test/files/result_based_comments/MultipleResultCommentRules.xml");
+    		attemptTransformation("result_based_comments/MultipleResultCommentRules.xml");
     	} catch (Exception e) {
             fail(e.getMessage());
             e.printStackTrace();
@@ -215,7 +216,7 @@ import junit.framework.TestCase;
     	//Multiple comparisons in a level condition - should be no errors
     	System.out.println("Drug Level Condition with Multiple Comparisons");
     	try {
-    		attemptTransformation("test/files/result_based_comments/DrugLevelConditionWithMultipleComparisons.xml");
+    		attemptTransformation("result_based_comments/DrugLevelConditionWithMultipleComparisons.xml");
     	} catch (Exception e) {
             fail(e.getMessage());
             e.printStackTrace();
@@ -227,7 +228,7 @@ import junit.framework.TestCase;
     	boolean exceptionTriggered = false;
     	System.out.println("Empty Level Action");
     	try {
-    		attemptTransformation("test/files/result_based_comments/EmptyLevelAction.xml");
+    		attemptTransformation("result_based_comments/EmptyLevelAction.xml");
     	} catch (ASIParsingException e) {
     		System.out.println("\t==> "+e.getCause());
     		assert(e.getCause().getMessage().contains("The content of element type \"LEVEL_ACTION\" is incomplete"));
@@ -245,7 +246,7 @@ import junit.framework.TestCase;
     	boolean exceptionTriggered = false;
     	System.out.println("UndefinedDrug");
     	try {
-    		attemptTransformation("test/files/result_based_comments/UndefinedDrug.xml");
+    		attemptTransformation("result_based_comments/UndefinedDrug.xml");
     	} catch (ASIParsingException e) {
     		System.out.println("\t==> "+e.getMessage());
     		assert(e.getMessage().contains("has result comment rules but is not defined as a drug"));
@@ -263,7 +264,7 @@ import junit.framework.TestCase;
     	boolean exceptionTriggered = false;
     	System.out.println("UndefinedLevel");
     	try {
-    		attemptTransformation("test/files/result_based_comments/UndefinedLevel.xml");
+    		attemptTransformation("result_based_comments/UndefinedLevel.xml");
     	} catch (ASIParsingException e) {
     		System.out.println("\t==> "+e.getMessage());
     		assert(e.getMessage().contains("has not been defined as a level order"));

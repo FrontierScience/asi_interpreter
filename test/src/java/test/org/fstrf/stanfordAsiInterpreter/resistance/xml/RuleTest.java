@@ -29,6 +29,7 @@ package test.org.fstrf.stanfordAsiInterpreter.resistance.xml;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -57,7 +58,7 @@ import junit.framework.TestCase;
 
 @SuppressWarnings("all") public class RuleTest extends TestCase{
 
-	private File asiXmlFile;
+	private InputStream asiXmlFileStream;
     private String geneName;
     private List mutations;
     private boolean strictComparison;
@@ -75,7 +76,7 @@ import junit.framework.TestCase;
 	}
     private void setAsiXmlFile(String filePath) {
 		try {
-			this.asiXmlFile = new File(filePath);
+			this.asiXmlFileStream = RuleTest.class.getClassLoader().getResourceAsStream(filePath);
 		} catch(RuntimeException re) {
 			System.err.println("Invalid ASI XML File: " + filePath);
 			throw re;
@@ -94,9 +95,9 @@ import junit.framework.TestCase;
 		 * a rule is missing the condition for DLV drug
 		 */
 		try{
-			setAsiXmlFile("test/files/resistance_xml/HIVDB_missingCondition.xml");
+			setAsiXmlFile("resistance_xml/HIVDB_missingCondition.xml");
 			AsiTransformer transformer = new XmlAsiTransformer(this.validateXml);
-			transformer.transform(new FileInputStream(this.asiXmlFile));
+			transformer.transform(this.asiXmlFileStream);
 		}
 		catch (ASIParsingException e){		
 			System.out.println("CONDITION tag is a required element:"+"\n\t"+e.getMessage());
@@ -112,9 +113,9 @@ import junit.framework.TestCase;
 		 * a rule is missing the ACTIONS tag for DLV drug
 		 */
 		try{
-			setAsiXmlFile("test/files/resistance_xml/HIVDB_missingActions.xml");
+			setAsiXmlFile("resistance_xml/HIVDB_missingActions.xml");
 			AsiTransformer transformer = new XmlAsiTransformer(this.validateXml);
-			transformer.transform(new FileInputStream(this.asiXmlFile));
+			transformer.transform(this.asiXmlFileStream);
 		}
 		catch (ASIParsingException e){		
 			System.out.println("ACTIONS tag is a required element:"+"\n\t"+e.getMessage());
@@ -130,9 +131,9 @@ import junit.framework.TestCase;
 	
 	public void testRequiredGlobalRange(){
 		try{
-			setAsiXmlFile("test/files/resistance_xml/HIVDB_missingRequiredGlobalRange.xml");
+			setAsiXmlFile("resistance_xml/HIVDB_missingRequiredGlobalRange.xml");
 			AsiTransformer transformer = new XmlAsiTransformer(this.validateXml);
-			transformer.transform(new FileInputStream(this.asiXmlFile));
+			transformer.transform(this.asiXmlFileStream);
 		}
 		catch (ASIParsingException e){		
 			System.out.println("GLOBALRANGE tag is a required element (some rules are using USE_GLOBALRANGE tag):"+"\n\t"+e.getMessage());
@@ -153,9 +154,9 @@ import junit.framework.TestCase;
 		Map geneMap = new HashMap();
 		XmlAsiTransformer transformer = null;
 		try{
-			setAsiXmlFile("test/files/resistance_xml/HIVDB_invalidRuleActionType.xml");
+			setAsiXmlFile("resistance_xml/HIVDB_invalidRuleActionType.xml");
 			transformer = new XmlAsiTransformer(this.validateXml);
-			geneMap = transformer.transform(new FileInputStream(this.asiXmlFile));
+			geneMap = transformer.transform(this.asiXmlFileStream);
 		}
 		catch (ASIParsingException e){
 			System.out.println("testInvalidRuleActionTye ASIParsingException:"+e.getMessage());
@@ -217,9 +218,9 @@ import junit.framework.TestCase;
 		Map geneMap = new HashMap();
 		XmlAsiTransformer transformer = null;
 		try{
-			setAsiXmlFile("test/files/resistance_xml/HIVDB_invalidDoubleResultRuleActionType.xml");
+			setAsiXmlFile("resistance_xml/HIVDB_invalidDoubleResultRuleActionType.xml");
 			transformer = new XmlAsiTransformer(this.validateXml);
-			geneMap = transformer.transform(new FileInputStream(this.asiXmlFile));
+			geneMap = transformer.transform(this.asiXmlFileStream);
 		}
 		catch (ASIParsingException e){
 			System.out.println("testInvalidRuleActionTye ASIParsingException:"+e.getMessage());
@@ -269,9 +270,9 @@ import junit.framework.TestCase;
 		Map geneMap = new HashMap();
 		XmlAsiTransformer transformer = null;
 		try{
-			setAsiXmlFile("test/files/resistance_xml/HIVDB_evaluationExceptioScoreRangeAction.xml");
+			setAsiXmlFile("resistance_xml/HIVDB_evaluationExceptioScoreRangeAction.xml");
 			transformer = new XmlAsiTransformer(this.validateXml);
-			geneMap = transformer.transform(new FileInputStream(this.asiXmlFile));
+			geneMap = transformer.transform(this.asiXmlFileStream);
 		}
 		catch (ASIParsingException e){
 			System.out.println("testInvalidRuleActionTye ASIParsingException:"+e.getMessage());
