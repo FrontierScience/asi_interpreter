@@ -1,0 +1,12 @@
+/.gradle/
+/build/
+/target/
+/bin/
+/.settings/
+.project
+.classpath
+*.log
+*.swp
+*.swo
+*.orig
+*.jar

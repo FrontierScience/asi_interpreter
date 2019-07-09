@@ -28,6 +28,7 @@ package test.org.fstrf.stanfordAsiInterpreter.resistance.comments;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -61,8 +62,8 @@ public class LevelRuleTest extends TestCase
 	 */
 	public void testComparisons() throws FileNotFoundException, Exception {
 		AsiTransformer transformer = new XmlAsiTransformer(true);
-    	File algorithmFile = new File("test/files/result_based_comments/ComparisonTest.xml");
-    	Map<String,Gene> geneMap = transformer.transform(new FileInputStream(algorithmFile));
+    	InputStream algorithmFileStream = LevelRuleTest.class.getClassLoader().getResourceAsStream("result_based_comments/ComparisonTest.xml");
+    	Map<String,Gene> geneMap = transformer.transform(algorithmFileStream);
     	Gene gene = geneMap.get("PR");
     	List<String> mutations = Arrays.asList("20T");
     	MutationComparator mutationComparator = new StringMutationComparator(false);
@@ -127,8 +128,8 @@ public class LevelRuleTest extends TestCase
 	 */
 	public void testMultipleComparisons() throws FileNotFoundException, Exception {
 		AsiTransformer transformer = new XmlAsiTransformer(true);
-    	File algorithmFile = new File("test/files/result_based_comments/ComplexResultComments.xml");
-    	Map<String,Gene> geneMap = transformer.transform(new FileInputStream(algorithmFile));
+    	InputStream algorithmFileStream = LevelRuleTest.class.getClassLoader().getResourceAsStream("result_based_comments/ComplexResultComments.xml");
+    	Map<String,Gene> geneMap = transformer.transform(algorithmFileStream);
     	Gene gene = geneMap.get("PR");
     	List<String> mutations = Arrays.asList("10F","33F","88S","90M");
     	MutationComparator mutationComparator = new StringMutationComparator(false);
@@ -174,8 +175,8 @@ public class LevelRuleTest extends TestCase
 	 */
 	public void testOR() throws FileNotFoundException, Exception {
 		AsiTransformer transformer = new XmlAsiTransformer(true);
-    	File algorithmFile = new File("test/files/result_based_comments/ComplexResultComments.xml");
-    	Map<String,Gene> geneMap = transformer.transform(new FileInputStream(algorithmFile));
+    	InputStream algorithmFileStream = LevelRuleTest.class.getClassLoader().getResourceAsStream("result_based_comments/ComplexResultComments.xml");
+    	Map<String,Gene> geneMap = transformer.transform(algorithmFileStream);
     	Gene gene = geneMap.get("PR");
     	List<String> mutations = Arrays.asList("10F","33F","88S","90M");
     	MutationComparator mutationComparator = new StringMutationComparator(false);
