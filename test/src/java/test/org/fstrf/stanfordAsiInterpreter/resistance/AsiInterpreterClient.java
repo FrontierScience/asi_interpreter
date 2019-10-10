@@ -33,7 +33,6 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -51,8 +50,9 @@ import org.fstrf.stanfordAsiInterpreter.resistance.definition.Gene;
 import org.fstrf.stanfordAsiInterpreter.resistance.evaluate.EvaluatedCondition;
 import org.fstrf.stanfordAsiInterpreter.resistance.evaluate.EvaluatedDrug;
 import org.fstrf.stanfordAsiInterpreter.resistance.evaluate.EvaluatedDrugClass;
+import org.fstrf.stanfordAsiInterpreter.resistance.evaluate.EvaluatedDrugLevelCondition;
 import org.fstrf.stanfordAsiInterpreter.resistance.evaluate.EvaluatedGene;
-import org.fstrf.stanfordAsiInterpreter.resistance.evaluate.EvaluatedLevelCondition;
+import org.fstrf.stanfordAsiInterpreter.resistance.evaluate.EvaluatedResultCommentRule;
 import org.fstrf.stanfordAsiInterpreter.resistance.grammar.AsiGrammarAdapter.ScoredItem;
 import org.fstrf.stanfordAsiInterpreter.resistance.grammar.MutationComparator;
 import org.fstrf.stanfordAsiInterpreter.resistance.grammar.StringMutationComparator;
@@ -227,22 +227,21 @@ public class AsiInterpreterClient {
 			buffer.append('\n');
 		}
     	buffer.append("Result Comments:").append('\n');
-    	for (Map.Entry<String,Collection<EvaluatedLevelCondition>> entry:gene.getEvaluatedLevelConditionsByDrug().entrySet()) {
-    		String drugName = entry.getKey();
-    		Collection<EvaluatedLevelCondition> evaluatedLevelConditions = entry.getValue();
-    		for (EvaluatedLevelCondition condition: evaluatedLevelConditions) {
-    			if (condition.getDefinitions().size() == 0){
-        			continue;
-        		}
-        		buffer.append("\t").append("Drug: "+drugName).append('\n');
-        		buffer.append("\t").append("LevelCondition: "+condition.getLevelCondition()).append('\n');
-        		buffer.append("\t").append("Scored Level: "+condition.getScoredLevel().toString()).append('\n');
-        		buffer.append("\t").append("Definitions: ").append('\n');
-    			for(Definition definition: condition.getDefinitions()) {
-    				buffer.append("\t\t").append("Comment: " + definition.toString()).append('\n');
-    			}
-    			buffer.append('\n');
+    	for (EvaluatedResultCommentRule evaluatedResultCommentRule: gene.getEvaluatedResultCommentRules()) {
+    		//skip rules that don't apply (no definitions means the rule conditions were not met)
+    		if (evaluatedResultCommentRule.getDefinitions().size() == 0) {
+    			continue;
     		}
+    		buffer.append("\t").append("Drug Level Conditions:").append("\n");
+    		for (EvaluatedDrugLevelCondition condition: evaluatedResultCommentRule.getEvaluatedDrugLevelConditions()) {
+    			buffer.append("\t\t").append("Condition: "+condition.getDrugLevelCondition()).append("\n");
+    			buffer.append("\t\t\t").append("Scored Level for "+condition.getDrug()+": "+condition.getScoredLevel().toString()).append('\n');
+    		}
+    		buffer.append("\t").append("Definitions:").append("\n");
+    		for(Definition definition: evaluatedResultCommentRule.getDefinitions()) {
+				buffer.append("\t\t").append("Comment: " + definition.toString()).append('\n');
+			}
+			buffer.append('\n');
     	}
 
     	return buffer.toString();
