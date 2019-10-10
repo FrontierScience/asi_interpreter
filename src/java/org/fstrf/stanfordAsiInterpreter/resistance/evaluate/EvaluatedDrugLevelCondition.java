@@ -26,45 +26,30 @@ was not intended, designed, or validated to guide patient care.
 package org.fstrf.stanfordAsiInterpreter.resistance.evaluate;
 
 import java.text.MessageFormat;
-import java.util.HashSet;
-import java.util.Set;
 
-import org.fstrf.stanfordAsiInterpreter.resistance.definition.Definition;
-import org.fstrf.stanfordAsiInterpreter.resistance.definition.LevelCondition;
+import org.fstrf.stanfordAsiInterpreter.resistance.definition.DrugLevelCondition;
 import org.fstrf.stanfordAsiInterpreter.resistance.definition.LevelDefinition;
-import org.fstrf.stanfordAsiInterpreter.resistance.definition.ResultCommentDrug;
 
-public class EvaluatedLevelCondition {
+public class EvaluatedDrugLevelCondition {
 
 	private static final MessageFormat FORMAT =
-			new MessageFormat("{0}statement: {1},{0}definitions: {2}'}'");
+			new MessageFormat("{0}drug: {1},{0}level condition: {2},{0}result: {3},{0}scored level: {4}");
 
-	private LevelCondition levelCondition;
+	private String drugName;
+	private DrugLevelCondition drugLevelCondition;
 	private Boolean evaluationResult;
 	private LevelDefinition scoredLevel;
-	private Set<Definition> definitions;
-	private ResultCommentDrug drug;
 
-	public EvaluatedLevelCondition(LevelCondition levelCondition,boolean evaluationResult,LevelDefinition level,ResultCommentDrug drug){
-		this.levelCondition = levelCondition;
+
+	public EvaluatedDrugLevelCondition(DrugLevelCondition drugLevelCondition,boolean evaluationResult,LevelDefinition level,String drugName){
+		this.drugLevelCondition = drugLevelCondition;
 		this.evaluationResult = evaluationResult;
-		this.definitions = new HashSet<Definition>();
 		this.scoredLevel = level;
-		this.drug = drug;
+		this.drugName = drugName;
 	}
 
-	public void addDefinition(Definition definition){
-		if (definition != null){
-			this.definitions.add(definition);
-		}
-	}
-
-	public LevelCondition getLevelCondition(){
-		return this.levelCondition;
-	}
-
-	public Set<Definition> getDefinitions() {
-		return this.definitions;
+	public DrugLevelCondition getDrugLevelCondition(){
+		return this.drugLevelCondition;
 	}
 
 	public Boolean getResult(){
@@ -75,13 +60,13 @@ public class EvaluatedLevelCondition {
 		return this.scoredLevel;
 	}
 
-	public ResultCommentDrug getDrug(){
-		return this.drug;
+	public String getDrug(){
+		return this.drugName;
 	}
 
 	@Override
 	public String toString() {
-		Object[] objs = { "\n\t\t", this.levelCondition, this.definitions };
+		Object[] objs = { "\n\t\t", this.drugName,this.drugLevelCondition, this.evaluationResult,this.scoredLevel };
 		return FORMAT.format(objs);
 	}
 }

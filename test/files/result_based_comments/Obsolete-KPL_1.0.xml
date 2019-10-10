@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE ALGORITHM SYSTEM "http://sierra2.stanford.edu/sierra/ASI2.2.dtd">
+<!-- 
+KPL 16-Aug-2019
+
+This file was created for ASI 1.4.0 when we thought result comments would be formatted as below. 
+Stanford has since requested a change to the format of result comments, so the syntax in this file
+is no longer accurate. For a more up-to-date example, use KPL_1.1.xml
+ -->
 <ALGORITHM>
   <ALGNAME>KPL</ALGNAME>
   <ALGVERSION>1.0</ALGVERSION>
@@ -96,6 +103,9 @@
 			<LEVEL_CONDITION>
 				<LTE>2</LTE>
 			</LEVEL_CONDITION>
+			<LEVEL_ACTION>
+				<COMMENT ref="LowLevelWarning"/>
+			</LEVEL_ACTION>
 		</LEVEL_RULE>
 		<LEVEL_RULE>
 			<LEVEL_CONDITION>

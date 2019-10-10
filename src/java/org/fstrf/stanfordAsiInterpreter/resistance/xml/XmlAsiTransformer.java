@@ -54,13 +54,12 @@ import org.fstrf.stanfordAsiInterpreter.resistance.definition.CommentDefinition;
 import org.fstrf.stanfordAsiInterpreter.resistance.definition.Definition;
 import org.fstrf.stanfordAsiInterpreter.resistance.definition.Drug;
 import org.fstrf.stanfordAsiInterpreter.resistance.definition.DrugClass;
+import org.fstrf.stanfordAsiInterpreter.resistance.definition.DrugLevelCondition;
 import org.fstrf.stanfordAsiInterpreter.resistance.definition.Gene;
 import org.fstrf.stanfordAsiInterpreter.resistance.definition.LevelAction;
-import org.fstrf.stanfordAsiInterpreter.resistance.definition.LevelCondition;
 import org.fstrf.stanfordAsiInterpreter.resistance.definition.LevelDefinition;
-import org.fstrf.stanfordAsiInterpreter.resistance.definition.LevelRule;
 import org.fstrf.stanfordAsiInterpreter.resistance.definition.RangeValue;
-import org.fstrf.stanfordAsiInterpreter.resistance.definition.ResultCommentDrug;
+import org.fstrf.stanfordAsiInterpreter.resistance.definition.ResultCommentRule;
 import org.fstrf.stanfordAsiInterpreter.resistance.definition.Rule;
 import org.fstrf.stanfordAsiInterpreter.resistance.definition.RuleCondition;
 import org.fstrf.stanfordAsiInterpreter.resistance.definition.ScoreRangeAction;
@@ -78,10 +77,10 @@ public class XmlAsiTransformer implements AsiTransformer {
 	private static final XPath GENE_MUTATION_COMMENTS__NAME_XPATH = new DefaultXPath("NAME");
 	private static final XPath GENE_RULE_XPATH = new DefaultXPath("RULE");
 
-	private static final XPath RESULT_COMMENTS_XPATH = new DefaultXPath("/ALGORITHM/RESULT_COMMENTS/RESULT_COMMENT_DRUG");
-	private static final XPath RESULT_COMMENT_DRUG_NAME = new DefaultXPath("NAME");
-	private static final XPath RESULT_COMMENT_LEVEL_RULE = new DefaultXPath("LEVEL_RULE");
-	private static final XPath RESULT_COMMENT_LEVEL_CONDITION = new DefaultXPath("LEVEL_CONDITION");
+	private static final XPath RESULT_COMMENT_XPATH = new DefaultXPath("/ALGORITHM/RESULT_COMMENTS/RESULT_COMMENT_RULE");
+	private static final XPath RESULT_COMMENT_DRUG_LEVEL_CONDITIONS = new DefaultXPath("DRUG_LEVEL_CONDITIONS");
+	private static final XPath RESULT_COMMENT_DRUG_LEVEL_CONDITION = new DefaultXPath("DRUG_LEVEL_CONDITION");
+	private static final XPath RESULT_COMMENT_DRUG_NAME = new DefaultXPath("DRUG_NAME");
 	private static final XPath RESULT_COMMENT_LEVEL_ACTION = new DefaultXPath("LEVEL_ACTION");
 	private static final XPath RESULT_COMMENT_LEVEL_ACTION_COMMENT_XPATH = new DefaultXPath("COMMENT/@ref");
 
@@ -189,7 +188,7 @@ public class XmlAsiTransformer implements AsiTransformer {
         Map geneEvaluatedMutationComments = parseGeneMutationComments(doc, levels, comments, globalRange);
         Set geneNamesComments = geneEvaluatedMutationComments.keySet();
 
-        Map<String,ResultCommentDrug> resultComments = parseResultComments(doc,levels,comments,drugs);
+        List<ResultCommentRule> resultCommentRules = parseResultCommentRules(doc,levels,comments,drugs);
 
         Collection intersection = CollectionUtils.intersection(geneNamesDrugs, geneNamesComments);
         if (intersection.size() < geneNamesComments.size()){
@@ -213,25 +212,12 @@ public class XmlAsiTransformer implements AsiTransformer {
 
         	Gene geneDrugClass = (Gene) geneEvaluatedDrugs.get(geneName);
         	Gene geneMutationComments = (Gene)geneEvaluatedMutationComments.get(geneName);
-        	Map<String,ResultCommentDrug> geneResultCommentDrugs = new HashMap<String,ResultCommentDrug>();
-
-        	//For each drug associated with the gene, add all result comment rules to geneDrugLevelRules
-        	for (Object drugClassObj: geneDrugClass.getDrugClasses()){
-        		DrugClass drugClass = (DrugClass) drugClassObj;
-        		for (Object drugObj: drugClass.getDrugs()){
-        			Drug drug = (Drug) drugObj;
-        			String drugName = drug.getDrugName();
-        			if (resultComments.containsKey(drugName)){
-        				geneResultCommentDrugs.put(drugName,resultComments.get(drugName));
-        			}
-        		}
-        	}
 
         	if (geneMutationComments == null){
-        		genes.put(geneName, new Gene(geneName, geneDrugClass.getDrugClasses(), new ArrayList(),geneResultCommentDrugs));
+        		genes.put(geneName, new Gene(geneName, geneDrugClass.getDrugClasses(), new ArrayList(),resultCommentRules));
         	}
         	else{
-        		genes.put(geneName, new Gene(geneName, geneDrugClass.getDrugClasses(), geneMutationComments.getRules(),geneResultCommentDrugs));
+        		genes.put(geneName, new Gene(geneName, geneDrugClass.getDrugClasses(), geneMutationComments.getRules(),resultCommentRules));
         	}
 		}
 
@@ -500,43 +486,6 @@ public class XmlAsiTransformer implements AsiTransformer {
 		return genes;
 	}
 
-	private Map<String,ResultCommentDrug> parseResultComments(Node root, Map levels, Map comments, Map definedDrugs) throws ASIParsingException {
-		Map<String,ResultCommentDrug> drugs = new HashMap<String,ResultCommentDrug>();
-
-		//Get all the result comment drug nodes
-		List<Node> nodes = root.selectNodes(RESULT_COMMENTS_XPATH.getText().trim());
-
-
-		//for each drug node, get the name and rules
-		for (Node resultCommentDrugNode: nodes){
-
-			Node drugNameNode = selectUniqueSingleNode(resultCommentDrugNode,RESULT_COMMENT_DRUG_NAME);
-			// If no drug, throw an ASIParsingException
-			if (drugNameNode == null){
-				throw new ASIParsingException("no drug specified for result comment");
-			}
-
-			String drugName = drugNameNode.getText().trim();
-			// If drug wasn't defined, throw an ASIParsingException
-			if (!definedDrugs.containsKey(drugName)){
-				throw new ASIParsingException("\""+drugName+"\" has result comments but is not defined as a drug");
-			}
-
-			//Get the level rule(s)
-			List<Node> levelRuleNodes = resultCommentDrugNode.selectNodes(RESULT_COMMENT_LEVEL_RULE.getText().trim());
-
-			if (levelRuleNodes.size() == 0){
-				//No rules for current drug
-				throw new ASIParsingException("no level rule specified for drug "+drugNameNode.getText());
-			}
-
-			List<LevelRule> drugRules = parseLevelRules(levelRuleNodes,levels,comments);
-			drugs.put(drugName,new ResultCommentDrug(drugName,drugRules));
-		}
-
-		return drugs;
-	}
-
 	private boolean isUniqueDefinedDrug(String drugName, Map drugClasses) {
 		/*
 		 * search for every class if the drug is already associated with a different one
@@ -774,19 +723,30 @@ public class XmlAsiTransformer implements AsiTransformer {
 		return genes;
 	}
 
-	private List<LevelRule> parseLevelRules(List<Node> ruleNodes, Map levels, Map comments) throws ASIParsingException{
-		List<LevelRule> rules = new ArrayList<LevelRule>();
+	private List<ResultCommentRule> parseResultCommentRules(Node root, Map levels, Map comments, Map definedDrugs) throws ASIParsingException {
 
-		for (Node ruleNode: ruleNodes){
+		//Get all the result comment nodes
+		List<Node> nodes = root.selectNodes(RESULT_COMMENT_XPATH.getText().trim());
 
-			// Get the level conditions
-			Node levelConditionNode = selectUniqueSingleNode(ruleNode,RESULT_COMMENT_LEVEL_CONDITION);
-			//if no level condition, throw an ASIParsingException
-			if (levelConditionNode == null){
-				throw new ASIParsingException("no level condition specified in level rule");
+		List<ResultCommentRule> resultCommentRules = new ArrayList<ResultCommentRule>();
+
+		for (Node ruleNode: nodes){
+
+			Node levelConditionNode = selectUniqueSingleNode(ruleNode,RESULT_COMMENT_DRUG_LEVEL_CONDITIONS);
+
+			// Get the drug level condition nodes
+			List<Node> drugLevelConditionNodes = levelConditionNode.selectNodes(RESULT_COMMENT_DRUG_LEVEL_CONDITION.getText().trim());
+
+			//if no conditions, throw an ASIParsingException
+			if (drugLevelConditionNodes.size() == 0) {
+				throw new ASIParsingException("no drug level conditions specified in result comment rule");
 			}
 
-			LevelCondition levelCondition = parseLevelCondition(levelConditionNode,levels);//parse ltes and stuff
+			//add all conditions to a list
+			List<DrugLevelCondition> drugLevelConditions = new ArrayList<DrugLevelCondition>();
+			for (Node drugLevelConditionNode: drugLevelConditionNodes) {
+				drugLevelConditions.add(parseDrugLevelCondition(drugLevelConditionNode,levels,definedDrugs));
+			}
 
 			Node levelActionNode = selectUniqueSingleNode(ruleNode,RESULT_COMMENT_LEVEL_ACTION);
 			//if no level action, throw an ASIParsingException
@@ -795,18 +755,25 @@ public class XmlAsiTransformer implements AsiTransformer {
 			}
 			List<CommentAction> levelActions = parseLevelActions(levelActionNode,comments);
 
-			rules.add(new LevelRule(levelCondition,levelActions));
+			resultCommentRules.add(new ResultCommentRule(drugLevelConditions,levelActions));
 		}
 
-		return rules;
+		return resultCommentRules;
 
 	}
 
-	private LevelCondition parseLevelCondition(Node levelConditionNode,Map levels) throws ASIParsingException{
-		//search levelConditionNode for each of the comparison operators
+	private DrugLevelCondition parseDrugLevelCondition(Node levelConditionNode,Map levels, Map drugs) throws ASIParsingException{
+		//search drugLevelConditionNode for each of the comparison operators
 		//	Treat this like actions where there can be multiple, and throw exception if there are none
 
-		LevelCondition levelCondition = new LevelCondition();
+		String drugName = selectUniqueSingleNode(levelConditionNode,RESULT_COMMENT_DRUG_NAME).getText();
+
+		//verify that the drug is specified in the algorithm
+		if (!drugs.containsKey(drugName)) {
+			throw new ASIParsingException(drugName+" has result comment rules but is not defined as a drug");
+		}
+
+		DrugLevelCondition drugLevelCondition = new DrugLevelCondition(drugName);
 
 		//find elements and call addComparison if they exist
 
@@ -822,37 +789,37 @@ public class XmlAsiTransformer implements AsiTransformer {
 		if (LTENode != null){
 			String levelString = LTENode.getText();
 			Integer level = getValidatedLevelFromString(levelString,levels);
-			levelCondition.addComparison(level,"LTE");
+			drugLevelCondition.addComparison(level,"LTE");
 			anyNodeSpecified = true;
 		}
 		if (GTENode != null){
 			String levelString = GTENode.getText();
 			Integer level = getValidatedLevelFromString(levelString,levels);
-			levelCondition.addComparison(level,"GTE");
+			drugLevelCondition.addComparison(level,"GTE");
 			anyNodeSpecified = true;
 		}
 		if (LTNode != null){
 			String levelString = LTNode.getText();
 			Integer level = getValidatedLevelFromString(levelString,levels);
-			levelCondition.addComparison(level,"LT");
+			drugLevelCondition.addComparison(level,"LT");
 			anyNodeSpecified = true;
 		}
 		if (GTNode != null){
 			String levelString = GTNode.getText();
 			Integer level = getValidatedLevelFromString(levelString,levels);
-			levelCondition.addComparison(level,"GT");
+			drugLevelCondition.addComparison(level,"GT");
 			anyNodeSpecified = true;
 		}
 		if (EQNode != null){
 			String levelString = EQNode.getText();
 			Integer level = getValidatedLevelFromString(levelString,levels);
-			levelCondition.addComparison(level,"EQ");
+			drugLevelCondition.addComparison(level,"EQ");
 			anyNodeSpecified = true;
 		}
 		if (NEQNode != null){
 			String levelString = NEQNode.getText();
 			Integer level = getValidatedLevelFromString(levelString,levels);
-			levelCondition.addComparison(level,"NEQ");
+			drugLevelCondition.addComparison(level,"NEQ");
 			anyNodeSpecified = true;
 		}
 
@@ -860,7 +827,7 @@ public class XmlAsiTransformer implements AsiTransformer {
 			throw new ASIParsingException("no level comparison specified in level condition");
 		}
 
-		return levelCondition;
+		return drugLevelCondition;
 	}
 
 	private Integer getValidatedLevelFromString(String levelString, Map levels) throws ASIParsingException{

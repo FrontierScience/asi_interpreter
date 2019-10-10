@@ -21,7 +21,7 @@ that governs the use and development of this software, Frontier Science
 this software for patient care or in clinical settings. This software
 was developed solely for use in medical and public health research, and
 was not intended, designed, or validated to guide patient care.
-*/
+ */
 
 package org.fstrf.stanfordAsiInterpreter.resistance.definition;
 
@@ -33,65 +33,67 @@ import org.fstrf.stanfordAsiInterpreter.resistance.ASIParsingException;
 
 public class LevelConditionComparison {
 
-	private String operator;
-	private Integer levelOrder;
-	private static Set<String> possibleOperators;
-	private static String LTE,GTE,LT,GT,EQ,NEQ;
+    private String operator;
+    private Integer levelOrder;
+    private static Set<String> possibleOperators;
+    private static String LTE, GTE, LT, GT, EQ, NEQ;
 
-	static {
-		LTE = "LTE";
-		GTE = "GTE";
-		LT = "LT";
-		GT = "GT";
-		EQ = "EQ";
-		NEQ = "NEQ";
-		possibleOperators = new HashSet<String>(Arrays.asList(LTE,GTE,LT,GT,EQ,NEQ));
-	}
+    static {
+        LTE = "LTE";
+        GTE = "GTE";
+        LT = "LT";
+        GT = "GT";
+        EQ = "EQ";
+        NEQ = "NEQ";
+        possibleOperators = new HashSet<String>(Arrays.asList(LTE, GTE, LT, GT, EQ, NEQ));
+    }
 
-	public LevelConditionComparison(Integer levelOrder, String operator) throws ASIParsingException{
-		this.levelOrder = levelOrder;
-		if (!possibleOperators.contains(operator)){
-			throw new ASIParsingException("Invalid level comparison operator: "+operator);
-		}
-		this.operator = operator;
-	}
+    public LevelConditionComparison(Integer levelOrder, String operator) throws ASIParsingException {
+        this.levelOrder = levelOrder;
+        if (!possibleOperators.contains(operator)) {
+            throw new ASIParsingException("Invalid level comparison operator: " + operator);
+        }
+        this.operator = operator;
+    }
 
-	/**
-	 * evaluate method compares the member field levelOrder against the order of the
-	 * LevelDefinition parameter, using the operator to determine how the comparison should be done
-	 */
-	public boolean evaluate(LevelDefinition level){
-		Integer order = level.getOrder();
-		//will return false by default
-		boolean result;
-		switch (this.operator.toUpperCase()) {
-		case "LTE":
-			result = (order <= this.levelOrder);
-			break;
-		case "GTE":
-			result = (order >= this.levelOrder);
-			break;
-		case "GT":
-			result = (order > this.levelOrder);
-			break;
-		case "LT":
-			result = (order < this.levelOrder);
-			break;
-		case "EQ":
-			result = (order == this.levelOrder);
-			break;
-		case "NEQ":
-			result = (order != this.levelOrder);
-			break;
-		default:
-			result = false;
-		}
-		return result;
-	}
+    /**
+     * evaluate method compares the member field levelOrder against the order of
+     * the LevelDefinition parameter, using the operator to determine how the
+     * comparison should be done
+     * @param level (which is the estimated order level per given drug)
+     * @return result
+     */
+    public boolean evaluate(LevelDefinition level) {
+        Integer order = level.getOrder();
+        // will return false by default
+        boolean result;
+        switch (this.operator.toUpperCase()) {
+            case "LTE":
+                result = (order <= this.levelOrder);
+                break;
+            case "GTE":
+                result = (order >= this.levelOrder);
+                break;
+            case "GT":
+                result = (order > this.levelOrder);
+                break;
+            case "LT":
+                result = (order < this.levelOrder);
+                break;
+            case "EQ":
+                result = (order == this.levelOrder);
+                break;
+            case "NEQ":
+                result = (order != this.levelOrder);
+                break;
+            default:
+                result = false;
+        }
+        return result;
+    }
 
-	@Override
-	public String toString(){
-		return (this.operator+" "+this.levelOrder);
-	}
-
+    @Override
+    public String toString() {
+        return (this.operator + " " + this.levelOrder);
+    }
 }
