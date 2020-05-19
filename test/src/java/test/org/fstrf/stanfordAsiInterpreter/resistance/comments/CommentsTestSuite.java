@@ -33,7 +33,7 @@ import junit.framework.TestSuite;
 public class CommentsTestSuite  extends TestSuite{
 	public static Test suite() {
         TestSuite suite = new TestSuite();
-        suite.addTestSuite(LevelRuleTest.class);
+        suite.addTestSuite(ResultCommentRuleTest.class);
         return suite;
 	}
 }

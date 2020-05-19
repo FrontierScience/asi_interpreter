@@ -28,12 +28,9 @@ was not intended, designed, or validated to guide patient care.
 package org.fstrf.stanfordAsiInterpreter.resistance.evaluate;
 
 import java.text.MessageFormat;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Set;
 
 import org.fstrf.stanfordAsiInterpreter.resistance.definition.Gene;
@@ -46,20 +43,18 @@ public class EvaluatedGene {
 	private Gene gene;
 	private Collection evaluatedDrugClasses;
 	private Collection geneEvaluatedConditions;
-	private Collection<EvaluatedLevelCondition> evaluatedLevelConditions;
+	private Collection<EvaluatedResultCommentRule> evaluatedResultCommentRules;
 	private Set geneScoredMutations;
 	private Set geneCommentDefinitions;
-	private Map<String,Collection<EvaluatedLevelCondition>> evaluatedLevelConditionsByDrug;
 
 
-	public EvaluatedGene(Gene gene, Collection geneEvaluatedConditions, Collection evaluatedDrugClasses, Collection<EvaluatedLevelCondition> evaluatedLevelConditions) {
+	public EvaluatedGene(Gene gene, Collection geneEvaluatedConditions, Collection evaluatedDrugClasses, Collection<EvaluatedResultCommentRule> evaluatedResultCommentRules) {
 		this.gene = gene;
 		this.evaluatedDrugClasses =  evaluatedDrugClasses;
 		this.geneScoredMutations = new HashSet();
 		this.geneCommentDefinitions = new HashSet();
 		this.parseGeneCommentDefinitions(geneEvaluatedConditions);
-		this.evaluatedLevelConditions = evaluatedLevelConditions;
-		this.parseEvaluatedLevelConditions(evaluatedLevelConditions);
+		this.evaluatedResultCommentRules = evaluatedResultCommentRules;
 	}
 
 	private void parseGeneCommentDefinitions(Collection geneEvaluatedConditions) {
@@ -68,18 +63,6 @@ public class EvaluatedGene {
 			EvaluatedCondition evaluatedCondition = (EvaluatedCondition) iterator.next();
 			this.geneScoredMutations.addAll(evaluatedCondition.getEvaluator().getScoredMutations());
 			this.geneCommentDefinitions.addAll(evaluatedCondition.getDefinitions());
-		}
-	}
-
-	private void parseEvaluatedLevelConditions(Collection<EvaluatedLevelCondition> evaluatedLevelConditions) {
-		this.evaluatedLevelConditionsByDrug = new HashMap<String,Collection<EvaluatedLevelCondition>>();
-		for (EvaluatedLevelCondition condition: evaluatedLevelConditions) {
-			String drugName = condition.getDrug().getDrugName();
-			if (!this.evaluatedLevelConditionsByDrug.containsKey(drugName)){
-				this.evaluatedLevelConditionsByDrug.put(drugName, new ArrayList<EvaluatedLevelCondition>());
-			}
-			this.evaluatedLevelConditionsByDrug.get(drugName).add(condition);
-
 		}
 	}
 
@@ -103,12 +86,8 @@ public class EvaluatedGene {
 		return this.evaluatedDrugClasses;
 	}
 
-	public Collection<EvaluatedLevelCondition> getEvaluatedLevelConditions(){
-		return this.evaluatedLevelConditions;
-	}
-
-	public Map<String,Collection<EvaluatedLevelCondition>> getEvaluatedLevelConditionsByDrug(){
-		return this.evaluatedLevelConditionsByDrug;
+	public Collection<EvaluatedResultCommentRule> getEvaluatedResultCommentRules(){
+		return this.evaluatedResultCommentRules;
 	}
 
 	@Override

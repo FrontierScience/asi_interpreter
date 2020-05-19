@@ -40,7 +40,7 @@ import org.fstrf.stanfordAsiInterpreter.resistance.definition.CommentDefinition;
 import org.fstrf.stanfordAsiInterpreter.resistance.definition.Definition;
 import org.fstrf.stanfordAsiInterpreter.resistance.definition.Gene;
 import org.fstrf.stanfordAsiInterpreter.resistance.evaluate.EvaluatedGene;
-import org.fstrf.stanfordAsiInterpreter.resistance.evaluate.EvaluatedLevelCondition;
+import org.fstrf.stanfordAsiInterpreter.resistance.evaluate.EvaluatedResultCommentRule;
 import org.fstrf.stanfordAsiInterpreter.resistance.grammar.MutationComparator;
 import org.fstrf.stanfordAsiInterpreter.resistance.grammar.StringMutationComparator;
 import org.fstrf.stanfordAsiInterpreter.resistance.xml.XmlAsiTransformer;
@@ -48,12 +48,12 @@ import org.fstrf.stanfordAsiInterpreter.resistance.xml.XmlAsiTransformer;
 import junit.framework.TestCase;
 
 /**
- * This class tests that the logic for evaluating Level Rules
+ * This class tests that the logic for evaluating Result Comment Rules
  * returns result comments as expected
  *
  * @author Kyle Lambert
  */
-public class LevelRuleTest extends TestCase
+public class ResultCommentRuleTest extends TestCase
 {
 
 	/*
@@ -101,14 +101,13 @@ public class LevelRuleTest extends TestCase
     			"EQ3",
     			"NEQ2","NEQ4"));
 
-    	String drugName = "ATV/r";
-
     	Set<String> actualCommentIds = new HashSet<String>();
 
-    	Collection<EvaluatedLevelCondition> evaluatedLevelConditions = evaluatedGene.getEvaluatedLevelConditionsByDrug().get(drugName);
-    	System.out.println("Comments for "+drugName+": ");
-    	for (EvaluatedLevelCondition evaluatedLevelCondition: evaluatedLevelConditions) {
-    		for (Definition definition: evaluatedLevelCondition.getDefinitions()) {
+    	Collection<EvaluatedResultCommentRule> evaluatedResultCommentRules = evaluatedGene.getEvaluatedResultCommentRules();
+
+    	System.out.println("Comments: ");
+    	for (EvaluatedResultCommentRule evaluatedResultCommentRule: evaluatedResultCommentRules) {
+    		for (Definition definition: evaluatedResultCommentRule.getDefinitions()) {
     			CommentDefinition comment = (CommentDefinition) definition;
     			actualCommentIds.add(comment.getId());
     			System.out.println(comment.toString());
@@ -147,25 +146,29 @@ public class LevelRuleTest extends TestCase
     	 * which has the logic GTE2 and LTE4
     	 */
 
-    	String commentId = "BetweenTwoAndFour";
-    	Set<String> expectedDrugs = new HashSet<String>(Arrays.asList("IDV/r","LPV/r","NFV"));
-    	Set<String> actualDrugs = new HashSet<String>();
+    	Set<String> expectedCommentIds = new HashSet<String>(Arrays.asList(
+    			"IDV_BetweenTwoAndFour",
+    			"LPV_BetweenTwoAndFour",
+    			"NFV_BetweenTwoAndFour"));
 
-    	System.out.println("Drugs matching BetweenTwoAndFour");
-    	for (EvaluatedLevelCondition condition: evaluatedGene.getEvaluatedLevelConditions()) {
-    		for (Definition definition: condition.getDefinitions()) {
+    	Set<String> actualCommentIds = new HashSet<String>();
+
+    	Collection<EvaluatedResultCommentRule> evaluatedResultCommentRules = evaluatedGene.getEvaluatedResultCommentRules();
+
+    	System.out.println("BetweenTwoAndFour Comments: ");
+    	for (EvaluatedResultCommentRule evaluatedResultCommentRule: evaluatedResultCommentRules) {
+    		for (Definition definition: evaluatedResultCommentRule.getDefinitions()) {
     			CommentDefinition comment = (CommentDefinition) definition;
-    			if (comment.getId().equals(commentId)) {
-    				actualDrugs.add(condition.getDrug().getDrugName());
-    				System.out.println(condition.getDrug().getDrugName()+
-    						" (level "+condition.getScoredLevel().getOrder()+"): "+
-    						comment.toString());
+    			//Just filter for the BetweenTwoAndFour comments
+    			if (comment.getId().contains("BetweenTwoAndFour")) {
+    				actualCommentIds.add(comment.getId());
+    				System.out.println(comment.toString());
     			}
     		}
     	}
     	System.out.println();
-
-    	assert(actualDrugs.equals(expectedDrugs));
+    	//Comment sets should be exactly the same
+    	assert(expectedCommentIds.equals(actualCommentIds));
 	}
 
 	/*
@@ -194,25 +197,72 @@ public class LevelRuleTest extends TestCase
     	 * which is defined by two LevelRule blocks - one with EQ2 and one with EQ5
     	 */
 
-    	String commentId = "IsTwoOrFive";
-    	Set<String> expectedDrugs = new HashSet<String>(Arrays.asList("IDV/r","SQV/r"));
-    	Set<String> actualDrugs = new HashSet<String>();
+    	Set<String> expectedCommentIds = new HashSet<String>(Arrays.asList(
+    			"IDV_IsTwoOrFive",
+    			"SQV_IsTwoOrFive"));
 
-    	System.out.println("Drugs matching IsTwoOrFive");
-    	for (EvaluatedLevelCondition condition: evaluatedGene.getEvaluatedLevelConditions()) {
-    		for (Definition definition: condition.getDefinitions()) {
+    	Set<String> actualCommentIds = new HashSet<String>();
+
+    	Collection<EvaluatedResultCommentRule> evaluatedResultCommentRules = evaluatedGene.getEvaluatedResultCommentRules();
+
+    	System.out.println("IsTwoOrFive Comments: ");
+    	for (EvaluatedResultCommentRule evaluatedResultCommentRule: evaluatedResultCommentRules) {
+    		for (Definition definition: evaluatedResultCommentRule.getDefinitions()) {
     			CommentDefinition comment = (CommentDefinition) definition;
-    			if (comment.getId().equals(commentId)) {
-    				actualDrugs.add(condition.getDrug().getDrugName());
-    				System.out.println(condition.getDrug().getDrugName()+
-    						" (level "+condition.getScoredLevel().getOrder()+"): "+
-    						comment.toString());
+    			//Just filter for the IsTwoOrFive comments
+    			if (comment.getId().contains("IsTwoOrFive")) {
+    				actualCommentIds.add(comment.getId());
+    				System.out.println(comment.toString());
     			}
     		}
     	}
     	System.out.println();
+    	//Comment sets should be exactly the same
+    	assert(expectedCommentIds.equals(actualCommentIds));
+	}
 
-    	assert(actualDrugs.equals(expectedDrugs));
+	public void testMultiDrugResultCommentRule() throws FileNotFoundException, Exception{
+		AsiTransformer transformer = new XmlAsiTransformer(true);
+    	File algorithmFile = new File("test/files/result_based_comments/ComplexResultComments.xml");
+    	Map<String,Gene> geneMap = transformer.transform(new FileInputStream(algorithmFile));
+    	Gene gene = geneMap.get("PR");
+    	List<String> mutations = Arrays.asList("10F","33F","88S","90M");
+    	MutationComparator mutationComparator = new StringMutationComparator(false);
+
+    	EvaluatedGene evaluatedGene = gene.evaluate(mutations, mutationComparator);
+
+    	/*
+    	 * The drugs in the algorithm should have the following level assignments:
+    	 * 	FPV/r: 	1
+    	 * 	IDV/r: 	2
+    	 * 	LPV/r: 	3
+    	 * 	NFV: 	4
+    	 * 	SQV/r: 	5
+    	 *
+    	 * Therefore, NFV and SQV/r are both GTE 4 and the multidrug comment NFV_SQV_BothHigh
+    	 * should be triggered
+    	 */
+    	Set<String> expectedCommentIds = new HashSet<String>(Arrays.asList(
+    			"MultiDrug_NFV_SQV_BothHigh"));
+
+    	Set<String> actualCommentIds = new HashSet<String>();
+
+    	Collection<EvaluatedResultCommentRule> evaluatedResultCommentRules = evaluatedGene.getEvaluatedResultCommentRules();
+
+    	System.out.println("MultiDrug Comments: ");
+    	for (EvaluatedResultCommentRule evaluatedResultCommentRule: evaluatedResultCommentRules) {
+    		for (Definition definition: evaluatedResultCommentRule.getDefinitions()) {
+    			CommentDefinition comment = (CommentDefinition) definition;
+    			//Just filter for the IsTwoOrFive comments
+    			if (comment.getId().contains("MultiDrug")) {
+    				actualCommentIds.add(comment.getId());
+    				System.out.println(comment.toString());
+    			}
+    		}
+    	}
+    	System.out.println();
+    	//Comment sets should be exactly the same
+    	assert(expectedCommentIds.equals(actualCommentIds));
 	}
 
 }

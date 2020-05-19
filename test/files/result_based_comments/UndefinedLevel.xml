@@ -2,8 +2,8 @@
 <!DOCTYPE ALGORITHM SYSTEM "http://sierra2.stanford.edu/sierra/ASI2.2.dtd">
 <ALGORITHM>
   <ALGNAME>KPL</ALGNAME>
-  <ALGVERSION>1.0</ALGVERSION>
-  <ALGDATE>2018-11-20</ALGDATE>
+  <ALGVERSION>1.1</ALGVERSION>
+  <ALGDATE>2019-08-15</ALGDATE>
   <DEFINITIONS>
     <GENE_DEFINITION>
       <NAME>PR</NAME>
@@ -38,7 +38,7 @@
     
     <DRUGCLASS>
       <NAME>PI</NAME>
-      <DRUGLIST>IDV/r</DRUGLIST>
+      <DRUGLIST>IDV/r, ATV/r, LPV/r</DRUGLIST>
     </DRUGCLASS>
     
     <GLOBALRANGE><![CDATA[(-INF TO 9 => 1,  10 TO 14 => 2,  15 TO 29 => 3,  30 TO 59 => 4,  60 TO INF => 5)]]></GLOBALRANGE>
@@ -67,7 +67,7 @@
       <CONDITION><![CDATA[SCORE FROM(10F => 10,
                          20T => 5,
                          MAX ( 24F => 5, 24I => 15, 24M => 5 ),
-                         MAX ( 82A => 30, 82C => 15, 82F => 30, 82L => 10, 82M => 30, 82S => 30, 82T => 30 ),
+                         MAX ( 82A => 30, 82C => 15, 82F => 30, 82L => 15, 82M => 30, 82S => 30, 82T => 30 ),
                          (11IL AND 32I) => 5)]]></CONDITION>
       <ACTIONS>
         <SCORERANGE>
@@ -76,6 +76,82 @@
       </ACTIONS>
     </RULE>
   </DRUG>
+  
+  <DRUG>
+        <NAME>LPV/r</NAME>
+        <FULLNAME>lopinavir/r</FULLNAME>
+        <RULE>
+            <CONDITION>
+                SCORE FROM (10F => 5,
+                            MAX ( 24I => 10, 24FM => 5 ),
+                            32I => 15,
+                            33F => 5,
+                            MAX ( 46IL => 10, 46V => 5 ),
+                            MAX ( 47A => 60, 47V => 15 ),
+                            48ALMQSTV => 10,
+                            MAX ( 50V => 30, 50L AND EXCLUDE 50(NOT L) => -10 ),
+                            MAX ( 54LMV => 15, 54AST => 10 ),
+                            73ACSTV => 5,
+                            74P => 5,
+                            76V => 30,
+                            MAX ( 82AF => 30, 82MST => 25, 82CL => 10 ),
+                            MAX ( 84A => 60, 84CV => 30 ),
+                            90M => 15,
+                            (32I AND 47V) => 10,
+                            (32I AND 54ML) => 10,
+                            (46IL AND 76V) => 10,
+                            (46ILV AND 82AFSTMC) => 5,
+                            (47V AND 54ML) => 10,
+                            (54VSTAML AND 82AFSTMC) => 10,
+                            (82AFSTMC AND 24IFM) => 10,
+                            (90M AND 82AFSTMC) => 5,
+                            (90M AND 84V) => 5
+                           )
+            </CONDITION>
+            <ACTIONS>
+                <SCORERANGE><USE_GLOBALRANGE/></SCORERANGE>
+            </ACTIONS>
+        </RULE>
+    </DRUG>
+    
+    <DRUG>
+        <NAME>ATV/r</NAME>
+        <FULLNAME>atazanavir/r</FULLNAME>
+        <RULE>
+            <CONDITION>
+                SCORE FROM (20T => 5,
+                            MAX ( 24I => 10, 24FM => 5 ),
+                            32I => 15,
+                            33F => 5,
+                            46ILV => 10,
+                            47AV => 5,
+                            MAX ( 48MV => 30, 48ALQST => 10 ),
+                            50L => 60,
+                            53L => 10,
+                            54ALMSTV => 15,
+                            58E => 5,
+                            71IL => 5,
+                            MAX ( 73ACST => 10, 73V => 5 ),
+                            74P => 10,
+                            76V AND EXCLUDE 76(NOT V) => -5,
+                            MAX ( 82ST => 25, 82AF => 15, 82CLM => 60 ),
+                            83D => 10,
+                            84ACV => 60,
+                            MAX ( 88S => 60, 88GT => 15, 88D => 5 ),
+                            90M => 25,
+                            (46ILV AND 82ATSFMCL) => 10,
+                            (46ILV AND 90M) => 10,
+                            (53L AND 90M) => 10,
+                            (54AVSTLM AND 82ATSFMCL) => 10,
+                            (73STCA AND 90M) => 10,
+                            (82ATSFMCL AND 90M) => 10
+                           )
+            </CONDITION>
+            <ACTIONS>
+                <SCORERANGE><USE_GLOBALRANGE/></SCORERANGE>
+            </ACTIONS>
+        </RULE>
+    </DRUG>
   
   <MUTATION_COMMENTS>
     <GENE>
@@ -90,16 +166,17 @@
   </MUTATION_COMMENTS>
   
   <RESULT_COMMENTS>
-  	<RESULT_COMMENT_DRUG>
-  		<NAME>IDV/r</NAME>
-		<LEVEL_RULE>
-			<LEVEL_CONDITION>
+	<RESULT_COMMENT_RULE>
+		<DRUG_LEVEL_CONDITIONS>
+			<DRUG_LEVEL_CONDITION>
+				<DRUG_NAME>LPV/r</DRUG_NAME>
 				<LTE>99</LTE>
-			</LEVEL_CONDITION>
-			<LEVEL_ACTION>
-				<COMMENT ref="LowLevelWarning"/>
-			</LEVEL_ACTION>
-		</LEVEL_RULE>
-  	</RESULT_COMMENT_DRUG>
-  </RESULT_COMMENTS>
+			</DRUG_LEVEL_CONDITION>
+		</DRUG_LEVEL_CONDITIONS>
+		<LEVEL_ACTION>
+			<COMMENT ref="HighLevelWarning"/>
+		</LEVEL_ACTION>
+	</RESULT_COMMENT_RULE>
+</RESULT_COMMENTS>
+
 </ALGORITHM>
