@@ -1,0 +1,434 @@
+Arguments: [-s, -v, -f, /hdrs/bgraham/HIVDB_8.9_withUpdates_BG, -g, RT, -m, 66I]
+ALGNAME:HIVDB
+ALGVERSION:8.9
+ALGDATE:2019-10-07
+
+
+Gene: RT
+Evaluated Drug Classes:
+	Drug Class: NNRTI
+	Evaluated Drugs:
+		Drug: EFV
+		Drug Full Name: efavirenz
+		Scored Mutations: []
+		Level: {order: 1, text: Susceptible, sir: S}
+		Comments:
+		Evaluated Conditions:
+			Condition: SCORE FROM(98G => 15,
+                         MAX ( 100I => 60, 100V => 30 ),
+                         MAX ( 101E => 15, 101H => 10, 101P => 60 ),
+                         MAX ( 103H => 60, 103N => 60, 103S => 45, 103T => 15 ),
+                         MAX ( 106A => 45, 106M => 60 ),
+                         108I => 10,
+                         MAX ( 138G => 10, 138K => 10, 138Q => 10, 138R => 10 ),
+                         MAX ( 179D => 10, 179E => 10, 179F => 10, 179L => 10 ),
+                         MAX ( 181C => 30, 181F => 15, 181G => 15, 181I => 30, 181S => 15, 181V => 30 ),
+                         MAX ( 188C => 60, 188F => 60, 188H => 30, 188L => 60 ),
+                         MAX ( 190A => 45, 190C => 60, 190E => 60, 190Q => 60, 190S => 60, 190T => 60, 190V => 60 ),
+                         221Y => 10,
+                         225H => 45,
+                         MAX ( 227C => 45, 227I => 10, 227L => 15, 227V => 10 ),
+                         MAX ( 230I => 15, 230L => 45 ),
+                         MAX ( 238N => 10, 238T => 30 ),
+                         318F => 10,
+                         (101E AND 181C) => 5,
+                         (103R AND 179D) => 20,
+                         (106A AND 227L) => 15,
+                         (98G AND 181C) => 5,
+                         (98G AND 227C) => 15)
+			Result: 0.0
+			Scored Items: 
+
+
+		Drug: ETR
+		Drug Full Name: etravirine
+		Scored Mutations: []
+		Level: {order: 1, text: Susceptible, sir: S}
+		Comments:
+		Evaluated Conditions:
+			Condition: SCORE FROM(98G => 10,
+                         MAX ( 100I => 30, 100V => 10 ),
+                         MAX ( 101E => 15, 101H => 10, 101P => 60 ),
+                         106I => 10,
+                         MAX ( 138A => 10, 138G => 10, 138K => 10, 138Q => 10, 138R => 10 ),
+                         MAX ( 179D => 10, 179E => 10, 179F => 15, 179L => 10 ),
+                         MAX ( 181C => 30, 181F => 15, 181G => 15, 181I => 60, 181S => 15, 181V => 60 ),
+                         188L => 10,
+                         MAX ( 190A => 10, 190C => 10, 190E => 45, 190Q => 45, 190S => 10, 190T => 10, 190V => 10 ),
+                         221Y => 10,
+                         227C => 30,
+                         MAX ( 230I => 15, 230L => 30 ),
+                         (101E AND 181C) => 5,
+                         (101E AND 188L) => 5,
+                         (181C AND 190ACSTV) => 10,
+                         (98G AND 181C) => 5,
+                         (98G AND 227C) => 15,
+                         MAX ((101E AND 190A) => 5, (101E AND 190S) => 5),
+                         MAX ((179F AND 181C) => 15, (179T AND 181C) => 10))
+			Result: 0.0
+			Scored Items: 
+
+
+		Drug: DOR
+		Drug Full Name: doravirine
+		Scored Mutations: []
+		Level: {order: 1, text: Susceptible, sir: S}
+		Comments:
+		Evaluated Conditions:
+			Condition: SCORE FROM(98G => 15,
+                         MAX ( 100I => 15, 100V => 10 ),
+                         MAX ( 101E => 15, 101P => 10 ),
+                         MAX ( 106A => 60, 106I => 10, 106M => 50 ),
+                         108I => 15,
+                         138K => 10,
+                         179F => 10,
+                         MAX ( 181C => 10, 181I => 20, 181V => 20 ),
+                         MAX ( 188C => 10, 188F => 30, 188H => 10, 188L => 60 ),
+                         MAX ( 190C => 10, 190E => 60, 190Q => 30, 190S => 30, 190T => 10, 190V => 10 ),
+                         221Y => 15,
+                         225H => 30,
+                         MAX ( 227C => 60, 227I => 50, 227L => 50, 227V => 50 ),
+                         MAX ( 230I => 15, 230L => 60 ),
+                         234I => 30,
+                         236L => 15,
+                         318F => 30,
+                         (100I AND 103N) => 15,
+                         (103N AND 181C) => 10,
+                         (106A AND 227L) => 15,
+                         (106I AND 181C) => 10,
+                         (106I AND 190S) => 10,
+                         (108I AND 181C) => 10,
+                         (108I AND 234I) => 15,
+                         (181C AND 190ACSTV) => 20,
+                         (181CIV AND 221Y) => 10,
+                         (98G AND 181C) => 5,
+                         (98G AND 227C) => 15,
+                         MAX ((101E AND 190A) => 5, (101E AND 190S) => 5))
+			Result: 0.0
+			Scored Items: 
+
+
+		Drug: RPV
+		Drug Full Name: rilpivirine
+		Scored Mutations: []
+		Level: {order: 1, text: Susceptible, sir: S}
+		Comments:
+		Evaluated Conditions:
+			Condition: SCORE FROM(98G => 15,
+                         MAX ( 100I => 60, 100V => 15 ),
+                         MAX ( 101E => 45, 101H => 10, 101P => 60 ),
+                         106I => 10,
+                         MAX ( 138A => 15, 138G => 15, 138K => 45, 138Q => 15, 138R => 15 ),
+                         MAX ( 179D => 10, 179E => 10, 179F => 15, 179L => 15 ),
+                         MAX ( 181C => 45, 181F => 30, 181G => 30, 181I => 60, 181S => 30, 181V => 60 ),
+                         MAX ( 188F => 30, 188L => 60 ),
+                         MAX ( 190A => 15, 190C => 10, 190E => 60, 190Q => 45, 190S => 15, 190T => 10, 190V => 10 ),
+                         221Y => 15,
+                         227C => 45,
+                         MAX ( 230I => 30, 230L => 60 ),
+                         (101E AND 184I) => 15,
+                         (103R AND 179D) => 15,
+                         (106I AND 181C) => 10,
+                         (138K AND 184I) => 15,
+                         (181C AND 190ACSTV) => 10,
+                         (181CIV AND 221Y) => 10,
+                         (98G AND 181C) => 5,
+                         (98G AND 227C) => 15,
+                         MAX ((179F AND 181C) => 15, (179T AND 181C) => 10))
+			Result: 0.0
+			Scored Items: 
+
+
+		Drug: NVP
+		Drug Full Name: nevirapine
+		Scored Mutations: []
+		Level: {order: 1, text: Susceptible, sir: S}
+		Comments:
+		Evaluated Conditions:
+			Condition: SCORE FROM(98G => 30,
+                         MAX ( 100I => 60, 100V => 30 ),
+                         MAX ( 101E => 30, 101H => 15, 101P => 60 ),
+                         MAX ( 103H => 60, 103N => 60, 103S => 60, 103T => 60 ),
+                         MAX ( 106A => 60, 106I => 10, 106M => 60 ),
+                         108I => 15,
+                         MAX ( 138G => 10, 138K => 10, 138Q => 10, 138R => 10 ),
+                         MAX ( 179D => 10, 179E => 10, 179F => 15, 179L => 10 ),
+                         MAX ( 181C => 60, 181F => 60, 181G => 60, 181I => 60, 181S => 60, 181V => 60 ),
+                         MAX ( 188C => 60, 188F => 60, 188H => 60, 188L => 60 ),
+                         MAX ( 190A => 60, 190C => 60, 190E => 60, 190Q => 60, 190S => 60, 190T => 60, 190V => 60 ),
+                         221Y => 15,
+                         225H => 45,
+                         MAX ( 227C => 45, 227I => 30, 227L => 30, 227V => 30 ),
+                         MAX ( 230I => 30, 230L => 60 ),
+                         MAX ( 238N => 10, 238T => 30 ),
+                         318F => 30,
+                         348I => 15,
+                         (101E AND 181C) => 5,
+                         (103R AND 179D) => 20,
+                         (98G AND 181C) => 5,
+                         (98G AND 227C) => 15)
+			Result: 0.0
+			Scored Items: 
+
+
+
+	Drug Class: NRTI
+	Evaluated Drugs:
+		Drug: 3TC
+		Drug Full Name: lamivudine
+		Scored Mutations: []
+		Level: {order: 1, text: Susceptible, sir: S}
+		Comments:
+		Evaluated Conditions:
+			Condition: SCORE FROM(62V => 5,
+                         MAX ( 65N => 15, 65R => 30 ),
+                         67d => 15,
+                         68d => 15,
+                         MAX ( 69i => 30, 69d => 15 ),
+                         MAX ( 70E => 10, 70G => 10, 70N => 10, 70Q => 10, 70S => 10, 70T => 10, 70d => 15 ),
+                         75I => 5,
+                         77L => 5,
+                         116Y => 5,
+                         MAX ( 151L => 10, 151M => 15 ),
+                         MAX ( 184I => 60, 184V => 60 ),
+                         (210W AND 215FY) => 5,
+                         (41L AND 210W AND 215FY) => 5,
+                         (41L AND 215FY) => 5,
+                         (41L AND 67EGN AND 215FY) => 5,
+                         (67EGN AND 70R AND 219ENQR) => 10,
+                         (77L AND 116Y AND 151M) => 15)
+			Result: 0.0
+			Scored Items: 
+
+
+		Drug: DDI
+		Drug Full Name: didanosine
+		Scored Mutations: []
+		Level: {order: 1, text: Susceptible, sir: S}
+		Comments:
+		Evaluated Conditions:
+			Condition: SCORE FROM(41L => 10,
+                         62V => 5,
+                         MAX ( 65E => 10, 65N => 30, 65R => 60 ),
+                         MAX ( 67E => 5, 67G => 5, 67H => 5, 67N => 5, 67S => 5, 67T => 5, 67d => 30 ),
+                         68d => 30,
+                         MAX ( 69D => 30, 69G => 10, 69i => 60, 69d => 30 ),
+                         MAX ( 70E => 15, 70G => 15, 70N => 15, 70Q => 15, 70R => 10, 70S => 15, 70T => 15, 70d => 30 ),
+                         MAX ( 74I => 60, 74V => 60 ),
+                         MAX ( 75A => 15, 75I => 5, 75M => 15, 75S => 15, 75T => 30 ),
+                         77L => 10,
+                         116Y => 10,
+                         MAX ( 151L => 30, 151M => 60 ),
+                         MAX ( 184I => 10, 184V => 10 ),
+                         210W => 10,
+                         MAX ( 215A => 10, 215C => 10, 215D => 10, 215E => 10, 215F => 15, 215I => 10, 215L => 10, 215N => 10, 215S => 10, 215V => 10, 215Y => 15 ),
+                         MAX ( 219E => 5, 219N => 5, 219Q => 5, 219R => 5, 219W => 5 ),
+                         (40F AND 41L AND 210W AND 215FY) => 5,
+                         (41L AND 210W) => 10,
+                         (41L AND 44AD AND 210W AND 215FY) => 5,
+                         (41L AND 67EGN AND 215FY) => 5,
+                         (67EGN AND 215FY AND 219ENQR) => 5,
+                         (67EGN AND 70R AND 219ENQR) => 10,
+                         (70R AND 215FY) => 5,
+                         (77L AND 116Y AND 151M) => 10,
+                         MAX ((210W AND 215ACDEILNSV) => 5, (210W AND 215FY) => 10),
+                         MAX ((41L AND 215ACDEILNSV) => 5, (41L AND 215FY) => 10))
+			Result: 0.0
+			Scored Items: 
+
+
+		Drug: ABC
+		Drug Full Name: abacavir
+		Mutation Type: testtype1
+			Mutations: 
+				69I
+		Mutation Type: testtype2
+			Mutations: 
+				69I
+		Scored Mutations: []
+		Level: {order: 1, text: Susceptible, sir: S}
+		Comments:
+		Evaluated Conditions:
+			Condition: SCORE FROM(41L => 5,
+                         62V => 5,
+                         MAX ( 65E => 10, 65N => 30, 65R => 45 ),
+                         MAX ( 67E => 5, 67G => 5, 67H => 5, 67N => 5, 67S => 5, 67T => 5, 67d => 30 ),
+                         68d => 15,
+                         MAX ( 69G => 10, 69i => 60, 69d => 15 ),
+                         MAX ( 70E => 15, 70G => 15, 70N => 15, 70Q => 15, 70R => 5, 70S => 15, 70T => 15, 70d => 15 ),
+                         MAX ( 74I => 30, 74V => 30 ),
+                         75I => 5,
+                         77L => 5,
+                         115F => 60,
+                         116Y => 10,
+                         MAX ( 151L => 30, 151M => 60 ),
+                         MAX ( 184I => 15, 184V => 15 ),
+                         210W => 5,
+                         MAX ( 215A => 5, 215C => 5, 215D => 5, 215E => 5, 215F => 10, 215I => 5, 215L => 5, 215N => 5, 215S => 5, 215V => 5, 215Y => 10 ),
+                         MAX ( 219E => 5, 219N => 5, 219Q => 5, 219R => 5 ),
+                         (40F AND 41L AND 210W AND 215FY) => 5,
+                         (41L AND 210W) => 10,
+                         (41L AND 210W AND 215FY) => 5,
+                         (41L AND 44AD AND 210W AND 215FY) => 5,
+                         (41L AND 67EGN AND 215FY) => 5,
+                         (67EGN AND 215FY AND 219ENQR) => 5,
+                         (67EGN AND 70R AND 184IV AND 219ENQR) => 20,
+                         (67EGN AND 70R AND 219ENQR) => 10,
+                         (70R AND 215FY) => 5,
+                         (74IV AND 184IV) => 15,
+                         (77L AND 116Y AND 151M) => 10,
+                         MAX ((210W AND 215ACDEILNSV) => 5, (210W AND 215FY) => 10),
+                         MAX ((41L AND 215ACDEILNSV) => 5, (41L AND 215FY) => 15))
+			Result: 0.0
+			Scored Items: 
+
+
+		Drug: TDF
+		Drug Full Name: tenofovir
+		Scored Mutations: []
+		Level: {order: 1, text: Susceptible, sir: S}
+		Comments:
+		Evaluated Conditions:
+			Condition: SCORE FROM(41L => 5,
+                         62V => 5,
+                         MAX ( 65E => 10, 65N => 30, 65R => 60 ),
+                         MAX ( 67E => 5, 67G => 5, 67H => 5, 67N => 5, 67S => 5, 67T => 5, 67d => 30 ),
+                         68d => 15,
+                         MAX ( 69G => 5, 69i => 60, 69d => 15 ),
+                         MAX ( 70E => 15, 70G => 15, 70N => 15, 70Q => 15, 70R => 5, 70S => 15, 70T => 15, 70d => 15 ),
+                         74I => 5,
+                         75I => 5,
+                         77L => 5,
+                         115F => 15,
+                         116Y => 5,
+                         MAX ( 151L => 10, 151M => 15 ),
+                         MAX ( 184I => -10, 184V => -10 ),
+                         210W => 5,
+                         MAX ( 215A => 5, 215C => 5, 215D => 5, 215E => 5, 215F => 10, 215I => 5, 215L => 5, 215N => 5, 215S => 5, 215V => 5, 215Y => 10 ),
+                         MAX ( 219E => 5, 219N => 5, 219Q => 5, 219R => 5 ),
+                         (151M AND 184IV) => 10,
+                         (40F AND 41L AND 210W AND 215FY) => 5,
+                         (41L AND 210W) => 10,
+                         (41L AND 210W AND 215FY) => 5,
+                         (41L AND 44AD AND 210W AND 215FY) => 5,
+                         (41L AND 67EGN AND 215FY) => 5,
+                         (65R AND 151M) => 10,
+                         (67EGN AND 215FY AND 219ENQR) => 5,
+                         (67EGN AND 70R AND 219ENQR) => 10,
+                         (70EGNQST AND 184IV) => 10,
+                         (70R AND 215FY) => 5,
+                         (77L AND 116Y AND 151M) => 15,
+                         MAX ((210W AND 215ACDEILNSV) => 5, (210W AND 215FY) => 10),
+                         MAX ((41L AND 215ACDEILNSV) => 5, (41L AND 215FY) => 10))
+			Result: 0.0
+			Scored Items: 
+
+
+		Drug: AZT
+		Drug Full Name: zidovudine
+		Scored Mutations: []
+		Level: {order: 1, text: Susceptible, sir: S}
+		Comments:
+		Evaluated Conditions:
+			Condition: SCORE FROM(41L => 15,
+                         62V => 5,
+                         MAX ( 65N => -10, 65R => -15 ),
+                         MAX ( 67E => 10, 67G => 10, 67H => 10, 67N => 15, 67S => 10, 67T => 10, 67d => 30 ),
+                         MAX ( 69G => 5, 69i => 60 ),
+                         MAX ( 70E => -10, 70G => -10, 70R => 30 ),
+                         MAX ( 75I => 5, 75M => 10 ),
+                         77L => 10,
+                         116Y => 10,
+                         MAX ( 151L => 30, 151M => 60 ),
+                         MAX ( 184I => -10, 184V => -10 ),
+                         210W => 15,
+                         MAX ( 215A => 20, 215C => 20, 215D => 20, 215E => 20, 215F => 40, 215I => 20, 215L => 20, 215N => 20, 215S => 20, 215V => 20, 215Y => 40 ),
+                         MAX ( 219E => 10, 219N => 10, 219Q => 10, 219R => 10, 219W => 10 ),
+                         (151M AND 184IV) => 10,
+                         (40F AND 41L AND 210W AND 215FY) => 5,
+                         (41L AND 210W) => 10,
+                         (41L AND 44AD AND 210W AND 215FY) => 5,
+                         (41L AND 67EGN AND 215FY) => 5,
+                         (65R AND 151M) => 10,
+                         (67EGN AND 215FY AND 219ENQR) => 5,
+                         (67EGN AND 70R AND 219ENQR) => 10,
+                         (70R AND 215FY) => 5,
+                         (77L AND 116Y AND 151M) => 10,
+                         MAX ((210W AND 215ACDEILNSV) => 5, (210W AND 215FY) => 10),
+                         MAX ((41L AND 215ACDEILNSV) => 5, (41L AND 215FY) => 10))
+			Result: 0.0
+			Scored Items: 
+
+
+		Drug: FTC
+		Drug Full Name: emtricitabine
+		Scored Mutations: []
+		Level: {order: 1, text: Susceptible, sir: S}
+		Comments:
+		Evaluated Conditions:
+			Condition: SCORE FROM(62V => 5,
+                         MAX ( 65N => 15, 65R => 30 ),
+                         67d => 15,
+                         68d => 15,
+                         MAX ( 69i => 30, 69d => 15 ),
+                         MAX ( 70E => 10, 70G => 10, 70N => 10, 70Q => 10, 70S => 10, 70T => 10, 70d => 15 ),
+                         75I => 5,
+                         77L => 5,
+                         116Y => 5,
+                         MAX ( 151L => 10, 151M => 15 ),
+                         MAX ( 184I => 60, 184V => 60 ),
+                         (210W AND 215FY) => 5,
+                         (41L AND 210W AND 215FY) => 5,
+                         (41L AND 215FY) => 5,
+                         (41L AND 67EGN AND 215FY) => 5,
+                         (67EGN AND 70R AND 219ENQR) => 10,
+                         (77L AND 116Y AND 151M) => 15)
+			Result: 0.0
+			Scored Items: 
+
+
+		Drug: D4T
+		Drug Full Name: stavudine
+		Scored Mutations: []
+		Level: {order: 1, text: Susceptible, sir: S}
+		Comments:
+		Evaluated Conditions:
+			Condition: SCORE FROM(41L => 15,
+                         62V => 5,
+                         MAX ( 65E => 10, 65N => 30, 65R => 60 ),
+                         MAX ( 67E => 10, 67G => 10, 67H => 10, 67N => 15, 67S => 10, 67T => 10, 67d => 30 ),
+                         68d => 30,
+                         MAX ( 69D => 10, 69G => 10, 69i => 60, 69d => 30 ),
+                         MAX ( 70E => 15, 70G => 15, 70N => 15, 70Q => 15, 70R => 15, 70S => 15, 70T => 15, 70d => 30 ),
+                         MAX ( 75A => 30, 75I => 5, 75M => 30, 75S => 30, 75T => 60 ),
+                         77L => 10,
+                         116Y => 10,
+                         MAX ( 151L => 30, 151M => 60 ),
+                         MAX ( 184I => -10, 184V => -10 ),
+                         210W => 15,
+                         MAX ( 215A => 20, 215C => 20, 215D => 20, 215E => 20, 215F => 40, 215I => 20, 215L => 20, 215N => 20, 215S => 20, 215V => 20, 215Y => 40 ),
+                         MAX ( 219E => 10, 219N => 10, 219Q => 10, 219R => 10, 219W => 10 ),
+                         (151M AND 184IV) => 10,
+                         (40F AND 41L AND 210W AND 215FY) => 5,
+                         (41L AND 210W) => 10,
+                         (41L AND 44AD AND 210W AND 215FY) => 5,
+                         (41L AND 67EGN AND 215FY) => 5,
+                         (67EGN AND 215FY AND 219ENQR) => 5,
+                         (67EGN AND 70R AND 219ENQR) => 10,
+                         (70EGNQST AND 184IV) => 10,
+                         (70R AND 215FY) => 5,
+                         (77L AND 116Y AND 151M) => 10,
+                         MAX ((210W AND 215ACDEILNSV) => 5, (210W AND 215FY) => 10),
+                         MAX ((41L AND 215ACDEILNSV) => 5, (41L AND 215FY) => 10))
+			Result: 0.0
+			Scored Items: 
+
+
+
+Gene Comments:
+	Condition: 69SAIE
+	Scored Mutations: [69I]
+	Definitions: 
+		Comment: {id: RT69SAIE, text: T69S/A/I/E are relatively polymorphic mutations weakly selected in patients receiving NRTIs. Their effects on NRTI susceptibility have not been well studied., sort: 1}
+
+Result Comments:
