@@ -2,7 +2,7 @@
 
 <!-- you need to update the build.properties file for this to work -->
 
-<project default="distributables" basedir="..">
+<project default="deploy" basedir="..">
 	
 	<property file="build/build.properties" />
 	<tstamp />
@@ -198,5 +198,5 @@
 		</junit>
 	</target>
 	
-	<target name="distributables" depends="regressiontests,jar,javadoc" />
+	<target name="deploy" depends="regressiontests,jar,javadoc" />
 </project>
