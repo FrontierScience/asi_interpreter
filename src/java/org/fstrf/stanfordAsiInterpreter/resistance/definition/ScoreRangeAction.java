@@ -14,14 +14,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 ADDITIONAL DISCLAIMER:
-In addition to the standard warranty exclusions and limitations of 
-liability set forth in sections 7, 8 and 9 of the Apache 2.0 license 
-that governs the use and development of this software, Frontier Science 
-& Technology Research Foundation disclaims any liability for use of 
-this software for patient care or in clinical settings. This software 
-was developed solely for use in medical and public health research, and 
+In addition to the standard warranty exclusions and limitations of
+liability set forth in sections 7, 8 and 9 of the Apache 2.0 license
+that governs the use and development of this software, Frontier Science
+& Technology Research Foundation disclaims any liability for use of
+this software for patient care or in clinical settings. This software
+was developed solely for use in medical and public health research, and
 was not intended, designed, or validated to guide patient care.
-*/ 
+*/
 
 
 
@@ -33,15 +33,15 @@ import java.util.List;
 import org.fstrf.stanfordAsiInterpreter.resistance.ASIEvaluationException;
 import org.fstrf.stanfordAsiInterpreter.resistance.ASIParsingException;
 
-public class ScoreRangeAction implements RuleAction {
-	
+@SuppressWarnings("all") public class ScoreRangeAction implements RuleAction {
+
 	private List rangeValues;
-	
-	public ScoreRangeAction(List rangeValues) throws ASIParsingException {		
+
+	public ScoreRangeAction(List rangeValues) throws ASIParsingException {
 		this.checkForOverlappingRanges(rangeValues);
 		this.rangeValues = rangeValues;
 	}
-	
+
 	private void checkForOverlappingRanges(List rangeValues) throws ASIParsingException {
 		for(Iterator iter1 = rangeValues.iterator(); iter1.hasNext();) {
 			RangeValue rangeValue1 = (RangeValue) iter1.next();
@@ -54,7 +54,8 @@ public class ScoreRangeAction implements RuleAction {
 		}
 	}
 
-	public Definition evaluate(Object result) throws ASIEvaluationException {
+	@Override
+    public Definition evaluate(Object result) throws ASIEvaluationException {
 		Double reslt = (Double) result;
 		for(Iterator iterator = rangeValues.iterator(); iterator.hasNext();) {
 			RangeValue rangeValue = (RangeValue) iterator.next();
@@ -65,7 +66,8 @@ public class ScoreRangeAction implements RuleAction {
 		throw new ASIEvaluationException("No score range has been defined for a score of: " + result);
 	}
 
-	public boolean supports(Class resultType) {
+	@Override
+    public boolean supports(Class resultType) {
 		return resultType.equals(Double.class);
 	}
 }

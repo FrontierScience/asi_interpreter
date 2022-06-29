@@ -29,7 +29,7 @@ package org.fstrf.stanfordAsiInterpreter.resistance.definition;
 
 import java.util.Comparator;
 
-public class LevelDefinitionComparator implements Comparator {
+@SuppressWarnings("all") public class LevelDefinitionComparator implements Comparator {
 	
 	/*
 	 * returns:

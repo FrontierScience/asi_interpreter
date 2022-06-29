@@ -30,7 +30,7 @@ package org.fstrf.stanfordAsiInterpreter.resistance.definition;
 import org.fstrf.stanfordAsiInterpreter.resistance.ASIEvaluationException;
 
 
-public class CommentAction implements RuleAction {
+@SuppressWarnings("all") public class CommentAction implements RuleAction {
 
 	private CommentDefinition comment;
 	

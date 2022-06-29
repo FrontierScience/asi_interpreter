@@ -14,14 +14,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 ADDITIONAL DISCLAIMER:
-In addition to the standard warranty exclusions and limitations of 
-liability set forth in sections 7, 8 and 9 of the Apache 2.0 license 
-that governs the use and development of this software, Frontier Science 
-& Technology Research Foundation disclaims any liability for use of 
-this software for patient care or in clinical settings. This software 
-was developed solely for use in medical and public health research, and 
+In addition to the standard warranty exclusions and limitations of
+liability set forth in sections 7, 8 and 9 of the Apache 2.0 license
+that governs the use and development of this software, Frontier Science
+& Technology Research Foundation disclaims any liability for use of
+this software for patient care or in clinical settings. This software
+was developed solely for use in medical and public health research, and
 was not intended, designed, or validated to guide patient care.
-*/ 
+*/
 
 
 
@@ -36,11 +36,11 @@ import org.fstrf.stanfordAsiInterpreter.resistance.evaluate.EvaluatedCondition;
 import org.fstrf.stanfordAsiInterpreter.resistance.grammar.AsiGrammarEvaluator;
 import org.fstrf.stanfordAsiInterpreter.resistance.grammar.MutationComparator;
 
-public class Rule {
+@SuppressWarnings("all") public class Rule {
 
 	private RuleCondition condition;
 	private List actions;
-	
+
 	public Rule(RuleCondition condition, List actions) throws ASIParsingException {
 		if(actions.size() == 0) {
 			throw new ASIParsingException("no action exists for the rule:\n" + condition.getStatement());
@@ -50,17 +50,17 @@ public class Rule {
 		this.condition = condition;
 		this.actions = actions;
 	}
-	
+
 	public RuleCondition getCondition() {
 		return this.condition;
 	}
-	
+
 	public List getActions() {
 		return this.actions;
 	}
-	
+
 	public EvaluatedCondition evaluate(List mutations, MutationComparator comparator) throws ASIEvaluationException {
-		EvaluatedCondition evaluatedCondition =  (EvaluatedCondition) this.condition.evaluate(mutations, comparator);
+		EvaluatedCondition evaluatedCondition =  this.condition.evaluate(mutations, comparator);
 		AsiGrammarEvaluator evaluator = evaluatedCondition.getEvaluator();
 		for(Iterator iter = this.actions.iterator(); iter.hasNext();) {
 			RuleAction action = (RuleAction) iter.next();
@@ -71,7 +71,7 @@ public class Rule {
 		}
 		return evaluatedCondition;
 	}
-	
+
 	private boolean moreThanOneScoreRange(List actions) {
 		int scoreRangeActionCount = 0;
 		for(Iterator iterator = actions.iterator(); iterator.hasNext();) {
@@ -82,8 +82,9 @@ public class Rule {
 		}
 		return scoreRangeActionCount > 1;
 	}
-	
-	public String toString() {
+
+	@Override
+    public String toString() {
 		return this.condition.toString();
 	}
 }

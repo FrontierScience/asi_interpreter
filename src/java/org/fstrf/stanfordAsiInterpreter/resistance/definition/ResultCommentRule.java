@@ -33,7 +33,7 @@ import org.fstrf.stanfordAsiInterpreter.resistance.ASIEvaluationException;
 import org.fstrf.stanfordAsiInterpreter.resistance.evaluate.EvaluatedDrugLevelCondition;
 import org.fstrf.stanfordAsiInterpreter.resistance.evaluate.EvaluatedResultCommentRule;
 
-public class ResultCommentRule {
+@SuppressWarnings("all") public class ResultCommentRule {
 
     private List<DrugLevelCondition> levelConditions;
     private List<CommentAction> levelActions;

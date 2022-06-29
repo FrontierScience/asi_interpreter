@@ -31,7 +31,7 @@ import java.util.Set;
 
 import org.fstrf.stanfordAsiInterpreter.resistance.ASIParsingException;
 
-public class LevelConditionComparison {
+@SuppressWarnings("all") public class LevelConditionComparison {
 
     private String operator;
     private Integer levelOrder;

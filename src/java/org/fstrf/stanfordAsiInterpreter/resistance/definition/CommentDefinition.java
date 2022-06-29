@@ -29,7 +29,7 @@ package org.fstrf.stanfordAsiInterpreter.resistance.definition;
 
 import java.text.MessageFormat;
 
-public class CommentDefinition implements Definition {
+@SuppressWarnings("all") public class CommentDefinition implements Definition {
 	
 	private static final MessageFormat FORMAT = 
 		new MessageFormat("'{'id: {0}, text: {1}, sort: {2,number}'}'");

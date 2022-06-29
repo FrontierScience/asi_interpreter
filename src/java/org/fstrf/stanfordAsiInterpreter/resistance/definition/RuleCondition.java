@@ -14,14 +14,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 ADDITIONAL DISCLAIMER:
-In addition to the standard warranty exclusions and limitations of 
-liability set forth in sections 7, 8 and 9 of the Apache 2.0 license 
-that governs the use and development of this software, Frontier Science 
-& Technology Research Foundation disclaims any liability for use of 
-this software for patient care or in clinical settings. This software 
-was developed solely for use in medical and public health research, and 
+In addition to the standard warranty exclusions and limitations of
+liability set forth in sections 7, 8 and 9 of the Apache 2.0 license
+that governs the use and development of this software, Frontier Science
+& Technology Research Foundation disclaims any liability for use of
+this software for patient care or in clinical settings. This software
+was developed solely for use in medical and public health research, and
 was not intended, designed, or validated to guide patient care.
-*/ 
+*/
 
 
 
@@ -39,13 +39,13 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.lexer.Lexer;
 import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.Start;
 import org.fstrf.stanfordAsiInterpreter.resistance.grammar.parser.Parser;
 
-public class RuleCondition {
-	
+@SuppressWarnings("all") public class RuleCondition {
+
 	private static final int DEFAULT_BUFFER_SIZE = 1024;
-	
+
 	private String statement;
 	private Start conditionTree;
-	
+
 	public RuleCondition(String statement) throws ASIParsingException {
 		this.statement = statement;
 		PushbackReader reader = new PushbackReader(new StringReader(this.statement), DEFAULT_BUFFER_SIZE);
@@ -56,18 +56,19 @@ public class RuleCondition {
 			throw new ASIParsingException("Invalid condition statement: " + statement, e);
 		}
 	}
-	
+
 	public String getStatement(){
 		return this.statement;
 	}
-	
+
 	public EvaluatedCondition evaluate(List mutations, MutationComparator comparator) {
-	    AsiGrammarAdapter adapter = new AsiGrammarAdapter(mutations, comparator);	    
+	    AsiGrammarAdapter adapter = new AsiGrammarAdapter(mutations, comparator);
 	    this.conditionTree.apply(adapter);
 	    return new EvaluatedCondition(this, adapter);
 	}
-	
-	public String toString() {
+
+	@Override
+    public String toString() {
 		return this.statement;
 	}
 }

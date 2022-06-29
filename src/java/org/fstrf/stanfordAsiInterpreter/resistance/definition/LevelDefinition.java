@@ -29,7 +29,7 @@ package org.fstrf.stanfordAsiInterpreter.resistance.definition;
 
 import java.text.MessageFormat;
 
-public class LevelDefinition implements Definition {
+@SuppressWarnings("all") public class LevelDefinition implements Definition {
 
 	private static final MessageFormat FORMAT = 
 		new MessageFormat("'{'order: {0,number,integer}, text: {1}, sir: {2}'}'");

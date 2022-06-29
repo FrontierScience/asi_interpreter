@@ -30,7 +30,7 @@ package org.fstrf.stanfordAsiInterpreter.resistance.definition;
 import org.fstrf.stanfordAsiInterpreter.resistance.ASIEvaluationException;
 
 
-public class LevelAction implements RuleAction{
+@SuppressWarnings("all") public class LevelAction implements RuleAction{
 
 	private LevelDefinition level;
 	

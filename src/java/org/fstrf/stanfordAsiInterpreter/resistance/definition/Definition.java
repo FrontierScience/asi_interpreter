@@ -27,7 +27,7 @@ was not intended, designed, or validated to guide patient care.
 
 package org.fstrf.stanfordAsiInterpreter.resistance.definition;
 
-public interface Definition {
+@SuppressWarnings("all") public interface Definition {
 
 	public String getResistance();
 }

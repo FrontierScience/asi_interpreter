@@ -41,7 +41,7 @@ import org.fstrf.stanfordAsiInterpreter.resistance.evaluate.EvaluatedGene;
 import org.fstrf.stanfordAsiInterpreter.resistance.evaluate.EvaluatedResultCommentRule;
 import org.fstrf.stanfordAsiInterpreter.resistance.grammar.MutationComparator;
 
-public class Gene {
+@SuppressWarnings("all") public class Gene {
 
     private String name;
 
@@ -49,16 +49,32 @@ public class Gene {
     private Set drugClasses;
     private List geneRules;
     private List<ResultCommentRule> resultCommentRules;
+    private IndelRangeDefinition indelRange;
+    private int defaultLevel;
 
-    public Gene(String name, Set drugClasses, List geneRules, List<ResultCommentRule> resultCommentRules) {
+    public Gene(String name, Set drugClasses, List geneRules, List<ResultCommentRule> resultCommentRules, IndelRangeDefinition indelRange, int defaultLevel) {
         this.name = name;
         this.drugClasses = drugClasses;
         this.geneRules = geneRules;
         this.resultCommentRules = resultCommentRules;
+        this.indelRange = indelRange;
+        this.defaultLevel = defaultLevel;
+    }
+
+    public Gene(String name, Set drugClasses, List geneRules, List<ResultCommentRule> resultCommentRules, IndelRangeDefinition indelRange) {
+        this(name, drugClasses, geneRules, resultCommentRules, indelRange, 0);
+    }
+
+    public Gene(String name, Set drugClasses, List geneRules, List<ResultCommentRule> resultCommentRules) {
+        this(name, drugClasses, geneRules, resultCommentRules, null);
     }
 
     public Gene(String name, Set drugClasses, List geneRules) {
         this(name, drugClasses, geneRules, new ArrayList<ResultCommentRule>());
+    }
+
+    public Gene(String name, Set drugClasses, IndelRangeDefinition indelRange) {
+        this(name, drugClasses, new ArrayList(), new ArrayList<ResultCommentRule>(), indelRange);
     }
 
     public Gene(String name, Set drugClasses) {
@@ -81,6 +97,14 @@ public class Gene {
         return this.geneRules;
     }
 
+    public IndelRangeDefinition getIndelRangeDefinition() {
+        return this.indelRange;
+    }
+
+    public int getDefaultLevel() {
+        return this.defaultLevel;
+    }
+
     @Override
     public String toString() {
         return this.name;
@@ -95,16 +119,17 @@ public class Gene {
      * @throws ASIEvaluationException
      */
     public EvaluatedGene evaluate(List mutations, MutationComparator comparator) throws ASIEvaluationException {
+        List updatedMutations = this.indelRange != null ? replaceMutationsInRange(mutations, this.indelRange) : mutations;
         Collection evaluatedGeneRules = new ArrayList();
         for (Iterator iter = this.geneRules.iterator(); iter.hasNext();) {
             Rule geneRule = (Rule) iter.next();
-            evaluatedGeneRules.add(geneRule.evaluate(mutations, comparator));
+            evaluatedGeneRules.add(geneRule.evaluate(updatedMutations, comparator));
         }
 
         Collection evaluatedDrugClasses = new ArrayList();
         for (Iterator iter = this.drugClasses.iterator(); iter.hasNext();) {
             DrugClass drugClass = (DrugClass) iter.next();
-            evaluatedDrugClasses.add(drugClass.evaluate(mutations, comparator));
+            evaluatedDrugClasses.add(drugClass.evaluate(updatedMutations, comparator));
         }
 
         // create a map of drug names to result level definitions for the result
@@ -114,7 +139,9 @@ public class Gene {
             EvaluatedDrugClass evaluatedDrugClass = (EvaluatedDrugClass) evaluatedDrugClassObj;
             for (Object evaluatedDrugObj : evaluatedDrugClass.getEvaluatedDrugs()) {
                 EvaluatedDrug evaluatedDrug = (EvaluatedDrug) evaluatedDrugObj;
-                drugLevelResults.put(evaluatedDrug.getDrug().getDrugName(), evaluatedDrug.getHighestLevelDefinition());
+                LevelDefinition finalLevel = evaluatedDrug.getHighestLevelDefinition() != null ? evaluatedDrug.getHighestLevelDefinition()
+                        : new LevelDefinition(evaluatedDrug.getDrug().getDefaultLevel(), "", "");
+                drugLevelResults.put(evaluatedDrug.getDrug().getDrugName(), finalLevel);
             }
         }
 
@@ -124,5 +151,29 @@ public class Gene {
         }
 
         return new EvaluatedGene(this, evaluatedGeneRules, evaluatedDrugClasses, evaluatedResultComments);
+    }
+
+    /**
+     * For all mutations in the given list that appear in the given indel range input, replaces it with the indel range output
+     *
+     * @param mutationList the mutation list to update
+     * @param indelRange the indel range that defines the mutation updates
+     * @return the updated mutation list
+     */
+    private static List replaceMutationsInRange(List mutationList, IndelRangeDefinition indelRange)
+    {
+        List res = new ArrayList();
+
+        for(Object o : mutationList) {
+            String mut = o.toString();
+            if(indelRange.getInput().contains(mut)){
+                res.add(indelRange.getOutput());
+            }
+            else {
+                res.add(mut);
+            }
+        }
+
+        return res;
     }
 }
