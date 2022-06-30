@@ -1,0 +1,86 @@
+<!-- 
+This DTD is being put together to indicate the format the various
+drug resistance algorithms should use.
+
+version 2.3  added DEFAULT_LEVEL, MUTATION_TYPE, indel range
+by benjamin graham
+-->
+
+
+<!ELEMENT ALGORITHM (ALGNAME, ALGVERSION?, ALGDATE?, DEFINITIONS, DRUG*, MUTATION_COMMENTS?,RESULT_COMMENTS?)>
+
+<!-- *************************************************************** -->
+<!ELEMENT ALGNAME (#PCDATA)>
+<!-- *************************************************************** -->
+
+<!-- *************************************************************** -->
+<!ELEMENT ALGVERSION (#PCDATA)>
+<!-- *************************************************************** -->
+
+<!-- *************************************************************** -->
+<!ELEMENT ALGDATE (#PCDATA)>
+<!-- *************************************************************** -->
+
+<!-- *************************************************************** -->
+<!ELEMENT DEFINITIONS (GENE_DEFINITION*, LEVEL_DEFINITION*, DRUGCLASS*, GLOBALRANGE?, DEFAULT_LEVEL, COMMENT_DEFINITIONS?)>
+<!ELEMENT GENE_DEFINITION (NAME, DRUGCLASSLIST?, INDEL_RANGE_DEFINITION?)>
+<!ELEMENT DRUGCLASSLIST (#PCDATA)>                    
+<!ELEMENT LEVEL_DEFINITION (ORDER, ORIGINAL, SIR)>
+<!ELEMENT ORDER (#PCDATA)>
+<!ELEMENT ORIGINAL (#PCDATA)>
+<!ELEMENT SIR (#PCDATA)>
+<!ELEMENT DRUGCLASS (NAME, DRUGLIST)>
+
+<!ELEMENT MUTATION_TYPE (TYPE_NAME, MUTATIONS)>
+<!ELEMENT TYPE_NAME (#PCDATA)>
+<!ELEMENT MUTATIONS (#PCDATA)>
+
+<!ELEMENT NAME (#PCDATA)>
+<!ELEMENT DRUGLIST (#PCDATA)>
+<!ELEMENT GLOBALRANGE (#PCDATA)>
+<!ELEMENT COMMENT_DEFINITIONS (COMMENT_STRING+)>
+<!ELEMENT COMMENT_STRING (TEXT, SORT_TAG?)>
+<!ATTLIST COMMENT_STRING   id ID #REQUIRED>     
+<!-- the html version of the HIVdb program expects the COMMENT_STRING id to be <geneName>_<mutation>_<commentType>
+     the commentType is used for grouping the comments (uppercased) and should match the name of the appropriate MutationClassification element in the virus definition -->
+<!ELEMENT TEXT (#PCDATA)>
+<!ELEMENT SORT_TAG (#PCDATA)>
+<!-- *************************************************************** -->
+
+<!-- *************************************************************** -->
+<!ELEMENT DRUG (NAME, FULLNAME?, MUTATION_TYPE*, RULE*)>
+<!ELEMENT FULLNAME (#PCDATA)>
+<!ELEMENT RULE (CONDITION, ACTIONS)>
+<!ELEMENT CONDITION (#PCDATA)>
+<!ELEMENT ACTIONS (LEVEL?, SCORERANGE?, COMMENT?, DEFAULT_LEVEL?)>
+<!ELEMENT LEVEL (#PCDATA)>
+<!ELEMENT SCORERANGE (#PCDATA | USE_GLOBALRANGE)*>
+<!ELEMENT USE_GLOBALRANGE EMPTY>
+<!ELEMENT COMMENT EMPTY>
+<!ATTLIST COMMENT   ref IDREF #REQUIRED>
+<!-- *************************************************************** -->
+
+<!-- *************************************************************** -->
+<!ELEMENT MUTATION_COMMENTS (GENE*)>
+<!ELEMENT GENE (NAME, RULE+)>
+<!ELEMENT INDEL_RANGE_DEFINITION (INPUT, OUTPUT)>
+<!ELEMENT INPUT (#PCDATA)>
+<!ELEMENT OUTPUT (#PCDATA)>
+<!ELEMENT DEFAULT_LEVEL (#PCDATA)>
+<!-- *************************************************************** -->
+
+<!-- *************************************************************** -->
+<!ELEMENT RESULT_COMMENTS (RESULT_COMMENT_RULE*)>
+<!ELEMENT RESULT_COMMENT_RULE (DRUG_LEVEL_CONDITIONS,LEVEL_ACTION)>
+<!ELEMENT DRUG_LEVEL_CONDITIONS (DRUG_LEVEL_CONDITION+)>
+<!ELEMENT DRUG_LEVEL_CONDITION (DRUG_NAME,(LTE | LT | GTE | GT | EQ | NEQ)+)>
+<!ELEMENT DRUG_NAME (#PCDATA)>
+<!ELEMENT LEVEL_ACTION (COMMENT)>
+<!---Comparison operators for the LEVEL_CONDITION element --> 
+<!ELEMENT LTE (#PCDATA)>
+<!ELEMENT LT (#PCDATA)>
+<!ELEMENT GTE (#PCDATA)>
+<!ELEMENT GT (#PCDATA)>
+<!ELEMENT EQ (#PCDATA)>
+<!ELEMENT NEQ (#PCDATA)>
+<!-- *************************************************************** --> 

@@ -27,7 +27,7 @@ was not intended, designed, or validated to guide patient care.
 
 package org.fstrf.stanfordAsiInterpreter.resistance;
 
-public class ASIEvaluationException extends Exception {
+@SuppressWarnings("all") public class ASIEvaluationException extends Exception {
 	
 	private static final long serialVersionUID = -5617747657984880353L;
 	
