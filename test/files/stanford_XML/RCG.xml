@@ -1,0 +1,466 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE ALGORITHM SYSTEM 
+  "http://hivdb2.stanford.edu/asi/xml/ASI.dtd">
+
+<ALGORITHM>
+    <ALGNAME>RCG</ALGNAME>
+
+    <DEFINITIONS>
+    	<GENE_DEFINITION>
+    		<NAME>PR</NAME>
+    		<DRUGCLASSLIST>NRTI,PI</DRUGCLASSLIST>
+    	</GENE_DEFINITION>
+    	<GENE_DEFINITION>
+    		<NAME>RT</NAME>
+    		<DRUGCLASSLIST>NNRTI</DRUGCLASSLIST>
+    	</GENE_DEFINITION>
+        <LEVEL_DEFINITION>
+            <ORDER>1</ORDER>
+            <ORIGINAL>1 = Drug is Active</ORIGINAL>
+            <SIR>S</SIR>
+        </LEVEL_DEFINITION>
+
+        <LEVEL_DEFINITION>
+            <ORDER>2</ORDER>
+            <ORIGINAL>0.75 = Drug is Partially Active</ORIGINAL>
+            <SIR>I</SIR>
+        </LEVEL_DEFINITION>
+
+        <LEVEL_DEFINITION>
+            <ORDER>3</ORDER>
+            <ORIGINAL>0 = Drug is Inactive</ORIGINAL>
+            <SIR>R</SIR>
+        </LEVEL_DEFINITION>
+
+        <DRUGCLASS>
+            <NAME>PI</NAME>
+            <DRUGLIST>APV,IDV,NFV,RTV,SQV</DRUGLIST>
+        </DRUGCLASS>
+
+        <DRUGCLASS>
+            <NAME>NRTI</NAME>
+            <DRUGLIST>AZT,D4T,DDI,DDC,3TC,ABC</DRUGLIST>
+        </DRUGCLASS>
+
+        <DRUGCLASS>
+            <NAME>NNRTI</NAME>
+            <DRUGLIST>NVP,DLV,EFV</DRUGLIST>
+        </DRUGCLASS>
+
+	<COMMENT_DEFINITIONS>
+            <COMMENT_STRING id="EFV">
+                <TEXT>In some cases, higher levels of resistance may be seen
+when the secondary mutations L100I, K101EQ, V108I, Y188H, P225H are added
+to the K103N mutation, although these secondary mutations may not cause
+resistance by themselves and therefore should not be counted in a genotypic
+sensitivity score as indicative of resistance unless K103N is also present.
+                </TEXT>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="D4T">
+                <TEXT>V75T may be selected in vitro by d4T, but it is rare
+in vivo and not clearly associated with d4T failure.  Therefore, it should
+not be counted in a genotypic sensitivity score as indicative of d4T
+resistance.
+                </TEXT>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="MNR-1">
+                <TEXT>In some cases, higher levels of resistance may be seen
+when the secondary mutations A62V, V75I, F77L, F116Y are added
+to the Q151M mutation, although these secondary mutations may not cause
+resistance by themselves and therefore should not be counted in a genotypic
+sensitivity score as indicative of resistance unless Q151M is also present.
+                </TEXT>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="MNR-2">
+                <TEXT>In some cases, higher levels of resistance may be seen
+when the secondary mutations A62V, M41L, D67N, K70R, L210W, T215Y, K219Q
+are added
+to the 69i mutation, although these secondary mutations may not cause
+resistance by themselves and therefore should not be counted in a genotypic
+sensitivity score as indicative of resistance unless 69i is also present.
+                </TEXT>
+            </COMMENT_STRING>
+	</COMMENT_DEFINITIONS>
+    </DEFINITIONS>
+
+    <DRUG>
+        <NAME>AZT</NAME>
+        <RULE>
+            <CONDITION>
+                SELECT ATLEAST 1 FROM (41L,67N,70R,210W,215FY,219Q)
+            </CONDITION>
+            <ACTIONS>
+            <LEVEL>3</LEVEL>
+            <COMMENT ref="MNR-2" />
+            </ACTIONS>
+        </RULE>
+
+        <!-- Rule MNR-1 -->
+        <RULE>
+            <CONDITION>151M</CONDITION>
+            <ACTIONS><LEVEL>3</LEVEL></ACTIONS>
+        </RULE>
+
+        <!-- Rule MNR-1 comment -->
+        <RULE>
+            <CONDITION>151M AND SELECT ATLEAST 1 FROM (62V,75I,77L,116Y)
+            </CONDITION>
+            <ACTIONS>
+            	<LEVEL>1</LEVEL>
+            	<COMMENT ref="MNR-1" />
+            </ACTIONS>
+            
+        </RULE>
+
+        <!-- Rule MNR-2 -->
+        <RULE>
+            <CONDITION>69i</CONDITION>
+            <ACTIONS><LEVEL>3</LEVEL></ACTIONS>
+        </RULE>
+
+        <!-- Rule MNR-2 comment -->
+        <RULE>
+            <CONDITION>69i AND SELECT ATLEAST 1 FROM (62V,41L,67N,70R,210W,
+                                                      215Y,219Q)
+            </CONDITION>
+            <ACTIONS><COMMENT ref="MNR-2" /></ACTIONS>
+        </RULE>
+    </DRUG>
+  
+    <DRUG>
+        <NAME>D4T</NAME>
+        <!-- Rule MNR-1 -->
+        <RULE>
+            <CONDITION>151M</CONDITION>
+            <ACTIONS><LEVEL>3</LEVEL></ACTIONS>
+        </RULE>
+
+        <!-- Rule MNR-1 comment -->
+        <RULE>
+            <CONDITION>151M AND SELECT ATLEAST 1 FROM (62V,75I,77L,116Y)
+            </CONDITION>
+            <ACTIONS><COMMENT ref="MNR-1" /></ACTIONS>
+        </RULE>
+
+        <!-- Rule MNR-2 -->
+        <RULE>
+            <CONDITION>69i</CONDITION>
+            <ACTIONS><LEVEL>3</LEVEL></ACTIONS>
+        </RULE>
+
+        <!-- Rule MNR-2 comment -->
+        <RULE>
+            <CONDITION>69i AND SELECT ATLEAST 1 FROM (62V,41L,67N,70R,210W,
+                                                      215Y,219Q)
+            </CONDITION>
+            <ACTIONS><COMMENT ref="MNR-2" /></ACTIONS>
+        </RULE>
+
+        <RULE>
+            <CONDITION>75T</CONDITION>
+            <ACTIONS><COMMENT ref="D4T" /></ACTIONS>
+        </RULE>
+
+        <RULE>
+            <CONDITION>
+                SELECT ATLEAST 3 FROM (41L,67N,70R,210W,215FY,219Q)
+            </CONDITION>
+            <ACTIONS>  
+     	        <LEVEL>2</LEVEL>
+            </ACTIONS>
+        </RULE> 
+    </DRUG>
+  
+    <DRUG>
+        <NAME>DDI</NAME>
+        <RULE>
+            <CONDITION>
+                SELECT ATLEAST 1 FROM (65R,74V,184VI)
+            </CONDITION>
+    	    <ACTIONS>
+                <LEVEL>3</LEVEL>
+            </ACTIONS>
+        </RULE>
+   
+        <!-- Rule MNR-1 -->
+        <RULE>
+            <CONDITION>151M</CONDITION>
+            <ACTIONS><LEVEL>3</LEVEL></ACTIONS>
+        </RULE>
+
+        <!-- Rule MNR-1 comment -->
+        <RULE>
+            <CONDITION>151M AND SELECT ATLEAST 1 FROM (62V,75I,77L,116Y)
+            </CONDITION>
+            <ACTIONS><COMMENT ref="MNR-1" /></ACTIONS>
+        </RULE>
+
+        <!-- Rule MNR-2 -->
+        <RULE>
+            <CONDITION>69i</CONDITION>
+            <ACTIONS><LEVEL>3</LEVEL></ACTIONS>
+        </RULE>
+
+        <!-- Rule MNR-2 comment -->
+        <RULE>
+            <CONDITION>69i AND SELECT ATLEAST 1 FROM (62V,41L,67N,70R,210W,
+                                                      215Y,219Q)
+            </CONDITION>
+            <ACTIONS><COMMENT ref="MNR-2" /></ACTIONS>
+        </RULE>
+
+        <RULE>
+            <CONDITION>
+                SELECT ATLEAST 3 FROM (41L,67N,70R,210W,215YF,219QE)
+            </CONDITION>
+            <ACTIONS><LEVEL>2</LEVEL></ACTIONS>
+        </RULE>
+    </DRUG>
+  
+    <DRUG>
+        <NAME>DDC</NAME>
+        <RULE>
+            <CONDITION>
+                SELECT ATLEAST 1 FROM (65R,69D,74V,184VI)
+            </CONDITION>
+            <ACTIONS><LEVEL>3</LEVEL></ACTIONS>
+        </RULE>
+     
+        <!-- Rule MNR-1 -->
+        <RULE>
+            <CONDITION>151M</CONDITION>
+            <ACTIONS><LEVEL>3</LEVEL></ACTIONS>
+        </RULE>
+
+        <!-- Rule MNR-1 comment -->
+        <RULE>
+            <CONDITION>151M AND SELECT ATLEAST 1 FROM (62V,75I,77L,116Y)
+            </CONDITION>
+            <ACTIONS><COMMENT ref="MNR-1" /></ACTIONS>
+        </RULE>
+
+        <!-- Rule MNR-2 -->
+        <RULE>
+            <CONDITION>69i</CONDITION>
+            <ACTIONS><LEVEL>3</LEVEL></ACTIONS>
+        </RULE>
+
+        <!-- Rule MNR-2 comment -->
+        <RULE>
+            <CONDITION>69i AND SELECT ATLEAST 1 FROM (62V,41L,67N,70R,210W,
+                                                      215Y,219Q)
+            </CONDITION>
+            <ACTIONS><COMMENT ref="MNR-2" /></ACTIONS>
+        </RULE>
+
+        <RULE>
+            <CONDITION>
+                SELECT ATLEAST 3 FROM (41L,67N,70R,210W,215YF,219QE)
+            </CONDITION>
+            <ACTIONS><LEVEL>2</LEVEL></ACTIONS>
+        </RULE>
+    </DRUG>
+  
+    <DRUG>
+        <NAME>3TC</NAME>
+        <RULE>
+            <CONDITION>184VI</CONDITION>
+            <ACTIONS><LEVEL>3</LEVEL></ACTIONS>
+        </RULE>
+
+        <!-- Rule MNR-1 -->
+        <RULE>
+            <CONDITION>151M</CONDITION>
+            <ACTIONS><LEVEL>3</LEVEL></ACTIONS>
+        </RULE>
+
+        <!-- Rule MNR-1 comment -->
+        <RULE>
+            <CONDITION>151M AND SELECT ATLEAST 1 FROM (62V,75I,77L,116Y)
+            </CONDITION>
+            <ACTIONS><COMMENT ref="MNR-1" /></ACTIONS>
+        </RULE>
+
+        <!-- Rule MNR-2 -->
+        <RULE>
+            <CONDITION>69i</CONDITION>
+            <ACTIONS><LEVEL>3</LEVEL></ACTIONS>
+        </RULE>
+
+        <!-- Rule MNR-2 comment -->
+        <RULE>
+            <CONDITION>69i AND SELECT ATLEAST 1 FROM (62V,41L,67N,70R,210W,
+                                                      215Y,219Q)
+            </CONDITION>
+            <ACTIONS><COMMENT ref="MNR-2" /></ACTIONS>
+        </RULE>
+    </DRUG>
+
+    <DRUG>
+        <NAME>ABC</NAME>
+        <RULE>
+            <CONDITION>
+                SELECT ATLEAST 3 FROM (41L,65R,67N,70R,74V,115F,184V,
+                                       210W,215YF,219Q)
+            </CONDITION>
+            <ACTIONS>
+                <LEVEL>3</LEVEL>
+                <COMMENT ref="MNR-2" />
+            </ACTIONS>
+        </RULE>
+
+        <!-- Rule MNR-1 -->
+        <RULE>
+            <CONDITION>151M</CONDITION>
+            <ACTIONS><LEVEL>3</LEVEL></ACTIONS>
+        </RULE>
+
+        <!-- Rule MNR-1 comment -->
+        <RULE>
+            <CONDITION>151M AND SELECT ATLEAST 1 FROM (62V,75I,77L,116Y)
+            </CONDITION>
+            <ACTIONS>
+            	<LEVEL>1</LEVEL>
+            	<COMMENT ref="MNR-2" />
+            </ACTIONS>
+        </RULE>
+
+        <!-- Rule MNR-2 -->
+        <RULE>
+            <CONDITION>69i</CONDITION>
+            <ACTIONS><LEVEL>3</LEVEL></ACTIONS>
+        </RULE>
+
+        <!-- Rule MNR-2 comment -->
+        <RULE>
+            <CONDITION>69i AND SELECT ATLEAST 1 FROM (62V,41L,67N,70R,210W,
+                                                      215Y,219Q)
+            </CONDITION>
+            <ACTIONS><COMMENT ref="MNR-1" /></ACTIONS>
+        </RULE>
+    </DRUG>
+ 
+    <DRUG>
+        <NAME>NVP</NAME>
+        <RULE>
+            <CONDITION>
+                SELECT ATLEAST 1 FROM (103N,106A,108I,181CI,188CLH,190AS)
+            </CONDITION>
+            <ACTIONS>
+                <LEVEL>3</LEVEL>
+            </ACTIONS>
+        </RULE>
+    </DRUG>
+  
+    <DRUG>
+        <NAME>DLV</NAME>
+        <RULE>
+            <CONDITION>
+                SELECT ATLEAST 1 FROM (103N,181C,236L)
+            </CONDITION>
+            <ACTIONS>
+                <LEVEL>3</LEVEL>
+            </ACTIONS>
+        </RULE>
+    </DRUG>
+
+    <DRUG>
+        <NAME>EFV</NAME>
+        <RULE>
+            <CONDITION>
+                SELECT ATLEAST 1 FROM (103N,188L,190SE)
+            </CONDITION>
+            <ACTIONS>
+                <LEVEL>3</LEVEL>
+            </ACTIONS>
+        </RULE>
+
+        <RULE>
+            <CONDITION>
+                103N AND (100I OR 101EQ OR 108I OR 188H OR 225H)
+            </CONDITION>
+            <ACTIONS><COMMENT ref="EFV" /></ACTIONS>
+        </RULE>
+    </DRUG>
+
+    <DRUG>
+        <NAME>APV</NAME>
+        <RULE>
+            <CONDITION>
+                SELECT ATLEAST 1 FROM (32V,50V,84V)
+            </CONDITION>
+            <ACTIONS>
+                <LEVEL>3</LEVEL>
+            </ACTIONS>
+        </RULE>
+    </DRUG>
+  
+    <DRUG>
+        <NAME>IDV</NAME>
+        <RULE>
+            <CONDITION>
+                SELECT ATLEAST 1 FROM (32I,82ATF,84V,90M)
+            </CONDITION>
+            <ACTIONS>
+    	        <LEVEL>3</LEVEL>
+            </ACTIONS>
+        </RULE>
+    </DRUG>
+  
+    <DRUG>
+        <NAME>NFV</NAME>
+        <RULE>
+            <CONDITION>
+                SELECT ATLEAST 1 FROM (30N,82F,84V,90M)
+            </CONDITION>
+            <ACTIONS>            
+    	        <LEVEL>3</LEVEL>
+            </ACTIONS>
+        </RULE>
+    </DRUG>
+  
+    <DRUG>
+        <NAME>RTV</NAME>
+        <RULE>
+            <CONDITION>
+                SELECT ATLEAST 1 FROM (32I,82ATFS,84V,90M)
+            </CONDITION>
+            <ACTIONS>
+                <LEVEL>3</LEVEL>
+            </ACTIONS>
+        </RULE>
+    </DRUG>
+  
+    <DRUG>
+        <NAME>SQV</NAME>
+        <RULE>
+            <CONDITION>
+                SELECT ATLEAST 1 FROM (48V,82AT,84V,90M)
+            </CONDITION>
+            <ACTIONS>
+                <LEVEL>3</LEVEL>
+            </ACTIONS>
+        </RULE>
+    </DRUG>
+    
+    <MUTATION_COMMENTS>
+        <GENE>
+            <NAME>PR</NAME>
+            <RULE>
+                <CONDITION>41L</CONDITION>
+                <ACTIONS><COMMENT ref="MNR-2"/></ACTIONS>
+            </RULE>
+    
+    	 </GENE>
+    	 <GENE>
+            <NAME>RT</NAME>
+            <RULE>
+                <CONDITION>41L</CONDITION>
+                <ACTIONS><COMMENT ref="MNR-2"/></ACTIONS>
+            </RULE>
+    	 </GENE>
+   </MUTATION_COMMENTS>
+</ALGORITHM>	

@@ -1,0 +1,3242 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE ALGORITHM SYSTEM 
+  "http://hivdb6.stanford.edu/asi/xml/ASI.dtd">
+
+<ALGORITHM>
+    <ALGNAME>HIVDB</ALGNAME>
+    <ALGVERSION>6.0.1 modified for new compiler</ALGVERSION>
+
+    <DEFINITIONS>
+    	<GENE_DEFINITION>
+    	   <NAME>PR</NAME>
+    	   <DRUGCLASSLIST>PI</DRUGCLASSLIST>
+    	</GENE_DEFINITION>
+
+    	<GENE_DEFINITION>
+    	   <NAME>RT</NAME>
+    	   <DRUGCLASSLIST>NNRTI, NRTI</DRUGCLASSLIST>
+    	</GENE_DEFINITION>
+
+    	<GENE_DEFINITION>
+    	   <NAME>IN</NAME>
+    	</GENE_DEFINITION>
+
+        <LEVEL_DEFINITION>
+            <ORDER>1</ORDER>
+            <ORIGINAL>Susceptible</ORIGINAL>
+            <SIR>S</SIR>
+        </LEVEL_DEFINITION>
+
+        <LEVEL_DEFINITION>
+            <ORDER>2</ORDER>
+            <ORIGINAL>Potential low-level resistance</ORIGINAL>
+            <SIR>S</SIR>
+        </LEVEL_DEFINITION>
+
+        <LEVEL_DEFINITION>
+            <ORDER>3</ORDER>
+            <ORIGINAL>Low-level resistance</ORIGINAL>
+            <SIR>I</SIR>
+        </LEVEL_DEFINITION>
+
+        <LEVEL_DEFINITION>
+            <ORDER>4</ORDER>
+            <ORIGINAL>Intermediate resistance</ORIGINAL>
+            <SIR>I</SIR>
+        </LEVEL_DEFINITION>
+
+        <LEVEL_DEFINITION>
+            <ORDER>5</ORDER>
+            <ORIGINAL>High-level resistance</ORIGINAL>
+            <SIR>R</SIR>
+        </LEVEL_DEFINITION>
+  
+        <DRUGCLASS>
+            <NAME>PI</NAME>
+            <DRUGLIST>FPV/r,IDV/r,LPV/r,NFV,SQV/r,ATV/r,TPV/r,DRV/r</DRUGLIST>
+        </DRUGCLASS>
+
+        <DRUGCLASS>
+            <NAME>NRTI</NAME>
+            <DRUGLIST>AZT,D4T,DDI,3TC,FTC,ABC,TDF</DRUGLIST>
+        </DRUGCLASS>
+
+        <DRUGCLASS>
+            <NAME>NNRTI</NAME>
+            <DRUGLIST>NVP,DLV,EFV,ETR</DRUGLIST>
+        </DRUGCLASS>
+
+        <GLOBALRANGE>
+            (-INF TO 9  => 1, 
+             10 TO 14   => 2, 
+             15 TO 29   => 3,
+             30 TO 59   => 4,
+             60 TO INF  => 5)
+        </GLOBALRANGE>
+
+	<COMMENT_DEFINITIONS>
+	    <COMMENT_STRING id="PR_DRVr_Special">
+		<TEXT>The following $numberOfMutsIn{11I,32I,33F,47V,50V,54LM,74P,76V,84V,89V} of the 11 darunavir/r POWER/DUET study mutations were present: $listMutsIn{11I,32I,33F,47V,50V,54LM,74P,76V,84V,89V} (DeMeyer S et al, EHDRW 2008).</TEXT>
+		<SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+	    <COMMENT_STRING id="PR_TPVr_Special">
+		<TEXT>This sequence has $numberOfMutsIn{47V,54AMV,58E,74P,82LT,83D} major TPV/r-resistance mutations ($listMutsIn{47V,54AMV,58E,74P,82LT,83D}), $numberOfMutsIn{10V,36I,43T,46L,84V} minor TPV/r-resistance mutations ($listMutsIn{10V,36I,43T,46L,84V}), and $numberOfMutsIn{24I,50LV,54L,76V} mutations associated with increased TPV/r responsiveness ($listMutsIn{24I,50LV,54L,76V}).  RESIST study (Baxter J et al J Virology 2006 and Scherer J et al EACS 2007).</TEXT>
+		<SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+	    <COMMENT_STRING id="RT_ETR_Special">
+                <TEXT>The following $numberOfMutsIn{90I,98G,100I,101EP,106I,179DF,181CIV,190AS} of the 13 etravirine DUET study mutations were present: $listMutsIn{90I,98G,100I,101EP,106I,179DF,181CIV,190AS} (Katlama C et al, IAS 2007).</TEXT>
+		<SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+<!-- Begin the PR mutation-dependent comment strings. -->
+            <COMMENT_STRING id="PR_POS10ACDEGHKMNPQSTWdi_Other">
+                <TEXT>L10I/V/F/R/Y are associated with resistance to most PIs when present with other mutations. $listMutsIn{10ACDEGHKMNPQSTWdi} is a highly unusual mutation at this position.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS10IVFRY_PIMinor">
+                <TEXT>L10I/V/F/R/Y are associated with resistance to most PIs when present with other mutations. L10I/V occur in 5-10% of untreated persons. L10F/R/Y are nonpolymorphic.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS11I_PIMinor">
+                <TEXT>V11I is a PI-selected mutation. It is one of the 11 mutations associated with decreased response to DRV/r in the POWER trials.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS13V_Other">
+                <TEXT>I13V is a common polymorphism that is more common in treated than untreated subtype B isolates. In several subtypes, it is the consensus residue.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS16E_Other">
+                <TEXT>G16E is highly polymorphic. G16E  was weakly associated with ATV/r therapy in one study.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS20ACDEFGHLNPQSWYdi_Other">
+                <TEXT>K20R/M/I/T/V are associated with resistance to multiple PIs when present with other mutations. $listMutsIn{20ACDEFGHLNPQSWYdi} is a highly unusual mutation at this position.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS20RMITV_Other">
+                <TEXT>K20R/M/I/T/V are associated with resistance to multiple PIs when present with other mutations. K20R/M/I are polymorphic; K20T/V are nonpolymorphic.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS23ACDEFGHKMNPQRSTVWYdi_PIMinor">
+                <TEXT>L23I is a rare substrate cleft mutation that causes low-level NFV resistance. $listMutsIn{23ACDEFGHKMNPQRSTVWYdi} is a highly unusual mutation at this position.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS23I_PIMajor">
+                <TEXT>L23I is a rare substrate cleft mutation that causes low-level NFV resistance.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS24ACDEGHKMNPQRSTVWYdi_Other">
+                <TEXT>L24I is associated with reduced susceptibility to IDV/r and possibly LPV/r, SQV/r, and ATV/r when present with other mutations. It increases TPV/r susceptibility. L24F is a rare mutation at this position; its phenotypic effect is not known. $listMutsIn{24ACDEGHKMNPQRSTVWYdi} is a highly unusual mutation at this position.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS24F_PIMinor">
+                <TEXT>L24I is associated with reduced susceptibility to IDV/r and possibly LPV/r, SQV/r, and ATV/r when present with other mutations. It increases TPV/r susceptibility. L24F is a rare mutation at this position; its phenotypic effect is not known.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS24I_PIMajor">
+                <TEXT>L24I is associated with reduced susceptibility to IDV/r and possibly LPV/r, SQV/r, and ATV/r when present with other mutations. It increases TPV/r susceptibility.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS30ACEFGHIKLMPQRSTVWYdi_PIMajor">
+                <TEXT>D30N causes high-level resistance to NFV and potential low-level resistance to ATV/r. $listMutsIn{D30ACEFGHIKLMPQRSTVWYdi} is a highly unusual mutation at this position.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS30N_PIMajor">
+                <TEXT>D30N causes high-level resistance to NFV and potential low-level resistance to ATV/r.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS32ACDEFGHKLMNPQRSTWYdi_PIMajor">
+                <TEXT>V32I is a substrate cleft mutation which is associated with reduced susceptibility to all PIs except SQV/r. $listMutsIn{V32ACDEFGHKLMNPQRSTWYdi} is a highly unusual mutation at this position.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS32I_PIMajor">
+                <TEXT>V32I is a substrate cleft mutation which is associated with reduced susceptibility to all PIs except SQV/r.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS33F_PIMajor">
+                <TEXT>L33F are selected by FPV/r, DRV/r, LPV/r, ATV/r, and TPV/r, and contribute resistance to these drugs.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS33I_PIMinor">
+                <TEXT>L33F are selected by FPV/r, DRV/r, LPV/r, ATV/r, and TPV/r, and contribute resistance to these drugs. L33I is less common than L33F but may have a similar effect.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS33V_Other">
+                <TEXT>L33V is a polymorphism that does not appear to be related to PI therapy or drug resistance.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS35G_PIMinor">
+                <TEXT>E35G is a nonpolymorphic mutation that is selected by NFV and which is weakly associated with decreased virological response to TPV/r.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS36I_Other">
+                <TEXT>M36I is weakly associated with PI resistance in subtype B viruses when present with other mutations. However, M36I is the consensus amino acid in most non-B subtypes. </TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS36LTV_Other">
+                <TEXT>M36I is weakly associated with PI resistance in subtype B viruses when present with other mutations. However, M36I is the consensus amino acid in most non-B subtypes.  M36L/V/T are uncommon mutations at this position of unknown significance.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS43T_PIMinor">
+                <TEXT>K43T is a nonpolymorphic PI-selected mutation. It was associated with a decreased virological response to TPV/r in the RESIST trials.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS46ACDEFGHKNPQRSTWYdi_PIMinor">
+                <TEXT>M46I/L decreases susceptibility to IDV/r, NFV, FPV/r, LPV/r, and ATV/r when present with other mutations. M46V is an uncommon PI-selected mutation at this position. $listMutsIn{46ACDEFGHKNPQRSTWYdi} is a highly unusual mutation at this position.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS46IL_PIMajor">
+                <TEXT>M46I/L decreases susceptibility to IDV/r, NFV, FPV/r, LPV/r, and ATV/r when present with other mutations.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS46V_PIMinor">
+                <TEXT>M46I/L decreases susceptibility to IDV/r, NFV, FPV/r, LPV/r, and ATV/r when present with other mutations. M46V is an uncommon PI-selected mutation at this position.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS47A_PIMajor">
+                <TEXT>I47A usually occurs with V32I and in this setting causes high-level LPV/r and FPV/r resistance and possibly decreased DRV/r susceptibility.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS47CDEFGHKLMNPQRSTWYdi_PIMajor">
+                <TEXT>I47V decrease susceptibility to FPV/r, ATV/r, IDV/r, LPV/r, TPV/r, and DRV/r. I47A usually occurs with V32I and in this setting causes high-level LPV/r and FPV/r resistance and possibly decreased DRV/r susceptibility. $listMutsIn{47CDEFGHKLMNPQRSTWYdi} is a highly unusual mutation at this position.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS47V_PIMajor">
+                <TEXT>I47V decrease susceptibility to FPV/r, ATV/r, IDV/r, LPV/r, TPV/r, and DRV/r.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS48ASTQ_PIMinor">
+                <TEXT>G48V causes high-level SQV/r resistance, intermediate ATV/r and NFV resistance, and low-level IDV/r and LPV/r resistance. G48M has not been well studied but may have a similar effect on ARV susceptibility.  G48A/S/T/Q are rare PI-selected mutations. </TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS48CDEFHIKLNPRWYdi_PIMinor">
+                <TEXT>G48V causes high-level SQV/r resistance, intermediate ATV/r and NFV resistance, and low-level IDV/r and LPV/r resistance. G48M/A/S/T/Q are uncommon PI-selected mutations of uncertain effects. $listMutsIn{48CDEFHIKLNPRWYdi} is a highly unusual mutation at this position.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS48M_PIMajor">
+                <TEXT>G48V causes high-level SQV/r resistance, intermediate ATV/r and NFV resistance, and low-level IDV/r and LPV/r resistance. G48M is a less common mutation that may have a similar effect on ARV susceptibility. </TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS48V_PIMajor">
+                <TEXT>G48V causes high-level SQV/r resistance, intermediate ATV/r and NFV resistance, and low-level IDV/r and LPV/r resistance.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS50ACDEFGHKMNPQRSTWYdi_PIMajor">
+                <TEXT>I50V causes intermediate-to-high-level resistance to FPV/r, low-intermediate resistance to LPV/r and DRV/r, and increased susceptibility to TPV/r. I50L causes intermediate-to-high level resistance to ATV/r and  increased susceptibility to the remaining PIs. $listMutsIn{50ACDEFGHKMNPQRSTWYdi} is a highly unusual mutation at this position. </TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS50L_PIMajor">
+                <TEXT>I50L causes intermediate-to-high level resistance to ATV/r and  increased susceptibility to the remaining PIs. </TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS50V_PIMajor">
+                <TEXT>I50V causes intermediate-to-high-level resistance to FPV/r, low-intermediate resistance to LPV/r and DRV/r, and increased susceptibility to TPV/r.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS53ACDEGHIKMNPQRSTVWdi_PIMinor">
+                <TEXT>F53L is associated with decreased susceptibility to SQV/r and possibly ATV/r, IDV/r, NFV, and LPV/r.  $listMutsIn{53ACDEGHIKMNPQRSTVWdi} is a highly unusual mutation at this position.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS53L_PIMajor">
+                <TEXT>F53L is associated with decreased susceptibility to SQV/r and possibly ATV/r, IDV/r, NFV, and LPV/r. </TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS53Y_PIMinor">
+                <TEXT>F53L is associated with decreased susceptibility to SQV/r and possibly ATV/r, IDV/r, NFV, and LPV/r. F53Y is a rare treatment-associated variant at this position.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS54CDEFGHKNPQRWYdi_PIMajor">
+                <TEXT>I54V/M/L/A/T/S have diverse effects on multiple PIs. $listMutsIn{54CDEFGHKNPQRWYdi} is a highly unusual mutation at this position.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS54L_PIMajor">
+                <TEXT>I54L occurs in patients receiving FPV/r, LPV/r, and DRV/r and reduces susceptibility to these drugs and to NFV and possibly ATV/r. It increases TPV/r susceptibility.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS54M_PIMajor">
+                <TEXT>I54M occurs in patients receiving FPV/r, LPV/r, and DRV/r and reduces susceptibility to these drugs and to the remaining PIs except possibly SQV/r.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS54TAS_PIMajor">
+                <TEXT>I54T/A/S are PI-related mutations that appear to be associated with decreased susceptibility to each of the PIs. But their effects have not been as well studied as I54V, I54M, or I54L.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS54V_PIMajor">
+                <TEXT>I54V contributes resistance to each of the PIs except TPV/r and DRV/r.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS58E_PIMinor">
+                <TEXT>Q58E is a nonpolymorphic PI-selected mutation associated with decreased susceptibility to TPV/r and possibly other PIs.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS60E_Other">
+                <TEXT>D60E is a polymorphic mutation that is slightly more common in viruses from PI-treated compared with untreated persons.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS62V_Other">
+                <TEXT>I62V is a highly polymorphic mutation that is more common in PI-treated compared with untreated persons. </TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS63P_Other">
+                <TEXT>L63P is a common polymorphism that becomes even more common in persons receiving PIs.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS71TVIL_PIMinor">
+                <TEXT>A71T/V are polymorphisms that occur in 2-3% of untreated persons but which increase in frequency in persons receiving PIs. A71I/L are nonpolymorphic mutations that occur in viruses with multiple PI-resistance mutations.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS73STCA_PIMinor">
+                <TEXT>G73S/T/C/A are selected by and appear to be associated with decreased susceptibility to most, if not all, PIs. Their effect on SQV/r and NFV and possibly ATV/r appears to be greater than their effect on other PIs.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS74P_PIMinor">
+                <TEXT>T74P is a nonpolymorphic mutation that occurs more commonly in heavily treated patients. It has been associated with decreased virological response to TPV/r and to a lesser extent DRV/r but is probably associated with decreased susceptibility to multiple PIs.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS74S_PIMinor">
+                <TEXT>T74S is associated with reduced NFV susceptibility. It occurs in untreated persons with subtype C viruses. </TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS76ACDEFGHIKMNPQRSTWYdi_PIMinor">
+                <TEXT>L76V reduces susceptibility to FPV/r, IDV/r, LPV/r, and DRV/r and increases susceptibility to SQV/r, ATV/r, and TPV/r. $listMutsIn{76ACDEFGHIKMNPQRSTWYdi} is a highly unusual mutation at this position.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS76V_PIMajor">
+                <TEXT>L76V reduces susceptibility to FPV/r, IDV/r, LPV/r, and DRV/r and increases susceptibility to SQV/r, ATV/r, and TPV/r.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS77I_Other">
+                <TEXT>V77I is a common polymorphism that is associated with NFV therapy.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS82A_PIMajor">
+                <TEXT>V82A reduces susceptibility to IDV/r and LPV/r. With other mutations it is associated with reduced susceptibility to NFV, ATV/r, SQV/r, and FPV/r.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS82C_PIMajor">
+                <TEXT>V82C is a rare mutation that occurs primarily in protease genes containing multiple other PI-resistance mutations.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS82DEGHKNPQRWYdi_PIMajor">
+                <TEXT>V82A/T/F/L/M/S/C have diverse effects on multiple PIs. $listMutsIn{82DEGHKNPQRWYdi} is a highly unusual mutation at this position.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS82F_PIMajor">
+                <TEXT>V82F reduces susceptibility to IDV/r, LPV/r, FPV/r, and possibly DRV/r. With other mutations it is associated with reduced susceptibility to NFV, ATV/r, SQV/r, and possibly TPV/r.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS82I_Other">
+                <TEXT>V82I is a polymorphism that is common in some non-B subtypes; it has little if any effect on PI susceptibility.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS82L_PIMajor">
+                <TEXT>V82L is a rare TPV/r-selected mutation which decreases TPV/r susceptibility. Its effect on other PIs has not been characterized.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS82M_PIMajor">
+                <TEXT>V82M reduces IDV/r susceptibility in subtype G viruses. Its effect on other PIs has not been studied.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS82S_PIMajor">
+                <TEXT>V82S probably has a similar effect to V82T which reduces susceptibility to IDV/r, LPV/r, and TPV/r and with other mutations is associated with reduced susceptibility to NFV, ATV/r, FPV/r, and SQV/r.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS82T_PIMajor">
+                <TEXT>V82T reduces susceptibility to IDV/r, LPV/r, and TPV/r. With other mutations it is associated with reduced susceptibility to NFV, ATV/r, FPV/r, and SQV/r.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS83ACEFGHIKLMPQRSTVWYdi_PIMinor">
+                <TEXT>N83D is a nonpolymorphic mutation that occurs more commonly in heavily treated patients. It has been associated with decreased virological response to TPV/r. Its effect on other PIs is not known. $listMutsIn{83ACEFGHIKLMPQRSTVWYdi} is a highly unusual mutation at this position.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS83D_PIMinor">
+                <TEXT>N83D is a nonpolymorphic mutation that occurs more commonly in heavily treated patients. It has been associated with decreased virological response to TPV/r. Its effect on other PIs is not known.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS84AC_PIMajor">
+                <TEXT>I84V causes intermediate/high-level resistance to ATV/r, FPV/r, IDV/r, NFV, and SQV/r; and low-level resistance to LPV/r, TPV/r, and DRV/r. I84A/C are rare mutations that like I84V appear to reduce susceptibility to each of the PIs.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS84DEFGHKLMNPQRSTWYdi_PIMajor">
+                <TEXT>I84V causes intermediate/high-level resistance to ATV/r, FPV/r, IDV/r, NFV, and SQV/r; and low-level resistance to LPV/r, TPV/r, and DRV/r. I84A/C are rare mutations that like I84V appear to reduce susceptibility to each of the PIs. $listMutsIn{84DEFGHKLMNPQRSTWYdi} is a highly unusual mutation at this position.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS84V_PIMajor">
+                <TEXT>I84V causes intermediate/high-level resistance to ATV/r, FPV/r, IDV/r, NFV, and SQV/r; and low-level resistance to LPV/r, TPV/r, and DRV/r.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS85V_PIMinor">
+                <TEXT>I85V is a nonpolymorphic PI-selected mutation. </TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS88ACEFHIKLMPQRVWYdi_PIMinor">
+                <TEXT>N88D/S/T/G have diverse effects on several PIs. $listMutsIn{88ACEFHIKLMPQRVWYdi} is a highly unusual mutation at this position.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS88D_PIMajor">
+                <TEXT>N88D is selected by NFV and, in combination with D30N, increases NFV resistance.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS88GT_PIMinor">
+                <TEXT>N88S causes high-level resistance to NFV and ATV/r and low-level resistance to IDV/r; it increases susceptibility to FPV/r. N88T/G are rare PI-selected mutations that may have an effect similar to but less pronounced than N88S.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS88S_PIMajor">
+                <TEXT>N88S causes high-level resistance to NFV and ATV/r and low-level resistance to IDV/r; it increases susceptibility to FPV/r.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS89I_Other">
+                <TEXT>L89I is a minimally polymorphic PI-selected mutation of uncertain effect on PI susceptibility.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS89M_Other">
+                <TEXT>L89M is a common polymorphism that is not associated with decreased PI susceptibility.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS89T_Other">
+                <TEXT>L89T is a nonpolymoprhic PI-selected mutation of uncertain effect on PI susceptibility.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS89V_PIMinor">
+                <TEXT>L89V is a nonpolymorphic PI-selected accessory mutation which emerges during treatment with DRV/r and NFV. It is also one of the 11 mutations associated with decreased response to DRV/r in the POWER trials.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS90ACDEFGHIKNPQRSTVWYdi_PIMajor">
+                <TEXT>L90M causes resistance to NFV, SQV/r, ATV/r, and IDV/r. When present with other mutations it also decreases the activity of FPV/r and LPV/r. $listMutsIn{90ACDEFGHIKNPQRSTVWYdi} is a highly unusual mutation at this position.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS90M_PIMajor">
+                <TEXT>L90M causes resistance to NFV, SQV/r, ATV/r, and IDV/r. When present with other mutations it also decreases the activity of FPV/r and LPV/r.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS93L_Other">
+                <TEXT>I93L is a common polymorphism. It is the consensus residue in most subtypes. In subtype B, it is weakly associated with PI treatment.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="PR_POS93M_Other">
+                <TEXT>I93M is a rare PI-associated mutation; its effect on PI susceptibility is not known.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+<!-- End the PR mutation-dependent comment strings. -->
+
+<!-- Begin the RT mutation-dependent comment strings. -->
+            <COMMENT_STRING id="RT_POS41ACDEFGHIKNPQRSTVWYdi_NRTI">
+                <TEXT>M41L usually occurs with T215Y. Together these mutations confer intermediate-to-high level resistance to AZT and d4T and a lower level of resistance to ddI, ABC, and TDF. $listMutsIn{41ACDEFGHIKNPQRSTVWYdi} is a highly unusual mutation at this position.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS41L_NRTI">
+                <TEXT>M41L usually occurs with T215Y. Together these mutations confer intermediate-to-high level resistance to AZT and d4T and a lower level of resistance to ddI, ABC, and TDF.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS44AD_NRTI">
+                <TEXT>E44A/D occur in patients receiving multiple NRTIs. E44D causes low-level resistance to 3TC and probably to each of the other NRTIs when present with V118I or one or more TAMs.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS62CDEFGHIKLMNPQRSTWYdi_Other">
+                <TEXT>A62V is associated with multinucleoside resistance caused by Q151M; its effect in the absence of Q151M is not known. $listMutsIn{62CDEFGHIKLMNPQRSTWYdi} is a highly unusual mutation at this position.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS62V_NRTI">
+                <TEXT>A62V is associated with multinucleoside resistance caused by Q151M; its effect in the absence of Q151M is not known.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS65ACDEFGHILMPQSTVWYdi_NRTI">
+                <TEXT>K65R/N are known NRTI-resistance mutations. $listMutsIn{65ACDEFGHILMPQSTVWYdi} is a highly unusual mutation at this position.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS65N_NRTI">
+                <TEXT>K65R causes intermediate resistance to ddI, ABC, 3TC, FTC, and TDF, and low-level resistance to d4T. K65R causes AZT hypersusceptibility. K65N is an extremely rare mutation that may have a similar effect. </TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS65R_NRTI">
+                <TEXT>K65R causes intermediate resistance to ddI, ABC, 3TC, FTC, and TDF, and low-level resistance to d4T. K65R causes AZT hypersusceptibility.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS67ACFHIKLMPQRSTVWYi_NRTI">
+                <TEXT>D67N contributes some degree of resistance to each of the NRTIs except 3TC and FTC. It usually occurs with mutations at positions 70 or 215. D67E/G occur in heavily treated patients but their precise effect on NRTI susceptibility is not known. $listMutsIn{67ACFHIKLMPQRSTVWYi} is a highly unusual mutation at this position.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS67EG_NRTI">
+                <TEXT>D67N contributes some degree of resistance to each of the NRTIs except 3TC and FTC. It usually occurs with mutations at positions 70 or 215. D67E/G occur in heavily treated patients but their precise effect on NRTI susceptibility is not known.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS67N_NRTI">
+                <TEXT>D67N contributes some degree of resistance to each of the NRTIs except 3TC and FTC. It usually occurs with mutations at positions 70 or 215.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS67d_NRTI">
+                <TEXT>Amino acid deletions (d) in this region occur uncommonly. They occur in combination with other NRTI mutations and contribute decreased susceptibility to each of the NRTIs.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS69CEFHKLMPQRVWYd_NRTI">
+                <TEXT>T69D/N/S/G/A/I are NRTI-selected mutations. $listMutsIn{69CEFHKLMPQRVWYd} is a highly unusual mutation at this position.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS69D_NRTI">
+                <TEXT>T69D, a mutation originally identified for its role in causing ddC reistance, is associated with decreased susceptibility to ddI and d4T.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS69G_NRTI">
+                <TEXT>T69G occurs in isolates with a deletion at position 67 but its effect on NRTI susceptibility is not known.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS69NSAI_NRTI">
+                <TEXT>T69N/S/A/I are NRTI-selected mutations but their effect on NRTI susceptibility is not known.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS69i_NRTI">
+                <TEXT>Amino acid insertions (i) at this position occur in about 1%-2% of heavily treated persons. Together with TAMs, they confer high-level resistance to each of the NRTIs. Most susceptibility data are available for double amino acid insertions. However, insertions of 1 or >2 amino acids also occur.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS70ACDFHILMNPQSTVWYdi_NRTI">
+                <TEXT>K70R causes low-level AZT, d4T, and possibly TDF resistance. K70E/G reduces TDF, ABC, DDI, and to a lesser extent 3TC and FTC susceptibility. $listMutsIn{70ACDFHILMNPQSTVWYdi} is an unusual mutation at this position.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS70EG_NRTI">
+                <TEXT>K70E/G reduces TDF, ABC, DDI, and to a lesser extent 3TC and FTC susceptibility. </TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS70R_NRTI">
+                <TEXT>K70R causes low-level AZT, d4T, and possibly TDF resistance. </TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS74ACDEFGHKMNPQRSTWYdi_NRTI">
+                <TEXT>L74V reduces susceptibility to ddI and ABC susceptibility and increases susceptibility AZT and TDF. L74I appears to have a similar effect but may not increase AZT and TDF susceptibility. $listMutsIn{74ACDEFGHKMNPQRSTWYdi} is a highly unusual mutation at this position.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS74I_NRTI">
+                <TEXT>L74V reduces susceptibility to ddI and ABC susceptibility and increases susceptibility AZT and TDF. </TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS74V_NRTI">
+                <TEXT>L74V reduces susceptibility to ddI and ABC susceptibility and increases susceptibility AZT and TDF. L74I appears to have a similar effect but may not increase AZT and TDF susceptibility.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS75CDEFGHKNPQRWYdi_NRTI">
+                <TEXT>V75M/T/A/S/I are NRTI-selected mutations. $listMutsIn{75CDEFGHKNPQRWYdi} is a highly unusual mutation at this position.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS75I_NRTI">
+                <TEXT>V75I increases multinucleoside resistance caused by Q151M when present with F77L and F116Y; its effect in the absence of Q151M is not known.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS75L_NRTI">
+                <TEXT>V75L does not appear to be associated with reduced NRTI susceptibility.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS75TMAS_NRTI">
+                <TEXT>V75T/M/A/S reduce d4T and possibly ddI susceptibility.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS77ACDEGHIKMNPQRSTVWYdi_NRTI">
+                <TEXT>F77L increases multinucleoside resistance caused by Q151M when present with V75I or F116Y. $listMutsIn{77ACDEGHIKMNPQRSTVWYdi} is a highly unusual mutation at this position</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS77L_NRTI">
+                <TEXT>F77L increases multinucleoside resistance caused by Q151M when present with V75I or F116Y; its effect in the absence of Q151M is not known.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS90I_NNRTI">
+                <TEXT>V90I is a common polymorphism that was weakly associated with decreased ETR response in the DUET studies. However, it has minimal if any effect on NNRTI susceptibility. </TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS98G_NNRTI">
+                <TEXT>A98G reduces NVP susceptibility by 2 to 3-fold. It is selected by NRTIs and NNRTIs. It was associated with a decreased ETR response in the DUET studies but it has little if any effect on ETR susceptibility.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS98S_Other">
+                <TEXT>A98S is a common polymorphism that does not reduce NNRTI susceptibility.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS100ACDEFGHKMNPQRSTVWYdi_NNRTI">
+                <TEXT>L100I usually occurs in combination with K103N. By itself it causes intermediate resistance to NVP, DLV, and EFV, and 2 to 4-fold decreased ETR susceptibility. In combination with K103N it causes high-level resistance to NVP, DLV, and EFV and 10 to 20-fold decreased ETR susceptibility.  $listMutsIn{100ACDEFGHKMNPQRSTVWYdi} is a highly unusual mutation at this position.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS100I_NNRTI">
+                <TEXT>L100I usually occurs in combination with K103N. By itself it causes intermediate resistance to NVP, DLV, and EFV, and 2 to 4-fold decreased ETR susceptibility. In combination with K103N it causes high-level resistance to NVP, DLV, and EFV and 10 to 20-fold decreased ETR susceptibility.  L100I increases susceptibility to AZT and TDF.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS101ACDFGILMSTVWYdi_NNRTI">
+                <TEXT>K101E/P/N/H/Q are NNRTI-selected mutations. $listMutsIn{101ACDFGILMSTVWYdi} is a highly unusual mutation at this position.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS101E_NNRTI">
+                <TEXT>K101E causes intermediate resistance to NVP and DLV and low-level resistance to EFV and ETR.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS101HN_NNRTI">
+                <TEXT>K101H/N are rare NNRTI-associated mutations with uncertain phenotypic and clinical effects. K101H was weakly associated with a decreased ETR response in the DUET studies.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS101P_NNRTI">
+                <TEXT>K101P nearly always occurs with K103N and in this setting causes high-level resistance to NVP, DLV, and EFV. By itself K101P reduces ETR susceptibility 6-fold. </TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS101Q_NNRTI">
+                <TEXT>K101Q is weakly associated with NNRTI therapy and minimally reduces susceptibility to each of the NNRTIs.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS101R_Other">
+                <TEXT>K101R is an uncommon polymorphism that has not been associated with decreased NNRTI susceptibility.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS103ACDFGILMPVWYdi_NNRTI">
+                <TEXT>K103N/S/T/H are NNRTI-resistance mutations. K103R/E/Q are variants that usually do not cause NNRTI resistance. $listMutsIn{103ACDFGILMPVWYdi} is a highly unusual mutation at this position.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS103EQ_NNRTI">
+                <TEXT>K103E/Q are rare mutations that have not been associated with resistance to the current NNRTIs.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS103N_NNRTI">
+                <TEXT>K103N causes high-level resistance to NVP, DLV, and EFV. By itself it has no effect on ETR susceptibility. However, it has a synergistic effect with L100I and possibly K101P on ETR susceptibility.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS103R_NNRTI">
+                <TEXT>K103R occurs in about 1%-2% of untreated persons and by itself has no effect on NNRTI susceptibility. However, the combination of K103R + V179D, reduces NVP, DLV, and EFV susceptibility by about 15-fold.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS103S_NNRTI">
+                <TEXT>K103S causes high-level resistance to NVP and intermediate/high-level resistance to DLV and EFV. </TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS103TH_NNRTI">
+                <TEXT>K103T/H are rare mutations that appear to be associated with intermediate/high-level resistance to NVP, DLV, and EFV. </TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS106A_NNRTI">
+                <TEXT>V106A causes high-level resistance to NVP and DLV, and low/intermediate resistance to EFV. Its effect on ETR, if any, appears to be minimal.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS106CDEFGHKNPQRSTWYdi_NNRTI">
+                <TEXT>V106A/M are NNRTI-resistance mutations. V106I/L are polymorphisms that do not appear to cause NNRTI resistance. $listMutsIn{106CDEFGHKNPQRSTWYdi} is a highly unusual mutation at this position.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS106I_NNRTI">
+                <TEXT>V106I is a common polymorphism that was associated with decreased ETR response in the DUE study. However, it does not decrease NNRTI susceptibility. </TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS106L_NNRTI">
+                <TEXT>V106L is a rare polymorphism that does not appear to be associated with NNRTI resistance.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS106M_NNRTI">
+                <TEXT>V106M causes high-level resistance to NVP, EFV, and DLV but does not appear to decrease ETR susceptibility except as a marker of past NNRTI therapy.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS108ACDEFGHKLMNPQRSTWYdi_NNRTI">
+                <TEXT>V108I causes low-level reductions in susceptibility to each of the NNRTIs except ETR. It occasionally occurs in the absence of NNRTI therapy. $listMutsIn{108ACDEFGHKLMNPQRSTWYdi} is a highly unusual mutation at this position.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS108I_NNRTI">
+                <TEXT>V108I causes low-level reductions in susceptibility to each of the NNRTIs except ETR. It occasionally occurs in the absence of NNRTI therapy.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS115ACDEGHIKLMNPQRSTVWdi_NRTI">
+                <TEXT>Y115F causes intermediate resistance to ABC and low-level resistance to TDF. $listMutsIn{115ACDEGHIKLMNPQRSTVWdi} is a highly unusual mutation at this position.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS115F_NRTI">
+                <TEXT>Y115F causes intermediate resistance to ABC and low-level resistance to TDF.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS116ACDEGHIKLMNPQRSTVWdi_NRTI">
+                <TEXT>F116Y increases multinucleoside resistance caused by Q151M when present with F77L or V75I; its effect in the absence of Q151M is not known. $listMutsIn{116ACDEGHIKLMNPQRSTVWdi} is a highly unusual mutation at this position.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS116Y_NRTI">
+                <TEXT>F116Y increases multinucleoside resistance caused by Q151M when present with F77L or V75I; its effect in the absence of Q151M is not known.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS118ACDEFGHKLMNPQRSTWYdi_Other">
+                <TEXT>$listMutsIn{V118ACDEFGHKLMNPQRSTWYdi} is a highly unusual mutation at this position.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS118I_NRTI">
+                <TEXT>V118I occurs in ~2% of untreated persons and with increased frequency in persons receiving multiple NRTIs. It causes low-level resistance to 3TC and possibly to other NRTIs when present with E44A/D and/or one or more TAMs.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS138A_NNRTI">
+                <TEXT>E138A is a polymorphism that has been recently added to the list of mutations associated with decreased ETR response in the DUET studies.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS138CDFHILMNPRSTVWYdi_NNRTI">
+                <TEXT>E138AGKQ are weakly assocated with decreased ETR suscepitibility. $listMutsIn{138CDFHILMNPRSTVWYdi} is an unusual mutation at this position.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS138G_NNRTI">
+                <TEXT>E138G is a rare mutation that has been reported to emerge in patients with ETR failure. It may contribute to decreased ETR susceptibility in combination with other mutations.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS138K_NNRTI">
+                <TEXT>E138K is selected in vitro by ETR and reduces its susceptibility by about 5-fold. E138K reduces to susceptibility other NNRTIs by about 2 to 5-fold.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS138Q_NNRTI">
+                <TEXT>E138Q is weakly associated with NNRTI therapy. It may contribute to decreased NNRTI susceptibility in certain genetic contexts.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS151ACDEFGHIKNPRSTVWYdi_NRTI">
+                <TEXT>By itself, Q151M causes intermediate-to-high level resistance to AZT, ddI, d4T, and ABC; and low-level resistance to TDF. With changes at the associated positions 75, 77, and 116, Q151M confers high-level resistance to AZT, ddI, d4T, and ABC; intermediate resistance to TDF, and low-level resistance to 3TC and FTC. $listMutsIn{151ACDEFGHIKNPRSTVWYdi} is a highly unusual mutation at this position.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS151L_NRTI">
+                <TEXT>By itself, Q151M causes intermediate-to-high level resistance to AZT, ddI, d4T, and ABC; and low-level resistance to TDF. With changes at the associated positions 75, 77, and 116, Q151M confers high-level resistance to AZT, ddI, d4T, and ABC; intermediate resistance to TDF, and low-level resistance to 3TC and FTC. Q151L is a rarely observed transitional mutation that may precede the emergence of the Q151M.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS151M_NRTI">
+                <TEXT>By itself, Q151M causes intermediate-to-high level resistance to AZT, ddI, d4T, and ABC; and low-level resistance to TDF. With changes at the associated positions 75, 77, and 116, Q151M confers high-level resistance to AZT, ddI, d4T, and ABC; intermediate resistance to TDF, and low-level resistance to 3TC and FTC. </TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS179ACGHKLMNPQRSWYdi_NNRTI">
+                <TEXT>$listMutsIn{V179ACGHKLMNPQRSWYdi} is an unusual mutation at this position.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS179DE_NNRTI">
+                <TEXT>V179D/E cause low-level reductions in susceptibility to NVP, EFV, and DLV. V179D occurs in about 1% of untreated persons and reduces the susceptibility of each NNRTI by about 2-fold.  The combination of K103R + V179D reduces the susceptibility of NVP, DLV, and EFV by about 15-fold; the combination's effect on ETR is not known. V179D was associated with a decreased response to ETR in the DUET studies.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS179F_NNRTI">
+                <TEXT>V179F nearly always occurs in combination with Y181C. By itself, V179F has no effect on ETR susceptibility but in combination with Y181C, it reduces ETR susceptibility >100-fold and causes low-level EFV resistance. It is selected in vivo by ETR.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS179I_Other">
+                <TEXT>V179I is a common polymorphism which occurs more commonly in NNRTI-treated isolates. However, it does not reduce NNRTI susceptibility.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS179T_NNRTI">
+                <TEXT>V179T is a rare mutation that was weakly associated with a decreased response to ETR in the DUET studies. It has no apparent effect on NNRTI susceptibility</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS181ADEFGHKLMNPQRTWdi_NNRTI">
+                <TEXT>Y181C/I/V cause high-level resistance to NVP and DLV and low-level resistance to EFV. Y181C/I/V reduces ETR susceptibility by 5 to 15-fold and provide the mutational foundation for the development of higher levels of ETR resistance. $listMutsIn{181ADEFGHKLMNPQRTWdi} is a highly unusual mutation at this position.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS181CIV_NNRTI">
+                <TEXT>Y181C/I/V cause high-level resistance to NVP and DLV and low-level resistance to EFV. Y181C/I/V reduces ETR susceptibility by 5 to 15-fold and provide the mutational foundation for the development of higher levels of ETR resistance. Y181C increases susceptibility to AZT and TDF.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS181S_NNRTI">
+                <TEXT>Y181C/I/V cause high-level resistance to NVP and DLV and low-level resistance to EFV. Y181C/I/V reduces ETR susceptibility by 5 to 15-fold and provide the mutational foundation for the development of higher levels of ETR resistance. Y181S is a rare NNRTI-selected mutation that causes intermediate-high resistance to NVP and DLV. Few data are available for EFV and ETR.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS184ACDEFGHKLNPQRSTWYdi_Other">
+                <TEXT>M184V/I cause high-level in vitro resistance to 3TC and FTC and low-level in vitro resistance to ddI and ABC. M184V/I increase susceptibility to AZT, TDF, and d4T. $listMutsIn{184ACDEFGHKLNPQRSTWYdi} is a highly unusual mutation at this position.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS184VI_NRTI">
+                <TEXT>M184V/I cause high-level in vitro resistance to 3TC and FTC and low-level in vitro resistance to ddI and ABC. M184V/I increase susceptibility to AZT, TDF, and d4T.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS188ADEGIKMNPQRSTVWdi_Other">
+                <TEXT>Y188L/H/C are NNRTI-resistance mutations. $listMutsIn{188ADEGIKMNPQRSTVWdi} is a highly unusual mutation at this position.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS188C_NNRTI">
+                <TEXT>Y188C causes high-level resistance to NVP and low-level resistance to EFV and DLV; its effect on ETR is not known.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS188F_NNRTI">
+                <TEXT>Y188F is a rare mutation at this position of uncertain significance. It is often an artifact of the two-base pair change required for the emergence of Y188L.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS188H_NNRTI">
+                <TEXT>Y188H causes intermediate resistance to NVP, EFV, and DLV and has been selected in vitro by ETR.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS188L_NNRTI">
+                <TEXT>Y188L causes high-level resistance to NVP and EFV, intermediate resistance to DLV, and potentially low-level resistance to ETR.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS190A_NNRTI">
+                <TEXT>G190A causes high level resistance to NVP, intermediate resistance to EFV, and increased DLV susceptibility. It has no effect on ETR susceptibility but was associated with a decreased response to ETR in the DUET studies.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS190CTV_NNRTI">
+                <TEXT>G190C/T/V are rare mutations that cause high-level resistance to NVP and EFV and increased susceptibility to DLV. Their effect on ETR is not known.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS190DFHIKLMNPRWYdi_NNRTI">
+                <TEXT>G190A/S/E/Q/T/V/C are NNRTI-resistance mutations. $listMutsIn{190DFHIKLMNPRWYdi} is a highly unusual mutation at this position.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS190EQ_NNRTI">
+                <TEXT>G190E/Q cause high-level resistance to NVP and EFV and intermediate resistance to DLV. G190E + Y181C is associated with >100-fold decreased ETR susceptibility.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS190S_NNRTI">
+                <TEXT>G190S causes high-level resistance to NVP and EFV and increases DLV susceptibility. Although it was on the list of 13 mutations associated with decreased ETR response in the DUET studies, it does not appear to decrease ETR susceptibility.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS210ACDEGHIKMNPQRTVYdi_NRTI">
+                <TEXT>L210W contributes resistance to each of the NRTIs except 3TC and FTC. It usually occurs with the mutations M41L and T215Y. $listMutsIn{210ACDEGHIKMNPQRTVYdi} is a highly unusual mutation at this position.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS210FS_NRTI">
+                <TEXT>L210W contributes resistance to each of the NRTIs except 3TC and FTC. It usually occurs with the mutations M41L and T215Y. L210F/S occur rarely and are of unknown significance.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS210W_NRTI">
+                <TEXT>L210W contributes resistance to each of the NRTIs except 3TC and FTC. It usually occurs with the mutations M41L and T215Y.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS215AGHKLMNPQRWdi_NRTI">
+                <TEXT>T215Y causes AZT and D4T resistance and reduces susceptibility to ABC, ddI, and TDF particularly when it occurs in combination with M41L and L210W. T215S/C/D/E/I/V are transitions between wild type and the mutations Y and F. Most do not reduce NRTI susceptibility but their presence may suggests that T215Y or F may also be present. $listMutsIn{215AGHKLMNPQRWdi} is a highly unusual mutation at this position.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS215F_NRTI">
+                <TEXT>T215F causes AZT and D4T resistance and reduces susceptibility to ABC, ddI, and to a lesser extent TDF.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS215SCDEIV_NRTI">
+                <TEXT>T215S/C/D/E/I/V are transitions between wild type and the mutations Y and F. Most do not reduce NRTI susceptibility but their presence may suggests that T215Y or F may also be present.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS215Y_NRTI">
+                <TEXT>T215Y causes AZT and D4T resistance and reduces susceptibility to ABC, ddI, and TDF particularly when it occurs in combination with M41L and L210W.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS219ACFGILMPSTVYdi_NRTI">
+                <TEXT>K219Q/E/N/R/W/D/H are NNRTI-associated mutations. $listMutsIn{219ACFGILMPSTVYdi} is an unusual mutation at this position.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS219EQ_NRTI">
+                <TEXT>K219Q/E decrease AZT and probably d4T susceptibility when present with K70R or T215Y/F but have little if any effect on the remaining NRTIs.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS219NR_NRTI">
+                <TEXT>K219N/R occur commonly in heavily NRTI-treated patients. Their effect on NRTI susceptibility is uncertain.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS219WDH_NRTI">
+                <TEXT>K219W/H/D are uncommon NRTI-selected mutations at this position.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS221ACDEFGIKLMNPQRSTVWdi_NNRTI">
+                <TEXT>H221Y is an uncommon NNRTI-associated mutation. Its phenotypic effect on current NNRTIs has not been studied. $listMutsIn{221ACDEFGIKLMNPQRSTVWdi} is a highly unusual mutation at this position.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS221Y_NNRTI">
+                <TEXT>H221Y is an uncommon NNRTI-associated mutation. Its phenotypic effect on current NNRTIs has not been studied. </TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS225ACDEFGIKLMNQRSTVWYdi_NNRTI">
+                <TEXT>P225H increases EFV resistance when present in combination with K103N. $listMutsIn{225ACDEFGIKLMNQRSTVWYdi} is a highly unusual mutation at this position.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS225H_NNRTI">
+                <TEXT>P225H increases EFV resistance when present in combination with K103N.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS227ADEGHIKMNPQRSTVWYdi_NNRTI">
+                <TEXT>F227LC are NNRTI-associated mutations. $listMutsIn{F227ADEGHIKMNPQRSTVWYdi} is a highly unusual mutation at this position.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS227C_NNRTI">
+                <TEXT>F227C is a rare mutation which which has emerged in vitro with ETR. It has been associated with a wide range in phenotypic resistance to each of the NNRTIs.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS227L_NNRTI">
+                <TEXT>F227L usually occurs in combination with V106A and in this setting is associated with high level resistance to NVP and intermediate resistance to DLV and EFV. Its effect on ETR is not known.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS230ACDEFGHIKNPQRSTVWYdi_NNRTI">
+                <TEXT>M230L causes intermediate-to-high-level resistance to each of the NNRTIs. $listMutsIn{230ACDEFGHIKNPQRSTVWYdi} is a highly unusual mutation at this position.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS230L_NNRTI">
+                <TEXT>M230L causes intermediate-to-high-level resistance to each of the NNRTIs. It has been selected in vitro by ETR and reduces ETR susceptibility by about 3 to 10-fold depending on the assay.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS234ACDEFGHKMNPQRSTVWYdi_NNRTI">
+                <TEXT>L234I is an uncommon NNRTI associated mutation. $listMutsIn{234ACDEFGHKMNPQRSTVWYdi} is a highly unusual mutation at this position.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS234I_NNRTI">
+                <TEXT>L234I has been selected in vitro by ETR and it acts synergistically with Y181C to reduced susceptibility. Its clinical significance and effect on other NNRTIs is not known.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS236ACDEFGHIKMNQRSTVWYdi_NNRTI">
+                <TEXT>P236L causes high-level DLV resistance. $listMutsIn{236ACDEFGHIKMNQRSTVWYdi} is a highly unusual mutation at this position.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS236L_NNRTI">
+                <TEXT>P236L causes high-level DLV resistance.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS238ACDEFGHILMPQSVWYdi_NNRTI">
+                <TEXT>K238T/N are NNRTI-associated mutations. K238R is a common polymorphism that is not associated with NNRTIs. $listMutsIn{238ACDEFGHILMPQSVWYdi} is a highly unusual mutation at this position.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS238N_NNRTI">
+                <TEXT>K238T is an NNRTI-selected mutations that usually occur in combination with K103N in which case it causes high-level resistance to NVP, EFV, and DLV. Its effect on ETR is not known. K238N is a rarer NNRTI-selected mutation at this position. Its phenotypic effect is not known.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS238R_Other">
+                <TEXT>K238R is a naturally occurring variant that is common in some non-B subtypes and does not reduce NNRTI susceptibility.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS238T_NNRTI">
+                <TEXT>K238T is an NNRTI-selected mutations that usually occur in combination with K103N in which case it causes high-level resistance to NVP, EFV, and DLV. Its effect on ETR is not known. </TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS318ACDEGHIKLMNPQRSTVWdi_Other">
+                <TEXT>Y318F is an uncommon mutation that causes high-level DLV resistance and low/intermediate NVP resistance. $listMutsIn{318ACDEGHIKLMNPQRSTVWdi} is a highly unusual mutation at this position.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS318F_NNRTI">
+                <TEXT>Y318F is an uncommon mutation that causes high-level DLV resistance and low/intermediate NVP resistance.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS333DE_Other">
+                <TEXT>G333D/E are polymorphisms that occur more frequently in persons receiving NRTIs than in untreated persons. They may facilitate AZT resistance in isolates that contain M184V and multiple TAMs.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS348ACDEFGHKLMPQRSTVWYdi_NRTI">
+                <TEXT>N348I causes low-level reductions in AZT and NVP susceptibility. $listMutsIn{348ACDEFGHKLMPQRSTVWYdi} is an unusual mutation at this position. </TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="RT_POS348I_NRTI">
+                <TEXT>N348I causes low-level reductions in AZT and NVP susceptibility.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+<!-- End the RT mutation-dependent comment strings. -->
+
+<!-- Begin the IN mutation-dependent comment strings. -->
+            <COMMENT_STRING id="IN_POS51ACDEFGIKLMNPQRSTVWdi_INIMinor">
+                <TEXT>H51Y is a nonpolymorphic mutation that has been selected in vitro by EVG and shown to minimally reduce EVG susceptibility (Jones2007, Shimura2007). $listMutsIn{51ACDEFGIKLMNPQRSTVWdi} is an unusual mutation at this position</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="IN_POS51Y_INIMinor">
+                <TEXT>H51Y is a nonpolymorphic mutation that has been selected in vitro by EVG and shown to minimally reduce EVG susceptibility (Jones2007, Shimura2007).</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="IN_POS54I_INIMinor">
+                <TEXT>V54I is a minimally polymorphic mutation selected in vitro by RAL. Its effect on INI susceptibility has not been published.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="IN_POS66CDEFGHLMNPQRSVWYdi_INIMajor">
+                <TEXT>T66I/A/K are nonpolymorphic mutations selected in vivo by EVG (Jones2007, McColl2007). T66I decreases EVG susceptibility 15-fold but  does not reduce RAL susceptibility (Shimura2008, Rowley2008).  T66A has been selected in vitro with RAL in combination with Y143CR and Q95K (Witmer2007) and in vivo with with E92Q (Charpentier2008) . The phenotypic effects of T66A/K have not been reported. $listMutsIn{66CDEFGHLMNPQRSVWYdi} is an unusual mutation at this position.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="IN_POS66IAK_INIMajor">
+                <TEXT>T66I/A/K are nonpolymorphic mutations selected in vivo by EVG (Jones2007, McColl2007). T66I decreases EVG susceptibility 15-fold but  does not reduce RAL susceptibility (Shimura2008, Rowley2008).  T66A has been selected in vitro with RAL in combination with Y143CR and Q95K (Witmer2007) and in vivo with with E92Q (Charpentier2008) . The phenotypic effects of T66A/K have not been reported.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="IN_POS68VI_INIMinor">
+                <TEXT>L68V/I are minimally polymorphic accessory INI-resistance mutations selected in vivo by EVG that contribute to decreased RAL and EVG susceptibility in combination with E92Q (Goodman2008).</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="IN_POS74M_INIMinor">
+                <TEXT>L74M is a polymorphic accessory INI-resistance mutation selected by RAL (HazudaBarbados2007) that decreases RAL susceptibility in combination with N155H (MillerSitges2008).</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="IN_POS92ACDFGHIKLMNPRSTVWYdi_INIMajor">
+                <TEXT>E92Q is a nonpolymorphic mutation that decreases RAL and EVG susceptibility about 5 and 30-fold, respectively (Jones-2007, McColl-2007). In patients receiving RAL, E92Q usually occurs in combination with N155H (HazudaBarbados2007). $listMutsIn{92ACDFGHIKLMNPRSTVWYdi} is an unusual mutation at this position</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="IN_POS92Q_INIMajor">
+                <TEXT>E92Q is a nonpolymorphic mutation that decreases RAL and EVG susceptibility about 5 and 30-fold, respectively (Jones-2007, McColl-2007). In patients receiving RAL, E92Q usually occurs in combination with N155H (HazudaBarbados2007).</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="IN_POS95ACDEFGHILMNPRSTVWYdi_INIMinor">
+                <TEXT>Q95K is a nonpolymorphic accessory INI-resistance mutation selected in vitro by RAL and EVG (Jegeda2008, Shimura2008). By itself it has little if any effect on INI susceptibility (Shimura1008). $listMutsIn{95ACDEFGHILMNPRSTVWYdi} is an unusual mutation at this position.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="IN_POS95K_INIMinor">
+                <TEXT>Q95K is a nonpolymorphic accessory INI-resistance mutation selected in vitro by RAL and EVG (Jegeda2008, Shimura2008). By itself it has little if any effect on INI susceptibility (Shimura1008).</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="IN_POS97A_INIMinor">
+                <TEXT>T97A is a polymorphic accessory INI-resistance mutation selected in vivo by RAL. It decreases RAL susceptibility in combination with N155H (HazudaBarbados2007, MillerSitges2008).</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="IN_POS114ACDEFGIKLMNPQRSTVWdi_INIMinor">
+                <TEXT>H114Y is a nonpolymorphic mutation selected in vitro by EVG (Goethals2008). $listMutsIn{114ACDEFGIKLMNPQRSTVWdi} is an unusual mutation at this position.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="IN_POS114Y_INIMinor">
+                <TEXT>H114Y is a nonpolymorphic mutation selected in vitro by EVG (Goethals2008).</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="IN_POS121ACDEGHIKLMNPQRSTVWdi_INIMajor">
+                <TEXT>F121Y is a nonpolymorphic mutation that is selected in vitro by RAL (Rowley2008) and EVG (Shimura2007, Ren2007, Jones2007). It reduces susceptibility to both INIs by 5 to 10 fold. $listMutsIn{121ACDEGHIKLMNPQRSTVWdi} is an unusual mutation at this position.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="IN_POS121Y_INIMajor">
+                <TEXT>F121Y is a nonpolymorphic mutation that is selected in vitro by RAL (Rowley2008) and EVG (Shimura2007, Ren2007, Jones2007). It reduces susceptibility to both INIs by 5 to 10 fold.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="IN_POS125K_INIMinor">
+                <TEXT>T125K is a nonpolymorphic accessory INI-resistance mutation (selected in vitro by L870,810) which acts synergistically with F121Y to decrease RAL susceptibility (Rowley2008)</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="IN_POS128CDEFGHIKLMNPQRSVWYdi_INIMinor">
+                <TEXT>A128T is a nonpolymorphic mutation that has been selected in vitro by EVG (Goethals2008). $listMutsIn{128CDEFGHIKLMNPQRSVWYdi} is an unusual mutation at this position.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="IN_POS128T_INIMinor">
+                <TEXT>A128T is a nonpolymorphic mutation that has been selected in vitro by EVG (Goethals2008).</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="IN_POS138CDFGHILMNPQRSTVWYdi_INIMinor">
+                <TEXT>E138K/A are nonpolymorphic accessory INI-resistance mutations selected in patients receiving RAL. It usually occurs in combination with mutations at positions 140 and 148 (HazudaBarbados2007, Jegeda2008). It has also been selected in vitro by EVG (McColl2007, Shimura2007, Goodman2008). By itself, it appears to have no effect on INI susceptibility.  $listMutsIn{138CDFGHILMNPQRSTVWYdi} is an unusual mutation at this position. </TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="IN_POS138KA_INIMinor">
+                <TEXT>E138K/A are nonpolymorphic accessory INI-resistance mutations selected in patients receiving RAL. It usually occurs in combination with mutations at positions 140 and 148 (HazudaBarbados2007, Jegeda2008). It has also been selected in vitro by EVG (McColl2007, Shimura2007, Goodman2008). By itself, it appears to have no effect on INI susceptibility.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="IN_POS140DEFHIKLMNPQRTVWYdi_INIMajor">
+                <TEXT>G140S is a nonpolymorphic mutation that usually occurs with Q148HRK in patients receiving RAL (HazudaBarbados2007, MillerSitges2008, Cooper2008, Charpentier2008) or less commonly EVG (McColl2007). By itself it causes minimum reductions in INI susceptibility (Cooper2007, Goodman2008). However, G140S + Q148H reduces RAL and EVG susceptibility >1,000-fold. G140A/C are less well-studied variants at this position. $listMutsIn{140DEFHIKLMNPQRTVWYdi} is an unusual mutation at this position.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="IN_POS140SAC_INIMajor">
+                <TEXT>G140S is a nonpolymorphic mutation that usually occurs with Q148HRK in patients receiving RAL (HazudaBarbados2007, MillerSitges2008, Cooper2008, Charpentier2008) or less commonly EVG (McColl2007). By itself it causes minimum reductions in INI susceptibility (Cooper2007, Goodman2008). However, G140S + Q148H reduces RAL and EVG susceptibility >1,000-fold. G140A/C are less well-studied variants at this position.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="IN_POS143ADEFGIKLMNPQSTVWdi_INIMajor">
+                <TEXT>Y143CRH are nonpolymorphic mutations selected in vitro (Witmer2007) and in vivo by RAL (Hazuda2007, Cooper2008, MillerSitges2008). Y143R reduces RAL susceptibility by about 10-fold but has little effect on EVG susceptibility (Jegeda2008). $listMutsIn{143ADEFGIKLMNPQSTVWdi} is an unusual mutation at this position.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="IN_POS143CRH_INIMajor">
+                <TEXT>Y143CRH are nonpolymorphic mutations selected in vitro (Witmer2007) and in vivo by RAL (Hazuda2007, Cooper2008, MillerSitges2008). Y143R reduces RAL susceptibility by about 10-fold but has little effect on EVG susceptibility (Jegeda2008).</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="IN_POS145ACDEFGHIKLMNQRTVWYdi_INIMinor">
+                <TEXT>P145S is a nonpolymorphic mutation that has been selected in vitro by EVG (Garvey2008, Kobayashi2008). $listMutsIn{145ACDEFGHIKLMNQRTVWYdi} is an unusual mutation at this position.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="IN_POS145S_INIMinor">
+                <TEXT>P145S is a nonpolymorphic mutation that has been selected in vitro by EVG (Garvey2008, Kobayashi2008).</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="IN_POS146ACDEFGHIKLMNRSTVWYdi_INIMinor">
+                <TEXT>Q146P is a nonpolymorphic mutation that has been selected in vitro by EVG and shown to reduce EVG susceptibility about 10-fold (Shimura2007). Its effect on RAL susceptibility is not known. $listMutsIn{146ACDEFGHIKLMNRSTVWYdi} is an unusual mutation at this position.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="IN_POS146P_INIMinor">
+                <TEXT>Q146P is a nonpolymorphic mutation that has been selected in vitro by EVG and shown to reduce EVG susceptibility about 10-fold (Shimura2007). Its effect on RAL susceptibility is not known.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="IN_POS147ACDEFHIKLMNPQRTVWYdi_INIMajor">
+                <TEXT>S147G is a nonpolymorphic mutation selected in vivo by EVG. It reduces EVG susceptibility 5 to 10-fold  (Shimura2007,  Jones2007, Ren2007, Goodman2008) but has minimal if any effect on RAL susceptibility (McColl2007, Ren2007). $listMutsIn{147ACDEFHIKLMNPQRTVWYdi} is an unusual mutation at this position.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="IN_POS147G_INIMajor">
+                <TEXT>S147G is a nonpolymorphic mutation selected in vivo by EVG. It reduces EVG susceptibility 5 to 10-fold  (Shimura2007,  Jones2007, Ren2007, Goodman2008) but has minimal if any effect on RAL susceptibility (McColl2007, Ren2007).</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="IN_POS148ACDEFGILMNPSTVWYdi_INIMajor">
+                <TEXT>Q148HKR are nonpolymorphic mutations selected in vitro and in vivo by RAL and EVG in (HazudaSitges2007, McColl2007, Cooper2008, GoethalsSitges2008). By themselves Q148HKR reduce RAL susceptibility by 20 to 30-fold (McColl2007) and reduce EVG susceptibility by 6-fold (Q148H), 67-fold (Q148K), and 118-fold (Q148R). With G140S, Q148H is associated with >1,000-fold decreased RAL and EVG susceptibility (McColl2007). $listMutsIn{148ACDEFGILMNPSTVWYdi} is an unusual mutation at this position.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="IN_POS148HKR_INIMajor">
+                <TEXT>Q148HKR are nonpolymorphic mutations selected in vitro and in vivo by RAL and EVG in (HazudaSitges2007, McColl2007, Cooper2008, GoethalsSitges2008). By themselves Q148HKR reduce RAL susceptibility by 20 to 30-fold (McColl2007) and reduce EVG susceptibility by 6-fold (Q148H), 67-fold (Q148K), and 118-fold (Q148R). With G140S, Q148H is associated with >1,000-fold decreased RAL and EVG susceptibility (McColl2007).</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="IN_POS151ACDEFGHKLMNPQRSTWYdi_INIMinor">
+                <TEXT>V151I is a polymorphic mutation which has been selected in vitro by multiple INIs but which has no effect on RAL or EVG susceptibility (Hazuda2004, McColl2007, Rowley2008, Kobayashi2008). $listMutsIn{151ACDEFGHKLMNPQRSTWYdi} is an unusual mutation at this position.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="IN_POS151I_INIMinor">
+                <TEXT>V151I is a polymorphic mutation which has been selected in vitro by multiple INIs but which has no effect on RAL or EVG susceptibility (Hazuda2004, McColl2007, Rowley2008, Kobayashi2008).</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="IN_POS153A_Other">
+                <TEXT>S153A is a common polymorphism</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="IN_POS153CDEFGHIKLMNPQRTVWdi_INIMinor">
+                <TEXT>S153Y is a nonpolymorphic accessory mutation that has been selected in vitro by EVG usually with T66I (Jones2007, Shimura2007). By itself it minimally decreases EVG susceptibility (Jones2007). S153A is a common polymorphism. $listMutsIn{153CDEFGHIKLMNPQRTVWdi} is an unusual mutation at this position.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="IN_POS153Y_INIMinor">
+                <TEXT>S153Y is a nonpolymorphic accessory mutation that has been selected in vitro by EVG usually with T66I (Jones2007, Shimura2007). By itself it minimally decreases EVG susceptibility (Jones2007).</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="IN_POS154IL_INIMinor">
+                <TEXT>M154I/L are minimally polymorphic mutations that are selected in vitro by pre-RAL/EVG INIs (Hazuda2000). They di not appear to be selected by nor to decrease susceptibility to RAL or EVG (Ren2007, Rowley2008).</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="IN_POS155ACDEFGIKLMPQRTVWYdi_INIMajor">
+                <TEXT>N155H is a nonpolymorphic mutation selected in vivo by RAL and EVG and which  decreases susceptibility to these INIs by about 20 and 30-fold, respectively (McColl2008, Cooper2008, Goodman2008). N155S is an uncommon nonpolymorphic INI-resistance mutation (selected in vitro by L870,810) that reduces RAL and EVG susceptibility by about 3 to 10-fold (Hazuda2004, Ren2007, Rowley2008). $listMutsIn{155ACDEFGIKLMPQRTVWYdi} is an unusual mutaton at this position.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="IN_POS155HS_INIMajor">
+                <TEXT>N155H is a nonpolymorphic mutation selected in vivo by RAL and EVG and which  decreases susceptibility to these INIs by about 20 and 30-fold, respectively (McColl2008, Cooper2008, Goodman2008). N155S is an uncommon nonpolymorphic INI-resistance mutation (selected in vitro by L870,810) that reduces RAL and EVG susceptibility by about 3 to 10-fold (Hazuda2004, Ren2007, Rowley2008).</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="IN_POS157ACDFGHIKLMNPRSTVWYdi_INIMinor">
+                <TEXT>E157Q is a minimally polymorphic mutation that is selected in vitro by EVG (Jones2007, Shimura2007) and rarely in vivo by RAL (Malet2008). It appears to have minimal if any effect on INI susceptibility (Jones2007, Shimura2008). $listMutsIn{157ACDFGHIKLMNPRSTVWYdi} is an unusual mutation at this position.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="IN_POS157Q_INIMinor">
+                <TEXT>E157Q is a minimally polymorphic mutation that is selected in vitro by EVG (Jones2007, Shimura2007) and rarely in vivo by RAL (Malet2008). It appears to have minimal if any effect on INI susceptibility (Jones2007, Shimura2008).</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="IN_POS163RK_INIMinor">
+                <TEXT>G163RK are polymorphic accessory INI-resistance mutation that usually occur in combination with N155H in patients receiving RAL (Markowitz2007, HazudaBarbados2007)</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="IN_POS203M_INIMinor">
+                <TEXT>I203M is a polymorphic mutation that occasionally is selected in patients receiving RAL (Cooper2008, Malet2008). It has not been studied phenotypically.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="IN_POS230NR_INIMinor">
+                <TEXT>S230N/R are accessory INI-resistance mutation that do not affect INI susceptibility (Hombrouck 2008). S230N is polymorphic; S230R is not.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="IN_POS263ACDEFGHILMNPQSTVWYdi_INIMinor">
+                <TEXT>R263K is a nonpolymorphic mutation that has been selected in vitro by EVG and shown to reduce its susceptibility by about 5 fold (Jones2007), $listMutsIn{263ACDEFGHILMNPQSTVWYdi} is an unusual mutation at this position.</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+            <COMMENT_STRING id="IN_POS263K_INIMinor">
+                <TEXT>R263K is a nonpolymorphic mutation that has been selected in vitro by EVG and shown to reduce its susceptibility by about 5 fold (Jones2007)</TEXT>
+                <SORT_TAG>1</SORT_TAG>
+            </COMMENT_STRING>
+
+<!-- End the IN mutation-dependent comment strings. -->
+
+	</COMMENT_DEFINITIONS>
+    </DEFINITIONS>
+
+    <DRUG>
+        <NAME>DLV</NAME>
+        <FULLNAME>delavirdine</FULLNAME>
+        <RULE>
+            <CONDITION>
+                SCORE FROM (98G => 10,
+                            100I => 40,
+                            MAX ( 101P => 40, 101E => 30, 101HN => 15, 101Q => 5 ),
+                            MAX ( 103NST => 60, 103R => 5 ),
+                            MAX ( 106M => 60, 106A => 50 ),
+                            108I => 10,
+                            MAX ( 138K => 15, 138Q => 10, 138AG => 5 ),
+                            MAX ( 179F => 30, 179DE => 10 ),
+                            181CISV => 60,
+                            188CHL => 30,
+                            190EQ => 30,
+                            225H => 15,
+                            MAX ( 227C => 30, 227L => 5 ),
+                            230L => 60,
+                            234I => 10,
+                            236L => 60,
+                            238NT => 30,
+                            318F => 60
+                           )
+            </CONDITION>
+            <ACTIONS>
+                <SCORERANGE><USE_GLOBALRANGE/></SCORERANGE>
+            </ACTIONS>
+        </RULE>
+    </DRUG>
+
+    <DRUG>
+        <NAME>EFV</NAME>
+        <FULLNAME>efavirenz</FULLNAME>
+        <RULE>
+            <CONDITION>
+                SCORE FROM (98G => 5,
+                            100I => 40,
+                            MAX ( 101P => 40, 101E => 15, 101HN => 10, 101Q => 5 ),
+                            MAX ( 103NST => 60, 103R => 5 ),
+                            MAX ( 106M => 60, 106A => 30 ),
+                            108I => 10,
+                            MAX ( 138KQ => 10, 138AG => 5 ),
+                            MAX ( 179F => 15, 179DE => 10 ),
+                            181CISV => 30,
+                            MAX ( 188L => 60, 188CH => 30 ),
+                            MAX ( 190CEQSTV => 60, 190A => 40 ),
+                            225H => 30,
+                            MAX ( 227C => 15, 227L => 5 ),
+                            230L => 45,
+                            234I => 10,
+                            238NT => 15,
+                            318F => 10
+                           )
+            </CONDITION>
+            <ACTIONS>
+                <SCORERANGE><USE_GLOBALRANGE/></SCORERANGE>
+            </ACTIONS>
+        </RULE>
+    </DRUG>
+
+    <DRUG>
+        <NAME>NVP</NAME>
+        <FULLNAME>nevirapine</FULLNAME>
+        <RULE>
+            <CONDITION>
+                SCORE FROM (98G => 10,
+                            100I => 40,
+                            MAX ( 101P => 40, 101E => 30, 101HN => 15, 101Q => 5 ),
+                            MAX ( 103NST => 60, 103R => 5 ),
+                            106AM => 60,
+                            108I => 10,
+                            MAX ( 138K => 15, 138Q => 10, 138AG => 5 ),
+                            MAX ( 179F => 30, 179DE => 10 ),
+                            181CISV => 60,
+                            MAX ( 188CL => 60, 188H => 30 ),
+                            190ACEQSTV => 60,
+                            225H => 15,
+                            MAX ( 227C => 30, 227L => 15 ),
+                            230L => 60,
+                            234I => 10,
+                            238NT => 30,
+                            318F => 30
+                           )
+            </CONDITION>
+            <ACTIONS>
+                <SCORERANGE><USE_GLOBALRANGE/></SCORERANGE>
+            </ACTIONS>
+        </RULE>
+    </DRUG>
+
+    <DRUG>
+        <NAME>ETR</NAME>
+        <FULLNAME>etravirine</FULLNAME>
+        <RULE>
+            <CONDITION>
+                SCORE FROM (98G => 5,
+                            100I => 20,
+                            MAX ( 101P => 20, 101E => 15, 101HNQ => 5 ),
+                            103NST => 10,
+                            MAX ( 106M => 10, 106A => 5 ),
+                            MAX ( 138KQ => 10, 138AG => 5 ),
+                            MAX ( 179F => 25, 179DE => 10 ),
+                            MAX ( 181CIV => 35, 181S => 20 ),
+                            MAX ( 188L => 20, 188H => 15, 188C => 10 ),
+                            MAX ( 190E => 25, 190AQS => 15, 190CTV => 10 ),
+                            225H => 10,
+                            MAX ( 227C => 15, 227L => 5 ),
+                            230L => 20,
+                            234I => 10,
+                            238NT => 5,
+                            318F => 10
+                           )
+            </CONDITION>
+            <ACTIONS>
+                <SCORERANGE><USE_GLOBALRANGE/></SCORERANGE>
+            </ACTIONS>
+        </RULE>
+
+	<RULE>
+	    <CONDITION>SELECT ATLEAST 1 FROM (90I,98G,100I,101EP,106I,179DF,181CIV,190AS)
+            </CONDITION>
+	    <ACTIONS>
+	        <COMMENT ref="RT_ETR_Special" />
+	    </ACTIONS>
+	</RULE>
+    </DRUG>
+
+    <DRUG>
+        <NAME>3TC</NAME>
+        <FULLNAME>lamivudine</FULLNAME>
+        <RULE>
+            <CONDITION>
+                SCORE FROM (41L => 4,
+                            44AD => 5,
+                            MAX ( 65R => 30, 65N => 15 ),
+                            67d => 15,
+                            MAX ( 69i => 25, 69d => 15, 69DGN => 5, 69AEIS => 2 ),
+                            MAX ( 70E => 15, 70G => 10 ),
+                            75I => 5,
+                            77L => 5,
+                            116Y => 5,
+                            118I => 5,
+                            MAX ( 151M => 15, 151L => 10 ),
+                            184IV => 60,
+                            210W => 4,
+                            215FY => 4
+                           )
+            </CONDITION>
+            <ACTIONS>
+                <SCORERANGE><USE_GLOBALRANGE/></SCORERANGE>
+            </ACTIONS>
+        </RULE>
+    </DRUG>
+
+    <DRUG>
+        <NAME>FTC</NAME>
+        <FULLNAME>emtricitabine</FULLNAME>
+        <RULE>
+            <CONDITION>
+                SCORE FROM (41L => 4,
+                            44AD => 5,
+                            MAX ( 65R => 30, 65N => 15 ),
+                            67d => 15,
+                            MAX ( 69i => 25, 69d => 15, 69DGN => 5, 69AEIS => 2 ),
+                            MAX ( 70E => 15, 70G => 10 ),
+                            75I => 5,
+                            77L => 5,
+                            116Y => 5,
+                            118I => 5,
+                            MAX ( 151M => 15, 151L => 10 ),
+                            184IV => 60,
+                            210W => 4,
+                            215FY => 4
+                           )
+            </CONDITION>
+            <ACTIONS>
+                <SCORERANGE><USE_GLOBALRANGE/></SCORERANGE>
+            </ACTIONS>
+        </RULE>
+    </DRUG>
+
+    <DRUG>
+        <NAME>ABC</NAME>
+        <FULLNAME>abacavir</FULLNAME>
+        <RULE>
+            <CONDITION>
+                SCORE FROM (41L => 12,
+                            44AD => 2,
+                            62V => 2,
+                            MAX ( 65R => 30, 65N => 10 ),
+                            MAX ( 67d => 25, 67GN => 8, 67EHST => 5 ),
+                            MAX ( 69i => 30, 69d => 25, 69DGN => 5, 69AEIS => 2 ),
+                            MAX ( 70E => 25, 70G => 20 ),
+                            MAX ( 74V => 30, 74I => 20 ),
+                            MAX ( 75AIMST => 5, 75L => 2 ),
+                            77L => 10,
+                            115F => 25,
+                            116Y => 10,
+                            118I => 2,
+                            MAX ( 151M => 40, 151L => 20 ),
+                            184IV => 12,
+                            210W => 12,
+                            MAX ( 215FY => 20, 215CDEISV => 10 ),
+                            219W => 5
+                           )
+            </CONDITION>
+            <ACTIONS>
+                <SCORERANGE><USE_GLOBALRANGE/></SCORERANGE>
+            </ACTIONS>
+        </RULE>
+    </DRUG>
+
+    <DRUG>
+        <NAME>AZT</NAME>
+        <FULLNAME>zidovudine</FULLNAME>
+        <RULE>
+            <CONDITION>
+                SCORE FROM (41L => 15,
+                            44AD => 2,
+                            62V => 2,
+                            65R AND EXCLUDE 65(NOT R) => -5,
+                            MAX ( 67d => 30, 67GN => 15, 67E => 10, 67HST => 5 ),
+                            MAX ( 69di => 30, 69DGN => 5, 69AEIS => 2 ),
+                            MAX ( 70R => 18, 70NST => 5 ),
+                            74V AND EXCLUDE 74(NOT V) => -5,
+                            MAX ( 75AIMST => 5, 75L => 2 ),
+                            77L => 10,
+                            100I AND EXCLUDE 100(NOT I) => -4,
+                            116Y => 10,
+                            118I => 2,
+                            MAX ( 151M => 50, 151L => 20 ),
+                            181C AND EXCLUDE 181(NOT C) => -4,
+                            184IV AND EXCLUDE 184(NOT IV) => -8,
+                            210W => 15,
+                            MAX ( 215FY => 35, 215CDEISV => 20 ),
+                            MAX ( 219ENQ => 15, 219RW => 10 ),
+                            333DE => 5
+                           )
+            </CONDITION>
+            <ACTIONS>
+                <SCORERANGE><USE_GLOBALRANGE/></SCORERANGE>
+            </ACTIONS>
+        </RULE>
+
+    </DRUG>
+
+    <DRUG>
+        <NAME>D4T</NAME>
+        <FULLNAME>stavudine</FULLNAME>
+        <RULE>
+            <CONDITION>
+                SCORE FROM (41L => 15,
+                            44AD => 2,
+                            62V => 2,
+                            65R => 15,
+                            MAX ( 67d => 30, 67GN => 12, 67E => 10, 67HST => 5 ),
+                            MAX ( 69di => 30, 69DGN => 10, 69AEIS => 2 ),
+                            MAX ( 70R => 10, 70NST => 5 ),
+                            MAX ( 75T => 50, 75M => 30, 75S => 20, 75A => 15, 75I => 10, 75L => 2 ),
+                            77L => 10,
+                            116Y => 10,
+                            118I => 2,
+                            MAX ( 151M => 50, 151L => 20 ),
+                            184IV AND EXCLUDE 184(NOT IV) => -5,
+                            210W => 15,
+                            MAX ( 215FY => 30, 215CDEISV => 20 ),
+                            MAX ( 219ENQW => 10, 219R => 5 )
+                           )
+            </CONDITION>
+            <ACTIONS>
+                <SCORERANGE><USE_GLOBALRANGE/></SCORERANGE>
+            </ACTIONS>
+        </RULE>
+    </DRUG>
+
+    <DRUG>
+        <NAME>DDI</NAME>
+        <FULLNAME>didanosine</FULLNAME>
+        <RULE>
+            <CONDITION>
+                SCORE FROM (41L => 12,
+                            44AD => 2,
+                            62V => 2,
+                            MAX ( 65R => 30, 65N => 15 ),
+                            MAX ( 67d => 25, 67GN => 8, 67EHST => 5 ),
+                            MAX ( 69i => 40, 69d => 25, 69DG => 20, 69N => 10, 69AIS => 5, 69E => 2 ),
+                            70EG => 25,
+                            MAX ( 74V => 60, 74I => 30 ),
+                            MAX ( 75MT => 20, 75AIS => 10, 75L => 2 ),
+                            77L => 10,
+                            116Y => 10,
+                            118I => 2,
+                            MAX ( 151M => 50, 151L => 20 ),
+                            184IV => 5,
+                            210W => 12,
+                            MAX ( 215FY => 20, 215CDEISV => 10 ),
+                            219W => 5
+                           )
+            </CONDITION>
+            <ACTIONS>
+                <SCORERANGE><USE_GLOBALRANGE/></SCORERANGE>
+            </ACTIONS>
+        </RULE>
+    </DRUG>
+
+    <DRUG>
+        <NAME>TDF</NAME>
+        <FULLNAME>tenofovir</FULLNAME>
+        <RULE>
+            <CONDITION>
+                SCORE FROM (41L => 12,
+                            44AD => 2,
+                            62V => 2,
+                            MAX ( 65R => 40, 65N => 15 ),
+                            MAX ( 67d => 15, 67GHNST => 5 ),
+                            MAX ( 69i => 40, 69d => 15, 69DGN => 5, 69AEIS => 2 ),
+                            MAX ( 70E => 25, 70G => 15, 70R => 8 ),
+                            MAX ( 75AIMT => 5, 75L => 2 ),
+                            77L => 5,
+                            100I AND EXCLUDE 100(NOT I) => -4,
+                            115F => 10,
+                            116Y => 5,
+                            118I => 2,
+                            MAX ( 151M => 15, 151L => 10 ),
+                            181C AND EXCLUDE 181(NOT C) => -4,
+                            184IV AND EXCLUDE 184(NOT IV) => -8,
+                            210W => 12,
+                            MAX ( 215Y => 20, 215CDEFISV => 10 ),
+                            219W => 5
+                           )
+            </CONDITION>
+            <ACTIONS>
+                <SCORERANGE><USE_GLOBALRANGE/></SCORERANGE>
+            </ACTIONS>
+        </RULE>
+    </DRUG>
+
+    <DRUG>
+        <NAME>FPV/r</NAME>
+        <FULLNAME>fosamprenavir/r</FULLNAME>
+        <RULE>
+            <CONDITION>
+                SCORE FROM (MAX ( 10F => 4, 10IRVY => 2 ),
+                            11I => 5,
+                            24I => 3,
+                            32I => 30,
+                            33F => 10,
+                            43T => 2,
+                            MAX ( 46IL => 12, 46V => 5 ),
+                            47AV => 30,
+                            48MV => 5,
+                            MAX ( 50V => 60, 50L AND EXCLUDE 50(NOT L) => -5 ),
+                            53L => 3,
+                            MAX ( 54LM => 30, 54ASTV => 10 ),
+                            71ILTV => 2,
+                            73ACST => 2,
+                            74P => 5,
+                            76V => 35,
+                            82ACFLMST => 10,
+                            84ACV => 35,
+                            88S AND EXCLUDE 88(NOT S) => -10,
+                            89V => 8,
+                            90M => 15
+                           )
+            </CONDITION>
+            <ACTIONS>
+                <SCORERANGE><USE_GLOBALRANGE/></SCORERANGE>
+            </ACTIONS>
+        </RULE>
+
+    </DRUG>
+
+    <DRUG>
+        <NAME>DRV/r</NAME>
+        <FULLNAME>darunavir/r</FULLNAME>
+        <RULE>
+            <CONDITION>
+                SCORE FROM (10F => 2,
+                            11I => 5,
+                            32I => 15,
+                            33F => 5,
+                            MAX ( 46IL => 4, 46V => 2 ),
+                            47AV => 10,
+                            MAX ( 50V => 20, 50L AND EXCLUDE 50(NOT L) => -5 ),
+                            MAX ( 54M => 20, 54L => 15, 54STV => 4, 54A => 3 ),
+                            73ACST => 2,
+                            74P => 5,
+                            76V => 15,
+                            MAX ( 82F => 6, 82ACLMST => 3 ),
+                            84ACV => 10,
+                            88S AND EXCLUDE 88(NOT S) => -5,
+                            89V => 5,
+                            90M => 6
+                           )
+            </CONDITION>
+            <ACTIONS>
+                <SCORERANGE><USE_GLOBALRANGE/></SCORERANGE>
+            </ACTIONS>
+        </RULE>
+
+	<RULE>
+	    <CONDITION>SELECT ATLEAST 1 FROM (11I,32I,33F,47V,50V,54LM,74P,76V,84V,89V)
+            </CONDITION>
+	    <ACTIONS>
+	        <COMMENT ref="PR_DRVr_Special" />
+	    </ACTIONS>
+	</RULE>
+
+    </DRUG>
+
+    <DRUG>
+        <NAME>IDV/r</NAME>
+        <FULLNAME>indinavir/r</FULLNAME>
+        <RULE>
+            <CONDITION>
+                SCORE FROM (MAX ( 10F => 4, 10IRVY => 2 ),
+                            24I => 5,
+                            32I => 12,
+                            43T => 2,
+                            MAX ( 46IL => 12, 46V => 5 ),
+                            47AV => 10,
+                            MAX ( 48MV => 10, 48AEQST => 5 ),
+                            50L AND EXCLUDE 50(NOT L) => -5,
+                            MAX ( 53L => 3, 53Y => 2 ),
+                            MAX ( 54ASTV => 12, 54LM => 10 ),
+                            71ILTV => 2,
+                            73ACST => 5,
+                            74P => 5,
+                            76V => 20,
+                            MAX ( 82AFST => 35, 82M => 15, 82CL => 10 ),
+                            83D => 5,
+                            84ACV => 35,
+                            MAX ( 88S => 10, 88DGT => 5 ),
+                            89V => 2,
+                            90M => 30
+                           )
+            </CONDITION>
+            <ACTIONS>
+                <SCORERANGE><USE_GLOBALRANGE/></SCORERANGE>
+            </ACTIONS>
+        </RULE>
+    </DRUG>
+
+    <DRUG>
+        <NAME>LPV/r</NAME>
+        <FULLNAME>lopinavir/r</FULLNAME>
+        <RULE>
+            <CONDITION>
+                SCORE FROM (MAX ( 10F => 4, 10IRVY => 2 ),
+                            24I => 3,
+                            32I => 12,
+                            33F => 5,
+                            43T => 2,
+                            MAX ( 46IL => 10, 46V => 5 ),
+                            MAX ( 47A => 50, 47V => 15 ),
+                            MAX ( 48MV => 10, 48AEQST => 5 ),
+                            MAX ( 50V => 20, 50L AND EXCLUDE 50(NOT L) => -5 ),
+                            MAX ( 53L => 3, 53Y => 2 ),
+                            54ALMSTV => 12,
+                            71ILTV => 2,
+                            73ACST => 2,
+                            74P => 5,
+                            76V => 20,
+                            MAX ( 82AFST => 25, 82CLM => 10 ),
+                            84ACV => 15,
+                            89V => 2,
+                            90M => 10
+                           )
+            </CONDITION>
+            <ACTIONS>
+                <SCORERANGE><USE_GLOBALRANGE/></SCORERANGE>
+            </ACTIONS>
+        </RULE>
+    </DRUG>
+
+    <DRUG>
+        <NAME>ATV/r</NAME>
+        <FULLNAME>atazanavir/r</FULLNAME>
+        <RULE>
+            <CONDITION>
+                SCORE FROM (MAX ( 10F => 4, 10IRVY => 2 ),
+                            24I => 3,
+                            30N => 10,
+                            32I => 12,
+                            33F => 5,
+                            43T => 2,
+                            MAX ( 46IL => 12, 46V => 5 ),
+                            47AV => 5,
+                            MAX ( 48MV => 30, 48AEQST => 5 ),
+                            50L => 60,
+                            MAX ( 53L => 5, 53Y => 2 ),
+                            54ALMSTV => 12,
+                            58E => 5,
+                            71ILTV => 2,
+                            73ACST => 10,
+                            74P => 5,
+                            76V AND EXCLUDE 76(NOT V) => -5,
+                            MAX ( 82FST => 20, 82A => 15, 82CLM => 10 ),
+                            83D => 5,
+                            84ACV => 35,
+                            MAX ( 88S => 60, 88DGT => 10 ),
+                            89V => 2,
+                            90M => 20
+                           )
+            </CONDITION>
+            <ACTIONS>
+                <SCORERANGE><USE_GLOBALRANGE/></SCORERANGE>
+            </ACTIONS>
+        </RULE>
+    </DRUG>
+
+    <DRUG>
+        <NAME>TPV/r</NAME>
+        <FULLNAME>tipranavir/r</FULLNAME>
+        <RULE>
+            <CONDITION>
+                SCORE FROM (24I AND EXCLUDE 24(NOT I) => -2,
+                            32I => 5,
+                            33F => 10,
+                            35G => 2,
+                            43T => 5,
+                            MAX ( 46IL => 4, 46V => 2 ),
+                            MAX ( 47V => 15, 47A => 10 ),
+                            50LV AND EXCLUDE 50(NOT LV) => -5,
+                            MAX ( 54AMV => 15, 54ST => 10, 54L AND EXCLUDE 54(NOT L) => -8 ),
+                            58E => 15,
+                            73ACST => 2,
+                            74P => 15,
+                            76V AND EXCLUDE 76(NOT V) => -8,
+                            MAX ( 82L => 60, 82T => 40, 82S => 15, 82ACFM => 6 ),
+                            83D => 15,
+                            84ACV => 15,
+                            90M => 6
+                           )
+            </CONDITION>
+            <ACTIONS>
+                <SCORERANGE><USE_GLOBALRANGE/></SCORERANGE>
+            </ACTIONS>
+        </RULE>
+
+	<RULE>
+	    <CONDITION>SELECT ATLEAST 1 FROM (47V,54AMV,58E,74P,82LT,83D,10V,36I,43T,46L,84V,24I,50LV,54L,76V)
+            </CONDITION>
+	    <ACTIONS>
+	        <COMMENT ref="PR_TPVr_Special" />
+	    </ACTIONS>
+	</RULE>
+
+    </DRUG>
+
+    <DRUG>
+        <NAME>NFV</NAME>
+        <FULLNAME>nelfinavir</FULLNAME>
+        <RULE>
+            <CONDITION>
+                SCORE FROM (MAX ( 10F => 4, 10IRVY => 2 ),
+                            23I => 15,
+                            24I => 3,
+                            30N => 60,
+                            32I => 10,
+                            35G => 5,
+                            43T => 2,
+                            MAX ( 46IL => 30, 46V => 10 ),
+                            47AV => 15,
+                            MAX ( 48MV => 30, 48AEQST => 15 ),
+                            MAX ( 50V => 10, 50L AND EXCLUDE 50(NOT L) => -5 ),
+                            MAX ( 53L => 3, 53Y => 2 ),
+                            54ALMSTV => 15,
+                            58E => 5,
+                            71ILTV => 2,
+                            73ACST => 10,
+                            74PS => 10,
+                            76V => 5,
+                            MAX ( 82AFST => 35, 82CLM => 10 ),
+                            83D => 5,
+                            84ACV => 40,
+                            MAX ( 88S => 60, 88DGT => 30 ),
+                            89V => 10,
+                            90M => 60
+                           )
+            </CONDITION>
+            <ACTIONS>
+                <SCORERANGE><USE_GLOBALRANGE/></SCORERANGE>
+            </ACTIONS>
+        </RULE>
+    </DRUG>
+
+    <DRUG>
+        <NAME>SQV/r</NAME>
+        <FULLNAME>saquinavir/r</FULLNAME>
+        <RULE>
+            <CONDITION>
+                SCORE FROM (MAX ( 10F => 4, 10IRVY => 2 ),
+                            24I => 3,
+                            43T => 2,
+                            46ILV => 5,
+                            MAX ( 48MV => 60, 48AEQST => 30 ),
+                            50L AND EXCLUDE 50(NOT L) => -5,
+                            MAX ( 53L => 10, 53Y => 2 ),
+                            MAX ( 54ASTV => 15, 54LM => 10 ),
+                            71ILTV => 2,
+                            73ACST => 10,
+                            74P => 5,
+                            76V AND EXCLUDE 76(NOT V) => -5,
+                            82ACFLMST => 10,
+                            83D => 5,
+                            84ACV => 40,
+                            MAX ( 88D => 10, 88GST => 5 ),
+                            89V => 2,
+                            90M => 40
+                           )
+            </CONDITION>
+            <ACTIONS>
+                <SCORERANGE><USE_GLOBALRANGE/></SCORERANGE>
+            </ACTIONS>
+        </RULE>
+    </DRUG>
+
+    <MUTATION_COMMENTS>
+        <GENE>
+            <NAME>PR</NAME>
+<!-- Begin the PR rules for mutation-dependent comment strings. -->
+            <RULE>
+                <CONDITION>10(NOT LIVFRY)</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS10ACDEGHKMNPQSTWdi_Other" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>10IVFRY</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS10IVFRY_PIMinor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>11I</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS11I_PIMinor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>13V</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS13V_Other" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>16E</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS16E_Other" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>20(NOT KRIMTV)</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS20ACDEFGHLNPQSWYdi_Other" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>20RMITV</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS20RMITV_Other" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>23(NOT LI)</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS23ACDEFGHKMNPQRSTVWYdi_PIMinor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>23I</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS23I_PIMajor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>24(NOT LFI)</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS24ACDEGHKMNPQRSTVWYdi_Other" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>24F</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS24F_PIMinor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>24I</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS24I_PIMajor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>30(NOT DN)</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS30ACEFGHIKLMPQRSTVWYdi_PIMajor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>30N</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS30N_PIMajor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>32(NOT VI)</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS32ACDEFGHKLMNPQRSTWYdi_PIMajor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>32I</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS32I_PIMajor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>33F</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS33F_PIMajor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>33I</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS33I_PIMinor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>33V</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS33V_Other" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>35G</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS35G_PIMinor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>36I</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS36I_Other" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>36LTV</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS36LTV_Other" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>43T</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS43T_PIMinor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>46(NOT MILV)</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS46ACDEFGHKNPQRSTWYdi_PIMinor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>46IL</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS46IL_PIMajor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>46V</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS46V_PIMinor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>47A</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS47A_PIMajor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>47(NOT IAV)</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS47CDEFGHKLMNPQRSTWYdi_PIMajor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>47V</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS47V_PIMajor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>48ASTQ</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS48ASTQ_PIMinor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>48(NOT GVMASTQ)</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS48CDEFHIKLNPRWYdi_PIMinor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>48M</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS48M_PIMajor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>48V</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS48V_PIMajor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>50(NOT ILV)</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS50ACDEFGHKMNPQRSTWYdi_PIMajor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>50L</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS50L_PIMajor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>50V</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS50V_PIMajor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>53(NOT FLY)</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS53ACDEGHIKMNPQRSTVWdi_PIMinor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>53L</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS53L_PIMajor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>53Y</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS53Y_PIMinor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>54(NOT IALMSTV)</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS54CDEFGHKNPQRWYdi_PIMajor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>54L</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS54L_PIMajor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>54M</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS54M_PIMajor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>54TAS</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS54TAS_PIMajor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>54V</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS54V_PIMajor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>58E</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS58E_PIMinor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>60E</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS60E_Other" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>62V</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS62V_Other" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>63P</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS63P_Other" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>71TVIL</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS71TVIL_PIMinor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>73STCA</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS73STCA_PIMinor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>74P</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS74P_PIMinor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>74S</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS74S_PIMinor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>76(NOT LV)</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS76ACDEFGHIKMNPQRSTWYdi_PIMinor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>76V</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS76V_PIMajor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>77I</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS77I_Other" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>82A</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS82A_PIMajor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>82C</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS82C_PIMajor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>82(NOT VATIFLMSC)</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS82DEGHKNPQRWYdi_PIMajor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>82F</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS82F_PIMajor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>82I</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS82I_Other" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>82L</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS82L_PIMajor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>82M</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS82M_PIMajor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>82S</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS82S_PIMajor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>82T</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS82T_PIMajor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>83(NOT ND)</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS83ACEFGHIKLMPQRSTVWYdi_PIMinor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>83D</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS83D_PIMinor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>84AC</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS84AC_PIMajor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>84(NOT IACV)</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS84DEFGHKLMNPQRSTWYdi_PIMajor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>84V</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS84V_PIMajor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>85V</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS85V_PIMinor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>88(NOT NDGST)</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS88ACEFHIKLMPQRVWYdi_PIMinor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>88D</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS88D_PIMajor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>88GT</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS88GT_PIMinor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>88S</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS88S_PIMajor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>89I</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS89I_Other" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>89M</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS89M_Other" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>89T</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS89T_Other" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>89V</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS89V_PIMinor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>90(NOT LM)</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS90ACDEFGHIKNPQRSTVWYdi_PIMajor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>90M</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS90M_PIMajor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>93L</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS93L_Other" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>93M</CONDITION>
+                <ACTIONS><COMMENT ref="PR_POS93M_Other" /></ACTIONS>
+            </RULE>
+
+<!-- End the PR rules for mutation-dependent comment strings. -->
+
+        </GENE>
+        <GENE>
+            <NAME>RT</NAME>
+<!-- Begin the RT rules for mutation-dependent comment strings. -->
+            <RULE>
+                <CONDITION>41(NOT ML)</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS41ACDEFGHIKNPQRSTVWYdi_NRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>41L</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS41L_NRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>44AD</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS44AD_NRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>62(NOT AV)</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS62CDEFGHIKLMNPQRSTWYdi_Other" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>62V</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS62V_NRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>65(NOT KNR)</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS65ACDEFGHILMPQSTVWYdi_NRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>65N</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS65N_NRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>65R</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS65R_NRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>67(NOT DEGNd)</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS67ACFHIKLMPQRSTVWYi_NRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>67EG</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS67EG_NRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>67N</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS67N_NRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>67d</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS67d_NRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>69(NOT TADGINSi)</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS69CEFHKLMPQRVWYd_NRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>69D</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS69D_NRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>69G</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS69G_NRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>69NSAI</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS69NSAI_NRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>69i</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS69i_NRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>70(NOT KEGR)</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS70ACDFHILMNPQSTVWYdi_NRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>70EG</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS70EG_NRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>70R</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS70R_NRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>74(NOT LIV)</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS74ACDEFGHKMNPQRSTWYdi_NRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>74I</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS74I_NRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>74V</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS74V_NRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>75(NOT VAIMSTL)</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS75CDEFGHKNPQRWYdi_NRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>75I</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS75I_NRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>75L</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS75L_NRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>75TMAS</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS75TMAS_NRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>77(NOT FL)</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS77ACDEGHIKMNPQRSTVWYdi_NRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>77L</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS77L_NRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>90I</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS90I_NNRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>98G</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS98G_NNRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>98S</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS98S_Other" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>100(NOT LI)</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS100ACDEFGHKMNPQRSTVWYdi_NNRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>100I</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS100I_NNRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>101(NOT KEHNPQR)</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS101ACDFGILMSTVWYdi_NNRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>101E</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS101E_NNRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>101HN</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS101HN_NNRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>101P</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS101P_NNRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>101Q</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS101Q_NNRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>101R</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS101R_Other" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>103(NOT KEHNQRST)</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS103ACDFGILMPVWYdi_NNRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>103EQ</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS103EQ_NNRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>103N</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS103N_NNRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>103R</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS103R_NNRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>103S</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS103S_NNRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>103TH</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS103TH_NNRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>106A</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS106A_NNRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>106(NOT VAIML)</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS106CDEFGHKNPQRSTWYdi_NNRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>106I</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS106I_NNRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>106L</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS106L_NNRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>106M</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS106M_NNRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>108(NOT VI)</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS108ACDEFGHKLMNPQRSTWYdi_NNRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>108I</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS108I_NNRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>115(NOT YF)</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS115ACDEGHIKLMNPQRSTVWdi_NRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>115F</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS115F_NRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>116(NOT FY)</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS116ACDEGHIKLMNPQRSTVWdi_NRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>116Y</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS116Y_NRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>118(NOT VI)</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS118ACDEFGHKLMNPQRSTWYdi_Other" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>118I</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS118I_NRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>138A</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS138A_NNRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>138(NOT EAGKQ)</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS138CDFHILMNPRSTVWYdi_NNRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>138G</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS138G_NNRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>138K</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS138K_NNRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>138Q</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS138Q_NNRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>151(NOT QLM)</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS151ACDEFGHIKNPRSTVWYdi_NRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>151L</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS151L_NRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>151M</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS151M_NRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>179(NOT VDEFIT)</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS179ACGHKLMNPQRSWYdi_NNRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>179DE</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS179DE_NNRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>179F</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS179F_NNRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>179I</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS179I_Other" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>179T</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS179T_NNRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>181(NOT YCISV)</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS181ADEFGHKLMNPQRTWdi_NNRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>181CIV</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS181CIV_NNRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>181S</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS181S_NNRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>184(NOT MIV)</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS184ACDEFGHKLNPQRSTWYdi_Other" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>184VI</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS184VI_NRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>188(NOT YCHLF)</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS188ADEGIKMNPQRSTVWdi_Other" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>188C</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS188C_NNRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>188F</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS188F_NNRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>188H</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS188H_NNRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>188L</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS188L_NNRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>190A</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS190A_NNRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>190CTV</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS190CTV_NNRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>190(NOT GACEQSTV)</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS190DFHIKLMNPRWYdi_NNRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>190EQ</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS190EQ_NNRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>190S</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS190S_NNRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>210(NOT LFSW)</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS210ACDEGHIKMNPQRTVYdi_NRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>210FS</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS210FS_NRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>210W</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS210W_NRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>215(NOT TCDEFISVY)</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS215AGHKLMNPQRWdi_NRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>215F</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS215F_NRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>215SCDEIV</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS215SCDEIV_NRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>215Y</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS215Y_NRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>219(NOT KENQRWDH)</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS219ACFGILMPSTVYdi_NRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>219EQ</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS219EQ_NRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>219NR</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS219NR_NRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>219WDH</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS219WDH_NRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>221(NOT HY)</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS221ACDEFGIKLMNPQRSTVWdi_NNRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>221Y</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS221Y_NNRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>225(NOT PH)</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS225ACDEFGIKLMNQRSTVWYdi_NNRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>225H</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS225H_NNRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>227(NOT FCL)</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS227ADEGHIKMNPQRSTVWYdi_NNRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>227C</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS227C_NNRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>227L</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS227L_NNRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>230(NOT ML)</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS230ACDEFGHIKNPQRSTVWYdi_NNRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>230L</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS230L_NNRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>234(NOT LI)</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS234ACDEFGHKMNPQRSTVWYdi_NNRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>234I</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS234I_NNRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>236(NOT PL)</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS236ACDEFGHIKMNQRSTVWYdi_NNRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>236L</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS236L_NNRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>238(NOT KNRT)</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS238ACDEFGHILMPQSVWYdi_NNRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>238N</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS238N_NNRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>238R</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS238R_Other" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>238T</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS238T_NNRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>318(NOT YF)</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS318ACDEGHIKLMNPQRSTVWdi_Other" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>318F</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS318F_NNRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>333DE</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS333DE_Other" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>348(NOT NI)</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS348ACDEFGHKLMPQRSTVWYdi_NRTI" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>348I</CONDITION>
+                <ACTIONS><COMMENT ref="RT_POS348I_NRTI" /></ACTIONS>
+            </RULE>
+
+<!-- End the RT rules for mutation-dependent comment strings. -->
+        </GENE>
+        <GENE>
+            <NAME>IN</NAME>
+<!-- Begin the IN rules for mutation-dependent comment strings. -->
+            <RULE>
+                <CONDITION>51(NOT HY)</CONDITION>
+                <ACTIONS><COMMENT ref="IN_POS51ACDEFGIKLMNPQRSTVWdi_INIMinor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>51Y</CONDITION>
+                <ACTIONS><COMMENT ref="IN_POS51Y_INIMinor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>54I</CONDITION>
+                <ACTIONS><COMMENT ref="IN_POS54I_INIMinor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>66(NOT TIAK)</CONDITION>
+                <ACTIONS><COMMENT ref="IN_POS66CDEFGHLMNPQRSVWYdi_INIMajor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>66IAK</CONDITION>
+                <ACTIONS><COMMENT ref="IN_POS66IAK_INIMajor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>68VI</CONDITION>
+                <ACTIONS><COMMENT ref="IN_POS68VI_INIMinor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>74M</CONDITION>
+                <ACTIONS><COMMENT ref="IN_POS74M_INIMinor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>92(NOT EQ)</CONDITION>
+                <ACTIONS><COMMENT ref="IN_POS92ACDFGHIKLMNPRSTVWYdi_INIMajor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>92Q</CONDITION>
+                <ACTIONS><COMMENT ref="IN_POS92Q_INIMajor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>95(NOT QK)</CONDITION>
+                <ACTIONS><COMMENT ref="IN_POS95ACDEFGHILMNPRSTVWYdi_INIMinor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>95K</CONDITION>
+                <ACTIONS><COMMENT ref="IN_POS95K_INIMinor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>97A</CONDITION>
+                <ACTIONS><COMMENT ref="IN_POS97A_INIMinor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>114(NOT HY)</CONDITION>
+                <ACTIONS><COMMENT ref="IN_POS114ACDEFGIKLMNPQRSTVWdi_INIMinor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>114Y</CONDITION>
+                <ACTIONS><COMMENT ref="IN_POS114Y_INIMinor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>121(NOT FY)</CONDITION>
+                <ACTIONS><COMMENT ref="IN_POS121ACDEGHIKLMNPQRSTVWdi_INIMajor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>121Y</CONDITION>
+                <ACTIONS><COMMENT ref="IN_POS121Y_INIMajor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>125K</CONDITION>
+                <ACTIONS><COMMENT ref="IN_POS125K_INIMinor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>128(NOT AT)</CONDITION>
+                <ACTIONS><COMMENT ref="IN_POS128CDEFGHIKLMNPQRSVWYdi_INIMinor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>128T</CONDITION>
+                <ACTIONS><COMMENT ref="IN_POS128T_INIMinor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>138(NOT EKA)</CONDITION>
+                <ACTIONS><COMMENT ref="IN_POS138CDFGHILMNPQRSTVWYdi_INIMinor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>138KA</CONDITION>
+                <ACTIONS><COMMENT ref="IN_POS138KA_INIMinor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>140(NOT GSAC)</CONDITION>
+                <ACTIONS><COMMENT ref="IN_POS140DEFHIKLMNPQRTVWYdi_INIMajor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>140SAC</CONDITION>
+                <ACTIONS><COMMENT ref="IN_POS140SAC_INIMajor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>143(NOT YCRH)</CONDITION>
+                <ACTIONS><COMMENT ref="IN_POS143ADEFGIKLMNPQSTVWdi_INIMajor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>143CRH</CONDITION>
+                <ACTIONS><COMMENT ref="IN_POS143CRH_INIMajor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>145(NOT PS)</CONDITION>
+                <ACTIONS><COMMENT ref="IN_POS145ACDEFGHIKLMNQRTVWYdi_INIMinor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>145S</CONDITION>
+                <ACTIONS><COMMENT ref="IN_POS145S_INIMinor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>146(NOT QP)</CONDITION>
+                <ACTIONS><COMMENT ref="IN_POS146ACDEFGHIKLMNRSTVWYdi_INIMinor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>146P</CONDITION>
+                <ACTIONS><COMMENT ref="IN_POS146P_INIMinor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>147(NOT SG)</CONDITION>
+                <ACTIONS><COMMENT ref="IN_POS147ACDEFHIKLMNPQRTVWYdi_INIMajor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>147G</CONDITION>
+                <ACTIONS><COMMENT ref="IN_POS147G_INIMajor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>148(NOT QHKR)</CONDITION>
+                <ACTIONS><COMMENT ref="IN_POS148ACDEFGILMNPSTVWYdi_INIMajor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>148HKR</CONDITION>
+                <ACTIONS><COMMENT ref="IN_POS148HKR_INIMajor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>151(NOT VI)</CONDITION>
+                <ACTIONS><COMMENT ref="IN_POS151ACDEFGHKLMNPQRSTWYdi_INIMinor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>151I</CONDITION>
+                <ACTIONS><COMMENT ref="IN_POS151I_INIMinor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>153A</CONDITION>
+                <ACTIONS><COMMENT ref="IN_POS153A_Other" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>153(NOT SYA)</CONDITION>
+                <ACTIONS><COMMENT ref="IN_POS153CDEFGHIKLMNPQRTVWdi_INIMinor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>153Y</CONDITION>
+                <ACTIONS><COMMENT ref="IN_POS153Y_INIMinor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>154IL</CONDITION>
+                <ACTIONS><COMMENT ref="IN_POS154IL_INIMinor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>155(NOT NHS)</CONDITION>
+                <ACTIONS><COMMENT ref="IN_POS155ACDEFGIKLMPQRTVWYdi_INIMajor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>155HS</CONDITION>
+                <ACTIONS><COMMENT ref="IN_POS155HS_INIMajor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>157(NOT EQ)</CONDITION>
+                <ACTIONS><COMMENT ref="IN_POS157ACDFGHIKLMNPRSTVWYdi_INIMinor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>157Q</CONDITION>
+                <ACTIONS><COMMENT ref="IN_POS157Q_INIMinor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>163RK</CONDITION>
+                <ACTIONS><COMMENT ref="IN_POS163RK_INIMinor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>203M</CONDITION>
+                <ACTIONS><COMMENT ref="IN_POS203M_INIMinor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>230NR</CONDITION>
+                <ACTIONS><COMMENT ref="IN_POS230NR_INIMinor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>263(NOT RK)</CONDITION>
+                <ACTIONS><COMMENT ref="IN_POS263ACDEFGHILMNPQSTVWYdi_INIMinor" /></ACTIONS>
+            </RULE>
+
+            <RULE>
+                <CONDITION>263K</CONDITION>
+                <ACTIONS><COMMENT ref="IN_POS263K_INIMinor" /></ACTIONS>
+            </RULE>
+
+<!-- End the IN rules for mutation-dependent comment strings. -->
+        </GENE>
+    </MUTATION_COMMENTS>
+</ALGORITHM>
