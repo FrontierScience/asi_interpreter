@@ -72,7 +72,7 @@ import junit.framework.TestCase;
     	//No Result Comments - should be no errors
     	System.out.println("No Result Comments");
         try {
-        	attemptTransformation("test/files/stanford_XML/HIVDB_7.0.xml");
+        	attemptTransformation("stanford_XML/HIVDB_7.0.xml");
         } catch (Exception e) {
             fail(e.getMessage());
             e.printStackTrace();
