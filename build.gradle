@@ -10,10 +10,10 @@ plugins {
 }
 
 group = 'java.org.fstrf.stanfordAsiInterpreter.resistance'
-version = '1.5.0.1-hivdb2'
+version = '1.6.0.0-hivdb1'
 
-sourceCompatibility = 1.7
-targetCompatibility = 1.7
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 description = 'ASI (Algorithm Specification Interface) Interpreter'
 
