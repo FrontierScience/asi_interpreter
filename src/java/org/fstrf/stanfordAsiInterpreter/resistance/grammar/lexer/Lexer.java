@@ -14,12 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 ADDITIONAL DISCLAIMER:
-In addition to the standard warranty exclusions and limitations of 
-liability set forth in sections 7, 8 and 9 of the Apache 2.0 license 
-that governs the use and development of this software, Frontier Science 
-& Technology Research Foundation disclaims any liability for use of 
-this software for patient care or in clinical settings. This software 
-was developed solely for use in medical and public health research, and 
+In addition to the standard warranty exclusions and limitations of
+liability set forth in sections 7, 8 and 9 of the Apache 2.0 license
+that governs the use and development of this software, Frontier Science
+& Technology Research Foundation disclaims any liability for use of
+this software for patient care or in clinical settings. This software
+was developed solely for use in medical and public health research, and
 was not intended, designed, or validated to guide patient care.
 */
 
@@ -27,10 +27,7 @@ was not intended, designed, or validated to guide patient care.
 
 package org.fstrf.stanfordAsiInterpreter.resistance.grammar.lexer;
 
-import java.io.BufferedInputStream;
-import java.io.DataInputStream;
 import java.io.IOException;
-import java.io.PushbackReader;
 
 import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.EOF;
 import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.TAminoAcid;
@@ -59,7 +56,8 @@ public class Lexer {
     protected Token<?> token;
     protected State state = State.INITIAL;
 
-    private PushbackReader in;
+    private char[] in;
+    private int inPointer;
     private int line;
     private int pos;
     private boolean cr;
@@ -69,8 +67,9 @@ public class Lexer {
     protected void filter() throws LexerException, IOException {
     }
 
-    public Lexer(PushbackReader in) {
-        this.in = in;
+    public Lexer(String in) {
+        this.in = in.toCharArray();
+        inPointer = 0;
     }
 
     public Token<?> peek() throws LexerException, IOException {
@@ -114,7 +113,7 @@ public class Lexer {
 
             if (c != -1) {
                 switch (c) {
-                    case 10 :
+                    case 0x0A : // \n
                         if (cr) {
                             cr = false;
                         } else {
@@ -122,7 +121,7 @@ public class Lexer {
                             pos = 0;
                         }
                         break;
-                    case 13 :
+                    case 0x0D : // \r
                         line++;
                         pos = 0;
                         cr = true;
@@ -392,37 +391,35 @@ public class Lexer {
             return -1;
         }
 
-        int result = in.read();
-
-        if (result == -1) {
+        if (inPointer == in.length) {
             eof = true;
+            return -1;
         }
+
+        int result = in[inPointer++];
 
         return result;
     }
 
     private void pushBack(int acceptLength) throws IOException {
-        int length = text.length();
-        for (int i = length - 1; i >= acceptLength; i--) {
+        int pushBackSize = text.length() - acceptLength;
+        if (pushBackSize > 0) {
+            inPointer -= pushBackSize;
             eof = false;
-
-            in.unread(text.charAt(i));
         }
     }
 
-    protected void unread(Token<?> token) throws IOException {
+    /* protected void unread(Token<?> token) throws IOException {
         String text = token.getText();
-        int length = text.length();
-
-        for (int i = length - 1; i >= 0; i--) {
+        int pushBackSize = text.length();
+        if (pushBackSize > 0) {
+            inPointer -= pushBackSize;
             eof = false;
-
-            in.unread(text.charAt(i));
         }
 
         pos = token.getPos() - 1;
         line = token.getLine() - 1;
-    }
+    } */
 
     private String getText(int acceptLength) {
         StringBuffer s = new StringBuffer(acceptLength);
@@ -433,42 +430,48 @@ public class Lexer {
         return s.toString();
     }
 
-    private static int[][][][] gotoTable;
-    /*
-     * { { // INITIAL {{9, 9, 1}, {10, 10, 2}, {13, 13, 3}, {32, 32, 4}, {40,
-     * 40, 5}, {41, 41, 6}, {44, 44, 7}, {45, 45, 8}, {48, 57, 9}, {61, 61, 10},
-     * {65, 65, 11}, {67, 67, 12}, {68, 68, 13}, {69, 69, 14}, {70, 70, 15},
-     * {71, 71, 16}, {72, 72, 17}, {73, 73, 18}, {75, 75, 19}, {76, 76, 20},
-     * {77, 77, 21}, {78, 78, 22}, {79, 79, 23}, {80, 80, 24}, {81, 81, 25},
-     * {82, 82, 26}, {83, 83, 27}, {84, 84, 28}, {86, 86, 29}, {87, 87, 30},
-     * {89, 89, 31}, {90, 90, 32}, {100, 100, 33}, {105, 105, 34}, }, {{9, 32,
-     * -2}, }, {{9, 32, -2}, }, {{9, 32, -2}, }, {{9, 32, -2}, }, {}, {}, {},
-     * {}, {{46, 46, 35}, {48, 57, 9}, }, {{62, 62, 36}, }, {{78, 78, 37}, {84,
-     * 84, 38}, }, {}, {}, {{88, 88, 39}, }, {{82, 82, 40}, }, {}, {}, {}, {},
-     * {}, {{65, 65, 41}, }, {{79, 79, 42}, }, {{82, 82, 43}, }, {}, {}, {},
-     * {{67, 67, 44}, {69, 69, 45}, }, {}, {}, {}, {}, {}, {}, {}, {{48, 57,
-     * 46}, }, {}, {{68, 68, 47}, }, {{76, 76, 48}, }, {{65, 65, 49}, {67, 67,
-     * 50}, }, {{79, 79, 51}, }, {{88, 88, 52}, }, {{84, 84, 53}, }, {}, {{79,
-     * 79, 54}, }, {{76, 76, 55}, }, {{48, 57, 46}, }, {}, {{69, 69, 56}, },
-     * {{67, 67, 57}, }, {{76, 76, 58}, }, {{77, 77, 59}, }, {}, {{77, 77, 60},
-     * }, {{82, 82, 61}, }, {{69, 69, 62}, }, {{65, 65, 63}, }, {{84, 84, 64},
-     * }, {{85, 85, 65}, }, {}, {{79, 79, 66}, }, {{69, 69, 67}, }, {{67, 67,
-     * 68}, }, {{83, 83, 69}, }, {{76, 76, 70}, }, {{68, 68, 71}, }, {{82, 82,
-     * 72}, }, {}, {{84, 84, 73}, }, {{84, 84, 74}, }, {{89, 89, 75}, }, {{69,
-     * 69, 76}, }, {{69, 69, 77}, }, {}, {}, {}, {}, {{84, 84, 78}, }, {{72, 72,
-     * 79}, }, {{65, 65, 80}, }, {{78, 78, 81}, }, {}, } };
-     */
+    private static int[][][][] gotoTable = {{{{9, 9, 1}, {10, 10, 2}, {13, 13, 3}, {32, 32, 4}, {40,
+        40, 5}, {41, 41, 6}, {44, 44, 7}, {45, 45, 8}, {48, 57, 9}, {61, 61, 10},
+        {65, 65, 11}, {67, 67, 12}, {68, 68, 13}, {69, 69, 14}, {70, 70, 15},
+        {71, 71, 16}, {72, 72, 17}, {73, 73, 18}, {75, 75, 19}, {76, 76, 20},
+        {77, 77, 21}, {78, 78, 22}, {79, 79, 23}, {80, 80, 24}, {81, 81, 25},
+        {82, 82, 26}, {83, 83, 27}, {84, 84, 28}, {86, 86, 29}, {87, 87, 30},
+        {89, 89, 31}, {90, 90, 32}, {100, 100, 33}, {105, 105, 34},},
+        {{9, 32,
+            -2},},
+        {{9, 32, -2},}, {{9, 32, -2},}, {{9, 32, -2},}, {}, {}, {},
+        {}, {{46, 46, 35}, {48, 57, 9},}, {{62, 62, 36},}, {{78, 78, 37}, {84,
+            84, 38},},
+        {}, {}, {{88, 88, 39},}, {{82, 82, 40},}, {}, {}, {}, {},
+        {}, {{65, 65, 41},}, {{79, 79, 42},}, {{82, 82, 43},}, {}, {}, {},
+        {{67, 67, 44}, {69, 69, 45},}, {}, {}, {}, {}, {}, {}, {}, {{48, 57,
+            46},},
+        {}, {{68, 68, 47},}, {{76, 76, 48},}, {{65, 65, 49}, {67, 67,
+            50},},
+        {{79, 79, 51},}, {{88, 88, 52},}, {{84, 84, 53},}, {}, {{79,
+            79, 54},},
+        {{76, 76, 55},}, {{48, 57, 46},}, {}, {{69, 69, 56},},
+        {{67, 67, 57},}, {{76, 76, 58},}, {{77, 77, 59},}, {}, {{77, 77, 60},
+        }, {{82, 82, 61},}, {{69, 69, 62},}, {{65, 65, 63},},
+        {{84, 84, 64},
+        }, {{85, 85, 65},}, {}, {{79, 79, 66},}, {{69, 69, 67},},
+        {{67, 67,
+            68},},
+        {{83, 83, 69},}, {{76, 76, 70},}, {{68, 68, 71},}, {{82, 82,
+            72},},
+        {}, {{84, 84, 73},}, {{84, 84, 74},}, {{89, 89, 75},}, {{69,
+            69, 76},},
+        {{69, 69, 77},}, {}, {}, {}, {}, {{84, 84, 78},}, {{72, 72,
+            79},},
+        {{65, 65, 80},}, {{78, 78, 81},}, {},}};
 
-    private static int[][] accept;
-    /*
-     * { // INITIAL {-1, 16, 16, 16, 16, 12, 13, 15, 0, 17, -1, 19, 19, 19, 19,
-     * 19, 19, 19, 19, 19, 19, 19, 19, -1, 19, 19, 19, 19, 19, 19, 19, 19, 19,
-     * 19, 19, -1, 14, -1, -1, -1, -1, -1, -1, 2, -1, -1, 18, 1, -1, -1, -1, -1,
-     * 11, 3, -1, -1, -1, -1, -1, 6, -1, -1, -1, -1, -1, -1, -1, 10, -1, -1, -1,
-     * -1, -1, 5, 7, 8, 4, -1, -1, -1, -1, 9, },
-     * 
-     * };
-     */
+    private static int[][] accept = {{-1, 16, 16, 16, 16, 12, 13, 15, 0, 17, -1, 19, 19, 19, 19,
+        19, 19, 19, 19, 19, 19, 19, 19, -1, 19, 19, 19, 19, 19, 19, 19, 19, 19,
+        19, 19, -1, 14, -1, -1, -1, -1, -1, -1, 2, -1, -1, 18, 1, -1, -1, -1, -1,
+        11, 3, -1, -1, -1, -1, -1, 6, -1, -1, -1, -1, -1, -1, -1, 10, -1, -1, -1,
+        -1, -1, 5, 7, 8, 4, -1, -1, -1, -1, 9,},
+
+    };
 
     public static class State {
         public final static State INITIAL = new State(0);
@@ -484,10 +487,10 @@ public class Lexer {
         }
     }
 
-    static {
+    /* static {
         try {
             DataInputStream s = new DataInputStream(new BufferedInputStream(Lexer.class.getResourceAsStream("lexer.dat")));
-
+    
             // read gotoTable
             int length = s.readInt();
             gotoTable = new int[length][][][];
@@ -504,7 +507,7 @@ public class Lexer {
                     }
                 }
             }
-
+    
             // read accept
             length = s.readInt();
             accept = new int[length][];
@@ -515,10 +518,10 @@ public class Lexer {
                     accept[i][j] = s.readInt();
                 }
             }
-
+    
             s.close();
         } catch (Exception e) {
             throw new RuntimeException("The file \"lexer.dat\" is either missing or corrupted.");
         }
-    }
+    } */
 }

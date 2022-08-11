@@ -25,8 +25,6 @@ was not intended, designed, or validated to guide patient care.
 
 package org.fstrf.stanfordAsiInterpreter.resistance.definition;
 
-import java.io.PushbackReader;
-import java.io.StringReader;
 import java.util.List;
 
 import org.fstrf.stanfordAsiInterpreter.resistance.ASIParsingException;
@@ -39,19 +37,16 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.parser.Parser;
 
 public class RuleCondition {
 
-    private static final int DEFAULT_BUFFER_SIZE = 1024;
-
     private String statement;
     private Start conditionTree;
 
     public RuleCondition(String statement) throws ASIParsingException {
         this.statement = statement;
-        PushbackReader reader = new PushbackReader(new StringReader(this.statement), DEFAULT_BUFFER_SIZE);
-        Parser parser = new Parser(new Lexer(reader));
+        Parser parser = new Parser(new Lexer(statement));
         try {
             this.conditionTree = parser.parse();
         } catch (Exception e) {
-            throw new ASIParsingException("Invalid condition statement: " + statement, e);
+            throw new ASIParsingException("Invalid condition statement: " + statement + "\r\n original error: " + e);
         }
     }
 

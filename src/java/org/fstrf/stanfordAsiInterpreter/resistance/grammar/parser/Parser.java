@@ -27,8 +27,6 @@ was not intended, designed, or validated to guide patient care.
 
 package org.fstrf.stanfordAsiInterpreter.resistance.grammar.parser;
 
-import java.io.BufferedInputStream;
-import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -1100,7 +1098,7 @@ public class Parser {
             trparNode10 = (TRPar) nodeArrayList9.get(0);
 
             pselectstatement2Node1 = new AAtleastnotmorethanSelectstatement2(tatleastNode2, tintegerNode3, plogicsymbolNode4, tnotmorethanNode5, tintegerNode6,
-                    tfromNode7, tlparNode8, pselectlistNode9, trparNode10);
+                tfromNode7, tlparNode8, pselectlistNode9, trparNode10);
         }
         nodeList.add(pselectstatement2Node1);
         return nodeList;
@@ -1550,110 +1548,63 @@ public class Parser {
         return nodeList;
     }
 
-    private static int[][][] actionTable;
-    /*
-     * { {{-1, ERROR, 0}, {3, SHIFT, 1}, {4, SHIFT, 2}, {5, SHIFT, 3}, {10,
-     * SHIFT, 4}, {12, SHIFT, 5}, {16, SHIFT, 6}, {18, SHIFT, 7}, }, {{-1,
-     * ERROR, 1}, {16, SHIFT, 15}, {18, SHIFT, 16}, }, {{-1, ERROR, 2}, {3,
-     * SHIFT, 1}, {16, SHIFT, 6}, {18, SHIFT, 7}, }, {{-1, ERROR, 3}, {7, SHIFT,
-     * 18}, {8, SHIFT, 19}, {9, SHIFT, 20}, }, {{-1, ERROR, 4}, {6, SHIFT, 22},
-     * }, {{-1, ERROR, 5}, {3, SHIFT, 1}, {4, SHIFT, 2}, {5, SHIFT, 3}, {12,
-     * SHIFT, 5}, {16, SHIFT, 6}, {18, SHIFT, 7}, }, {{-1, ERROR, 6}, {12,
-     * SHIFT, 24}, {18, SHIFT, 25}, }, {{-1, ERROR, 7}, {16, SHIFT, 27}, },
-     * {{-1, ERROR, 8}, {19, ACCEPT, -1}, }, {{-1, REDUCE, 0}, }, {{-1, REDUCE,
-     * 2}, {1, SHIFT, 28}, {2, SHIFT, 29}, }, {{-1, REDUCE, 5}, }, {{-1, REDUCE,
-     * 6}, }, {{-1, REDUCE, 7}, }, {{-1, REDUCE, 1}, }, {{-1, ERROR, 15}, {18,
-     * SHIFT, 25}, }, {{-1, ERROR, 16}, {16, SHIFT, 34}, }, {{-1, REDUCE, 17},
-     * }, {{-1, ERROR, 18}, {16, SHIFT, 35}, }, {{-1, ERROR, 19}, {16, SHIFT,
-     * 36}, }, {{-1, ERROR, 20}, {16, SHIFT, 37}, }, {{-1, REDUCE, 18}, }, {{-1,
-     * ERROR, 22}, {12, SHIFT, 38}, }, {{-1, ERROR, 23}, {13, SHIFT, 39}, },
-     * {{-1, ERROR, 24}, {3, SHIFT, 40}, }, {{-1, REDUCE, 37}, }, {{-1, REDUCE,
-     * 11}, {18, SHIFT, 41}, }, {{-1, ERROR, 27}, {12, SHIFT, 42}, {18, SHIFT,
-     * 25}, }, {{-1, REDUCE, 9}, }, {{-1, REDUCE, 10}, }, {{-1, REDUCE, 35}, },
-     * {{-1, ERROR, 31}, {3, SHIFT, 1}, {4, SHIFT, 2}, {5, SHIFT, 3}, {12,
-     * SHIFT, 5}, {16, SHIFT, 6}, {18, SHIFT, 7}, }, {{-1, REDUCE, 3}, {1,
-     * SHIFT, 28}, {2, SHIFT, 29}, }, {{-1, REDUCE, 13}, {18, SHIFT, 41}, },
-     * {{-1, ERROR, 34}, {18, SHIFT, 25}, }, {{-1, ERROR, 35}, {1, SHIFT, 28},
-     * {2, SHIFT, 29}, {6, SHIFT, 47}, }, {{-1, ERROR, 36}, {6, SHIFT, 49}, },
-     * {{-1, ERROR, 37}, {6, SHIFT, 50}, }, {{-1, ERROR, 38}, {3, SHIFT, 1}, {4,
-     * SHIFT, 2}, {5, SHIFT, 3}, {11, SHIFT, 51}, {12, SHIFT, 5}, {16, SHIFT,
-     * 6}, {18, SHIFT, 7}, }, {{-1, REDUCE, 4}, }, {{-1, ERROR, 40}, {18, SHIFT,
-     * 25}, }, {{-1, REDUCE, 38}, }, {{-1, ERROR, 42}, {3, SHIFT, 56}, }, {{-1,
-     * REDUCE, 12}, {18, SHIFT, 41}, }, {{-1, REDUCE, 8}, }, {{-1, REDUCE, 36},
-     * }, {{-1, REDUCE, 14}, {18, SHIFT, 41}, }, {{-1, ERROR, 47}, {12, SHIFT,
-     * 57}, }, {{-1, ERROR, 48}, {9, SHIFT, 58}, }, {{-1, ERROR, 49}, {12,
-     * SHIFT, 59}, }, {{-1, ERROR, 50}, {12, SHIFT, 60}, }, {{-1, ERROR, 51},
-     * {12, SHIFT, 61}, }, {{-1, ERROR, 52}, {14, SHIFT, 62}, }, {{-1, ERROR,
-     * 53}, {13, SHIFT, 63}, }, {{-1, REDUCE, 27}, {15, SHIFT, 64}, }, {{-1,
-     * ERROR, 55}, {13, SHIFT, 67}, {18, SHIFT, 41}, }, {{-1, ERROR, 56}, {18,
-     * SHIFT, 25}, }, {{-1, ERROR, 57}, {3, SHIFT, 1}, {16, SHIFT, 6}, {18,
-     * SHIFT, 7}, }, {{-1, ERROR, 58}, {16, SHIFT, 71}, }, {{-1, ERROR, 59}, {3,
-     * SHIFT, 1}, {16, SHIFT, 6}, {18, SHIFT, 7}, }, {{-1, ERROR, 60}, {3,
-     * SHIFT, 1}, {16, SHIFT, 6}, {18, SHIFT, 7}, }, {{-1, ERROR, 61}, {3,
-     * SHIFT, 1}, {4, SHIFT, 2}, {5, SHIFT, 3}, {11, SHIFT, 51}, {12, SHIFT, 5},
-     * {16, SHIFT, 6}, {18, SHIFT, 7}, }, {{-1, ERROR, 62}, {0, SHIFT, 75}, {16,
-     * SHIFT, 76}, {17, SHIFT, 77}, }, {{-1, REDUCE, 26}, }, {{-1, ERROR, 64},
-     * {3, SHIFT, 1}, {4, SHIFT, 2}, {5, SHIFT, 3}, {11, SHIFT, 51}, {12, SHIFT,
-     * 5}, {16, SHIFT, 6}, {18, SHIFT, 7}, }, {{-1, REDUCE, 41}, }, {{-1,
-     * REDUCE, 28}, {15, SHIFT, 64}, }, {{-1, REDUCE, 15}, }, {{-1, ERROR, 68},
-     * {13, SHIFT, 81}, {18, SHIFT, 41}, }, {{-1, REDUCE, 23}, {15, SHIFT, 82},
-     * }, {{-1, ERROR, 70}, {13, SHIFT, 85}, }, {{-1, ERROR, 71}, {6, SHIFT,
-     * 86}, }, {{-1, ERROR, 72}, {13, SHIFT, 87}, }, {{-1, ERROR, 73}, {13,
-     * SHIFT, 88}, }, {{-1, ERROR, 74}, {13, SHIFT, 89}, }, {{-1, ERROR, 75},
-     * {16, SHIFT, 76}, {17, SHIFT, 77}, }, {{-1, REDUCE, 33}, }, {{-1, REDUCE,
-     * 34}, }, {{-1, REDUCE, 29}, }, {{-1, REDUCE, 32}, }, {{-1, REDUCE, 42}, },
-     * {{-1, REDUCE, 16}, }, {{-1, ERROR, 82}, {3, SHIFT, 1}, {16, SHIFT, 6},
-     * {18, SHIFT, 7}, }, {{-1, REDUCE, 39}, }, {{-1, REDUCE, 24}, {15, SHIFT,
-     * 82}, }, {{-1, REDUCE, 20}, }, {{-1, ERROR, 86}, {12, SHIFT, 93}, }, {{-1,
-     * REDUCE, 19}, }, {{-1, REDUCE, 21}, }, {{-1, REDUCE, 31}, }, {{-1, REDUCE,
-     * 30}, }, {{-1, REDUCE, 25}, }, {{-1, REDUCE, 40}, }, {{-1, ERROR, 93}, {3,
-     * SHIFT, 1}, {16, SHIFT, 6}, {18, SHIFT, 7}, }, {{-1, ERROR, 94}, {13,
-     * SHIFT, 95}, }, {{-1, REDUCE, 22}, }, };
-     */
-    private static int[][][] gotoTable;
-    /*
-     * { {{-1, 8}, }, {{-1, 52}, {0, 9}, {5, 23}, }, {{-1, 10}, {31, 44}, },
-     * {{-1, 30}, {32, 45}, }, {{-1, 31}, {35, 48}, }, {{-1, 11}, {2, 17}, {57,
-     * 69}, {59, 69}, {60, 69}, {82, 91}, {93, 69}, }, {{-1, 12}, }, {{-1, 13},
-     * }, {{-1, 21}, }, {{-1, 70}, {59, 72}, {60, 73}, {93, 94}, }, {{-1, 83},
-     * {84, 92}, }, {{-1, 14}, }, {{-1, 53}, {61, 74}, }, {{-1, 54}, {64, 79},
-     * }, {{-1, 65}, {66, 80}, }, {{-1, 78}, {75, 90}, }, {{-1, 32}, }, {{-1,
-     * 26}, {15, 33}, {27, 43}, {34, 46}, {40, 55}, {56, 68}, }, {{-1, 84}, },
-     * {{-1, 66}, }, };
-     */
-    private static String[] errorMessages;
-    /*
-     * {
-     * "expecting: 'NOT', 'EXCLUDE', 'SELECT', 'SCORE', '(', integer, amino acid"
-     * , "expecting: integer, amino acid",
-     * "expecting: 'NOT', integer, amino acid",
-     * "expecting: 'ATLEAST', 'EXACTLY', 'NOTMORETHAN'", "expecting: 'FROM'",
-     * "expecting: 'NOT', 'EXCLUDE', 'SELECT', '(', integer, amino acid",
-     * "expecting: '(', amino acid", "expecting: integer", "expecting: EOF",
-     * "expecting: 'AND', 'OR', ')', '=>', EOF", "expecting: amino acid",
-     * "expecting: '('", "expecting: ')'", "expecting: 'NOT'",
-     * "expecting: 'AND', 'OR', ')', '=>', ',', amino acid, EOF",
-     * "expecting: 'NOT', 'EXCLUDE', 'SELECT', 'NOTMORETHAN', '(', integer, amino acid"
-     * , "expecting: 'AND', 'OR', 'FROM'",
-     * "expecting: 'NOT', 'EXCLUDE', 'SELECT', 'MAX', '(', integer, amino acid",
-     * "expecting: 'NOTMORETHAN'", "expecting: '=>'", "expecting: ')', ','",
-     * "expecting: ')', amino acid", "expecting: '-', integer, float",
-     * "expecting: 'AND', 'OR', ')', '=>', ',', EOF",
-     * "expecting: integer, float", };
-     */
-    private static int[] errors;
-    /*
-     * { 0, 1, 2, 3, 4, 5, 6, 7, 8, 8, 9, 9, 9, 9, 8, 10, 7, 9, 7, 7, 7, 9, 11,
-     * 12, 13, 14, 14, 6, 15, 15, 9, 5, 9, 14, 10, 16, 4, 4, 17, 9, 10, 14, 13,
-     * 14, 9, 9, 14, 11, 18, 11, 11, 11, 19, 12, 20, 21, 10, 2, 7, 2, 2, 17, 22,
-     * 8, 17, 20, 20, 23, 21, 20, 12, 4, 12, 12, 12, 24, 20, 20, 20, 20, 20, 23,
-     * 2, 20, 20, 9, 11, 9, 9, 20, 20, 20, 20, 2, 12, 9, };
-     */
+    private static int[][][] actionTable = {
+        {{-1, ERROR, 0}, {3, SHIFT, 1}, {4, SHIFT, 2}, {5, SHIFT, 3}, {10, SHIFT, 4}, {12, SHIFT, 5}, {16, SHIFT, 6}, {18, SHIFT, 7},},
+        {{-1, ERROR, 1}, {16, SHIFT, 15}, {18, SHIFT, 16},}, {{-1, ERROR, 2}, {3, SHIFT, 1}, {16, SHIFT, 6}, {18, SHIFT, 7},},
+        {{-1, ERROR, 3}, {7, SHIFT, 18}, {8, SHIFT, 19}, {9, SHIFT, 20},}, {{-1, ERROR, 4}, {6, SHIFT, 22},},
+        {{-1, ERROR, 5}, {3, SHIFT, 1}, {4, SHIFT, 2}, {5, SHIFT, 3}, {12, SHIFT, 5}, {16, SHIFT, 6}, {18, SHIFT, 7},},
+        {{-1, ERROR, 6}, {12, SHIFT, 24}, {18, SHIFT, 25},}, {{-1, ERROR, 7}, {16, SHIFT, 27},}, {{-1, ERROR, 8}, {19, ACCEPT, -1},}, {{-1, REDUCE, 0},},
+        {{-1, REDUCE, 2}, {1, SHIFT, 28}, {2, SHIFT, 29},}, {{-1, REDUCE, 5},}, {{-1, REDUCE, 6},}, {{-1, REDUCE, 7},}, {{-1, REDUCE, 1},},
+        {{-1, ERROR, 15}, {18, SHIFT, 25},}, {{-1, ERROR, 16}, {16, SHIFT, 34},}, {{-1, REDUCE, 17},}, {{-1, ERROR, 18}, {16, SHIFT, 35},},
+        {{-1, ERROR, 19}, {16, SHIFT, 36},}, {{-1, ERROR, 20}, {16, SHIFT, 37},}, {{-1, REDUCE, 18},}, {{-1, ERROR, 22}, {12, SHIFT, 38},},
+        {{-1, ERROR, 23}, {13, SHIFT, 39},}, {{-1, ERROR, 24}, {3, SHIFT, 40},}, {{-1, REDUCE, 37},}, {{-1, REDUCE, 11}, {18, SHIFT, 41},},
+        {{-1, ERROR, 27}, {12, SHIFT, 42}, {18, SHIFT, 25},}, {{-1, REDUCE, 9},}, {{-1, REDUCE, 10},}, {{-1, REDUCE, 35},},
+        {{-1, ERROR, 31}, {3, SHIFT, 1}, {4, SHIFT, 2}, {5, SHIFT, 3}, {12, SHIFT, 5}, {16, SHIFT, 6}, {18, SHIFT, 7},},
+        {{-1, REDUCE, 3}, {1, SHIFT, 28}, {2, SHIFT, 29},}, {{-1, REDUCE, 13}, {18, SHIFT, 41},}, {{-1, ERROR, 34}, {18, SHIFT, 25},},
+        {{-1, ERROR, 35}, {1, SHIFT, 28}, {2, SHIFT, 29}, {6, SHIFT, 47},}, {{-1, ERROR, 36}, {6, SHIFT, 49},}, {{-1, ERROR, 37}, {6, SHIFT, 50},},
+        {{-1, ERROR, 38}, {3, SHIFT, 1}, {4, SHIFT, 2}, {5, SHIFT, 3}, {11, SHIFT, 51}, {12, SHIFT, 5}, {16, SHIFT, 6}, {18, SHIFT, 7},},
+        {{-1, REDUCE, 4},}, {{-1, ERROR, 40}, {18, SHIFT, 25},}, {{-1, REDUCE, 38},}, {{-1, ERROR, 42}, {3, SHIFT, 56},},
+        {{-1, REDUCE, 12}, {18, SHIFT, 41},}, {{-1, REDUCE, 8},}, {{-1, REDUCE, 36},}, {{-1, REDUCE, 14}, {18, SHIFT, 41},},
+        {{-1, ERROR, 47}, {12, SHIFT, 57},}, {{-1, ERROR, 48}, {9, SHIFT, 58},}, {{-1, ERROR, 49}, {12, SHIFT, 59},}, {{-1, ERROR, 50}, {12, SHIFT, 60},},
+        {{-1, ERROR, 51}, {12, SHIFT, 61},}, {{-1, ERROR, 52}, {14, SHIFT, 62},}, {{-1, ERROR, 53}, {13, SHIFT, 63},}, {{-1, REDUCE, 27}, {15, SHIFT, 64},},
+        {{-1, ERROR, 55}, {13, SHIFT, 67}, {18, SHIFT, 41},}, {{-1, ERROR, 56}, {18, SHIFT, 25},},
+        {{-1, ERROR, 57}, {3, SHIFT, 1}, {16, SHIFT, 6}, {18, SHIFT, 7},}, {{-1, ERROR, 58}, {16, SHIFT, 71},},
+        {{-1, ERROR, 59}, {3, SHIFT, 1}, {16, SHIFT, 6}, {18, SHIFT, 7},}, {{-1, ERROR, 60}, {3, SHIFT, 1}, {16, SHIFT, 6}, {18, SHIFT, 7},},
+        {{-1, ERROR, 61}, {3, SHIFT, 1}, {4, SHIFT, 2}, {5, SHIFT, 3}, {11, SHIFT, 51}, {12, SHIFT, 5}, {16, SHIFT, 6}, {18, SHIFT, 7},},
+        {{-1, ERROR, 62}, {0, SHIFT, 75}, {16, SHIFT, 76}, {17, SHIFT, 77},}, {{-1, REDUCE, 26},},
+        {{-1, ERROR, 64}, {3, SHIFT, 1}, {4, SHIFT, 2}, {5, SHIFT, 3}, {11, SHIFT, 51}, {12, SHIFT, 5}, {16, SHIFT, 6}, {18, SHIFT, 7},},
+        {{-1, REDUCE, 41},}, {{-1, REDUCE, 28}, {15, SHIFT, 64},}, {{-1, REDUCE, 15},}, {{-1, ERROR, 68}, {13, SHIFT, 81}, {18, SHIFT, 41},},
+        {{-1, REDUCE, 23}, {15, SHIFT, 82},}, {{-1, ERROR, 70}, {13, SHIFT, 85},}, {{-1, ERROR, 71}, {6, SHIFT, 86},}, {{-1, ERROR, 72}, {13, SHIFT, 87},},
+        {{-1, ERROR, 73}, {13, SHIFT, 88},}, {{-1, ERROR, 74}, {13, SHIFT, 89},}, {{-1, ERROR, 75}, {16, SHIFT, 76}, {17, SHIFT, 77},}, {{-1, REDUCE, 33},},
+        {{-1, REDUCE, 34},}, {{-1, REDUCE, 29},}, {{-1, REDUCE, 32},}, {{-1, REDUCE, 42},}, {{-1, REDUCE, 16},},
+        {{-1, ERROR, 82}, {3, SHIFT, 1}, {16, SHIFT, 6}, {18, SHIFT, 7},}, {{-1, REDUCE, 39},}, {{-1, REDUCE, 24}, {15, SHIFT, 82},}, {{-1, REDUCE, 20},},
+        {{-1, ERROR, 86}, {12, SHIFT, 93},}, {{-1, REDUCE, 19},}, {{-1, REDUCE, 21},}, {{-1, REDUCE, 31},}, {{-1, REDUCE, 30},}, {{-1, REDUCE, 25},},
+        {{-1, REDUCE, 40},}, {{-1, ERROR, 93}, {3, SHIFT, 1}, {16, SHIFT, 6}, {18, SHIFT, 7},}, {{-1, ERROR, 94}, {13, SHIFT, 95},}, {{-1, REDUCE, 22},},};
 
-    static {
+    private static int[][][] gotoTable = {{{-1, 8},}, {{-1, 52}, {0, 9}, {5, 23},}, {{-1, 10}, {31, 44},}, {{-1, 30}, {32, 45},}, {{-1, 31}, {35, 48},},
+        {{-1, 11}, {2, 17}, {57, 69}, {59, 69}, {60, 69}, {82, 91}, {93, 69},}, {{-1, 12},}, {{-1, 13},}, {{-1, 21},},
+        {{-1, 70}, {59, 72}, {60, 73}, {93, 94},}, {{-1, 83}, {84, 92},}, {{-1, 14},}, {{-1, 53}, {61, 74},}, {{-1, 54}, {64, 79},}, {{-1, 65}, {66, 80},},
+        {{-1, 78}, {75, 90},}, {{-1, 32},}, {{-1, 26}, {15, 33}, {27, 43}, {34, 46}, {40, 55}, {56, 68},}, {{-1, 84},}, {{-1, 66},},};
+
+    private static String[] errorMessages = {"expecting: 'NOT', 'EXCLUDE', 'SELECT', 'SCORE', '(', integer, amino acid", "expecting: integer, amino acid",
+        "expecting: 'NOT', integer, amino acid", "expecting: 'ATLEAST', 'EXACTLY', 'NOTMORETHAN'", "expecting: 'FROM'",
+        "expecting: 'NOT', 'EXCLUDE', 'SELECT', '(', integer, amino acid", "expecting: '(', amino acid", "expecting: integer", "expecting: EOF",
+        "expecting: 'AND', 'OR', ')', '=>', EOF", "expecting: amino acid", "expecting: '('", "expecting: ')'", "expecting: 'NOT'",
+        "expecting: 'AND', 'OR', ')', '=>', ',', amino acid, EOF", "expecting: 'NOT', 'EXCLUDE', 'SELECT', 'NOTMORETHAN', '(', integer, amino acid",
+        "expecting: 'AND', 'OR', 'FROM'", "expecting: 'NOT', 'EXCLUDE', 'SELECT', 'MAX', '(', integer, amino acid", "expecting: 'NOTMORETHAN'",
+        "expecting: '=>'", "expecting: ')', ','", "expecting: ')', amino acid", "expecting: '-', integer, float",
+        "expecting: 'AND', 'OR', ')', '=>', ',', EOF", "expecting: integer, float"};
+
+    private static int[] errors = {0, 1, 2, 3, 4, 5, 6, 7, 8, 8, 9, 9, 9, 9, 8, 10, 7, 9, 7, 7, 7, 9, 11,
+        12, 13, 14, 14, 6, 15, 15, 9, 5, 9, 14, 10, 16, 4, 4, 17, 9, 10, 14, 13,
+        14, 9, 9, 14, 11, 18, 11, 11, 11, 19, 12, 20, 21, 10, 2, 7, 2, 2, 17, 22,
+        8, 17, 20, 20, 23, 21, 20, 12, 4, 12, 12, 12, 24, 20, 20, 20, 20, 20, 23,
+        2, 20, 20, 9, 11, 9, 9, 20, 20, 20, 20, 2, 12, 9,};
+
+    /* static {
         try {
             DataInputStream s = new DataInputStream(new BufferedInputStream(Parser.class.getResourceAsStream("parser.dat")));
-
+    
             // read actionTable
             int length = s.readInt();
             actionTable = new int[length][][];
@@ -1666,7 +1617,7 @@ public class Parser {
                     }
                 }
             }
-
+    
             // read gotoTable
             length = s.readInt();
             gotoTable = new int[length][][];
@@ -1679,30 +1630,30 @@ public class Parser {
                     }
                 }
             }
-
+    
             // read errorMessages
             length = s.readInt();
             errorMessages = new String[length];
             for (int i = 0; i < errorMessages.length; i++) {
                 length = s.readInt();
                 StringBuffer buffer = new StringBuffer();
-
+    
                 for (int j = 0; j < length; j++) {
                     buffer.append(s.readChar());
                 }
                 errorMessages[i] = buffer.toString();
             }
-
+    
             // read errors
             length = s.readInt();
             errors = new int[length];
             for (int i = 0; i < errors.length; i++) {
                 errors[i] = s.readInt();
             }
-
+    
             s.close();
         } catch (Exception e) {
             throw new RuntimeException("The file \"parser.dat\" is either missing or corrupted.");
         }
-    }
+    } */
 }
