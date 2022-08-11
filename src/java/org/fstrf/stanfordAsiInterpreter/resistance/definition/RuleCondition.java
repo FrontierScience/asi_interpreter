@@ -23,8 +23,6 @@ was developed solely for use in medical and public health research, and
 was not intended, designed, or validated to guide patient care.
 */
 
-
-
 package org.fstrf.stanfordAsiInterpreter.resistance.definition;
 
 import java.io.PushbackReader;
@@ -41,34 +39,34 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.parser.Parser;
 
 public class RuleCondition {
 
-	private static final int DEFAULT_BUFFER_SIZE = 1024;
+    private static final int DEFAULT_BUFFER_SIZE = 1024;
 
-	private String statement;
-	private Start conditionTree;
+    private String statement;
+    private Start conditionTree;
 
-	public RuleCondition(String statement) throws ASIParsingException {
-		this.statement = statement;
-		PushbackReader reader = new PushbackReader(new StringReader(this.statement), DEFAULT_BUFFER_SIZE);
-		Parser parser = new Parser(new Lexer(reader));
-		try {
-			this.conditionTree = parser.parse();
-		} catch(Exception e) {
-			throw new ASIParsingException("Invalid condition statement: " + statement, e);
-		}
-	}
+    public RuleCondition(String statement) throws ASIParsingException {
+        this.statement = statement;
+        PushbackReader reader = new PushbackReader(new StringReader(this.statement), DEFAULT_BUFFER_SIZE);
+        Parser parser = new Parser(new Lexer(reader));
+        try {
+            this.conditionTree = parser.parse();
+        } catch (Exception e) {
+            throw new ASIParsingException("Invalid condition statement: " + statement, e);
+        }
+    }
 
-	public String getStatement(){
-		return this.statement;
-	}
+    public String getStatement() {
+        return this.statement;
+    }
 
-	public <T extends MutationComparator<String>> EvaluatedCondition evaluate(List<String> mutations, T comparator) {
-	    AsiGrammarAdapter<T> adapter = new AsiGrammarAdapter<>(mutations, comparator);
-	    this.conditionTree.apply(adapter);
-	    return new EvaluatedCondition(this, adapter);
-	}
+    public <T extends MutationComparator<String>> EvaluatedCondition evaluate(List<String> mutations, T comparator) {
+        AsiGrammarAdapter<T> adapter = new AsiGrammarAdapter<>(mutations, comparator);
+        this.conditionTree.apply(adapter);
+        return new EvaluatedCondition(this, adapter);
+    }
 
-	@Override
+    @Override
     public String toString() {
-		return this.statement;
-	}
+        return this.statement;
+    }
 }

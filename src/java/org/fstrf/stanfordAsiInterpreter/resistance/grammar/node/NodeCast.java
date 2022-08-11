@@ -30,17 +30,20 @@ was not intended, designed, or validated to guide patient care.
 package org.fstrf.stanfordAsiInterpreter.resistance.grammar.node;
 
 
-public class NodeCast implements Cast<Node<?>>
+public class NodeCast<T extends Node<T>> implements Cast<T>
 {
-    public final static NodeCast instance = new NodeCast();
+    public final static <U extends Node<U>> NodeCast<U> instance() {
+    	return new NodeCast<>();
+    }
 
     private NodeCast()
     {
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-	public Node<?> cast(Object o)
+	public T cast(Object o)
     {
-        return (Node<?>) o;
+        return (T) o;
     }
 }
