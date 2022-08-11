@@ -1,3 +1,16 @@
+package org.fstrf.stanfordAsiInterpreter.resistance;
+
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.io.ByteArrayInputStream;
+
+public class DtdASI2_2 {
+	
+	public static InputStream load() {
+		return new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8));
+	}
+	
+	private static String xml = """
 <!-- 
 This DTD is being put together to indicate the format the various
 drug resistance algorithms should use.
@@ -76,3 +89,5 @@ by kyle lambert
 <!ELEMENT EQ (#PCDATA)>
 <!ELEMENT NEQ (#PCDATA)>
 <!-- *************************************************************** --> 
+""";
+}

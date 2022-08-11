@@ -27,29 +27,23 @@ was not intended, designed, or validated to guide patient care.
 
 package org.fstrf.stanfordAsiInterpreter.resistance.xml;
 
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.dom4j.Document;
-import org.dom4j.DocumentException;
-import org.dom4j.Node;
-import org.dom4j.XPath;
-import org.dom4j.io.SAXReader;
-import org.dom4j.xpath.DefaultXPath;
+import edu.stanford.hivdb.asijs.DOMParser;
+import edu.stanford.hivdb.asijs.XPathEvaluator;
+import edu.stanford.hivdb.asijs.jre.java.util.regex.Matcher;
+import edu.stanford.hivdb.asijs.jre.java.util.regex.Pattern;
+import elemental2.dom.Node;
+import elemental2.dom.XPathResult;
+import elemental2.dom.Document;
+
 import org.fstrf.stanfordAsiInterpreter.resistance.ASIParsingException;
-import org.fstrf.stanfordAsiInterpreter.resistance.AsiTransformer;
 import org.fstrf.stanfordAsiInterpreter.resistance.definition.CommentAction;
 import org.fstrf.stanfordAsiInterpreter.resistance.definition.CommentDefinition;
 import org.fstrf.stanfordAsiInterpreter.resistance.definition.Definition;
@@ -64,106 +58,81 @@ import org.fstrf.stanfordAsiInterpreter.resistance.definition.MutationType;
 import org.fstrf.stanfordAsiInterpreter.resistance.definition.RangeValue;
 import org.fstrf.stanfordAsiInterpreter.resistance.definition.ResultCommentRule;
 import org.fstrf.stanfordAsiInterpreter.resistance.definition.Rule;
+import org.fstrf.stanfordAsiInterpreter.resistance.definition.RuleAction;
 import org.fstrf.stanfordAsiInterpreter.resistance.definition.RuleCondition;
 import org.fstrf.stanfordAsiInterpreter.resistance.definition.ScoreRangeAction;
-import org.xml.sax.EntityResolver;
-import org.xml.sax.InputSource;
 
-@SuppressWarnings("all") public class XmlAsiTransformer implements AsiTransformer {
+import com.google.common.collect.Sets;
+
+
+public class XmlAsiTransformer {
 
 	private static final Pattern SCORE_RANGE_PATTERN = Pattern.compile("(-INF|\\d+(?:\\.\\d+)?)\\s*TO\\s*(INF|\\d+(?:\\.\\d+)?)\\s*=>\\s*(\\d+)");
     private static final Pattern SINGLE_SCORE_PATTERN = Pattern.compile("(\\(|\\,\\s*\\d+(?:\\.\\d+)?)\\s*=>\\s*(\\d+)");
 
-	private static final XPath GENE_DEFINITION_XPATH = new DefaultXPath("/ALGORITHM/DEFINITIONS/GENE_DEFINITION");
-	private static final XPath GENE_DEFINITION_NAME_XPATH = new DefaultXPath("NAME");
-    private static final XPath GENE_DEFINITION_INDELRANGE_XPATH = new DefaultXPath("INDEL_RANGE_DEFINITION");
-    private static final XPath GENE_DEFINITION_INDELRANGE_INPUT_XPATH = new DefaultXPath("INPUT");
-    private static final XPath GENE_DEFINITION_INDELRANGE_OUTPUT_XPATH = new DefaultXPath("OUTPUT");
-	private static final XPath GENE_DEFINITION_DRUGCLASSLIST_XPATH = new DefaultXPath("DRUGCLASSLIST");
-	private static final XPath GENE_MUTATION_COMMENTS_XPATH = new DefaultXPath("/ALGORITHM/MUTATION_COMMENTS/GENE");
-	private static final XPath GENE_MUTATION_COMMENTS__NAME_XPATH = new DefaultXPath("NAME");
-	private static final XPath GENE_RULE_XPATH = new DefaultXPath("RULE");
+    private static final XPathEvaluator XPATH_EVALUATOR = new XPathEvaluator();
+    
+	private static final String GENE_DEFINITION_XPATH = "/ALGORITHM/DEFINITIONS/GENE_DEFINITION";
+	private static final String GENE_DEFINITION_NAME_XPATH = "NAME";
+    private static final String GENE_DEFINITION_INDELRANGE_XPATH = "INDEL_RANGE_DEFINITION";
+    private static final String GENE_DEFINITION_INDELRANGE_INPUT_XPATH = "INPUT";
+    private static final String GENE_DEFINITION_INDELRANGE_OUTPUT_XPATH = "OUTPUT";
+	private static final String GENE_DEFINITION_DRUGCLASSLIST_XPATH = "DRUGCLASSLIST";
+	private static final String GENE_MUTATION_COMMENTS_XPATH = "/ALGORITHM/MUTATION_COMMENTS/GENE";
+	private static final String GENE_MUTATION_COMMENTS__NAME_XPATH = "NAME";
+	private static final String GENE_RULE_XPATH = "RULE";
 
-	private static final XPath RESULT_COMMENT_XPATH = new DefaultXPath("/ALGORITHM/RESULT_COMMENTS/RESULT_COMMENT_RULE");
-	private static final XPath RESULT_COMMENT_DRUG_LEVEL_CONDITIONS = new DefaultXPath("DRUG_LEVEL_CONDITIONS");
-	private static final XPath RESULT_COMMENT_DRUG_LEVEL_CONDITION = new DefaultXPath("DRUG_LEVEL_CONDITION");
-	private static final XPath RESULT_COMMENT_DRUG_NAME = new DefaultXPath("DRUG_NAME");
-	private static final XPath RESULT_COMMENT_LEVEL_ACTION = new DefaultXPath("LEVEL_ACTION");
-	private static final XPath RESULT_COMMENT_LEVEL_ACTION_COMMENT_XPATH = new DefaultXPath("COMMENT/@ref");
+	private static final String RESULT_COMMENT_XPATH = "/ALGORITHM/RESULT_COMMENTS/RESULT_COMMENT_RULE";
+	private static final String RESULT_COMMENT_DRUG_LEVEL_CONDITIONS = "DRUG_LEVEL_CONDITIONS";
+	private static final String RESULT_COMMENT_DRUG_LEVEL_CONDITION = "DRUG_LEVEL_CONDITION";
+	private static final String RESULT_COMMENT_DRUG_NAME = "DRUG_NAME";
+	private static final String RESULT_COMMENT_LEVEL_ACTION = "LEVEL_ACTION";
+	private static final String RESULT_COMMENT_LEVEL_ACTION_COMMENT_XPATH = "COMMENT/@ref";
 
-	private static final XPath LTE = new DefaultXPath("LTE");
-	private static final XPath GTE = new DefaultXPath("GTE");
-	private static final XPath LT = new DefaultXPath("LT");
-	private static final XPath GT = new DefaultXPath("GT");
-	private static final XPath EQ = new DefaultXPath("EQ");
-	private static final XPath NEQ = new DefaultXPath("NEQ");
+	private static final String LTE = "LTE";
+	private static final String GTE = "GTE";
+	private static final String LT = "LT";
+	private static final String GT = "GT";
+	private static final String EQ = "EQ";
+	private static final String NEQ = "NEQ";
 
-	private static final XPath LEVEL_XPATH = new DefaultXPath("/ALGORITHM/DEFINITIONS/LEVEL_DEFINITION");
-	private static final XPath LEVEL_ORDER_XPATH = new DefaultXPath("ORDER");
-	private static final XPath LEVEL_TEXT_XPATH = new DefaultXPath("ORIGINAL");
-	private static final XPath LEVEL_SIR_XPATH = new DefaultXPath("SIR");
+	private static final String LEVEL_XPATH = "/ALGORITHM/DEFINITIONS/LEVEL_DEFINITION";
+	private static final String LEVEL_ORDER_XPATH = "ORDER";
+	private static final String LEVEL_TEXT_XPATH = "ORIGINAL";
+	private static final String LEVEL_SIR_XPATH = "SIR";
 
-	private static final XPath COMMENT_XPATH = new DefaultXPath("/ALGORITHM/DEFINITIONS/COMMENT_DEFINITIONS/COMMENT_STRING");
-	private static final XPath COMMENT_ID_XPATH = new DefaultXPath("@id");
-	private static final XPath COMMENT_TEXT_XPATH = new DefaultXPath("TEXT");
-	private static final XPath COMMENT_SORT_XPATH = new DefaultXPath("SORT_TAG");
+	private static final String COMMENT_XPATH = "/ALGORITHM/DEFINITIONS/COMMENT_DEFINITIONS/COMMENT_STRING";
+	private static final String COMMENT_ID_XPATH = "@id";
+	private static final String COMMENT_TEXT_XPATH = "TEXT";
+	private static final String COMMENT_SORT_XPATH = "SORT_TAG";
 
-	private static final XPath GLOBALRANGE_XPATH = new DefaultXPath("/ALGORITHM/DEFINITIONS/GLOBALRANGE");
+	private static final String GLOBALRANGE_XPATH = "/ALGORITHM/DEFINITIONS/GLOBALRANGE";
 
-	private static final DefaultXPath DRUG_XPATH = new DefaultXPath("ALGORITHM/DRUG");
-	private static final DefaultXPath DRUG_NAME_XPATH = new DefaultXPath("NAME");
-	private static final DefaultXPath DRUG_FULLNAME_XPATH = new DefaultXPath("FULLNAME");
-    private static final DefaultXPath DRUG_MUTATION_TYPE_XPATH = new DefaultXPath("MUTATION_TYPE");
-    private static final DefaultXPath DRUG_TYPE_NAME_XPATH = new DefaultXPath("TYPE_NAME");
-    private static final DefaultXPath DRUG_MUTATION_LIST_XPATH = new DefaultXPath("MUTATIONS");
+	private static final String DRUG_XPATH = "ALGORITHM/DRUG";
+	private static final String DRUG_NAME_XPATH = "NAME";
+	private static final String DRUG_FULLNAME_XPATH = "FULLNAME";
+    private static final String DRUG_MUTATION_TYPE_XPATH = "MUTATION_TYPE";
+    private static final String DRUG_TYPE_NAME_XPATH = "TYPE_NAME";
+    private static final String DRUG_MUTATION_LIST_XPATH = "MUTATIONS";
 
-	private static final DefaultXPath ALGORITHM_NAME_XPATH = new DefaultXPath("ALGORITHM/ALGNAME");
-	private static final DefaultXPath ALGORITHM_VERSION_XPATH = new DefaultXPath("ALGORITHM/ALGVERSION");
-	private static final DefaultXPath ALGORITHM_DATE_XPATH = new DefaultXPath("ALGORITHM/ALGDATE");
+	private static final String ALGORITHM_NAME_XPATH = "ALGORITHM/ALGNAME";
+	private static final String ALGORITHM_VERSION_XPATH = "ALGORITHM/ALGVERSION";
+	private static final String ALGORITHM_DATE_XPATH = "ALGORITHM/ALGDATE";
 
-	private static final DefaultXPath RULE_XPATH = new DefaultXPath("RULE");
-	private static final DefaultXPath RULE_CONDITION_XPATH = new DefaultXPath("CONDITION");
-	private static final DefaultXPath RULE_COMMENT_XPATH = new DefaultXPath("ACTIONS/COMMENT/@ref");
-	private static final DefaultXPath RULE_LEVEL_XPATH = new DefaultXPath("ACTIONS/LEVEL");
-    private static final DefaultXPath RULE_DEFAULT_LEVEL_XPATH = new DefaultXPath("ACTIONS/DEFAULT_LEVEL");
-	private static final DefaultXPath RULE_SCORERANGE_XPATH = new DefaultXPath("ACTIONS/SCORERANGE");
-	private static final DefaultXPath RULE_USE_GLOBALRANGE_XPATH = new DefaultXPath("USE_GLOBALRANGE");
+	private static final String RULE_XPATH = "RULE";
+	private static final String RULE_CONDITION_XPATH = "CONDITION";
+	private static final String RULE_COMMENT_XPATH = "ACTIONS/COMMENT/@ref";
+	private static final String RULE_LEVEL_XPATH = "ACTIONS/LEVEL";
+    private static final String RULE_DEFAULT_LEVEL_XPATH = "ACTIONS/DEFAULT_LEVEL";
+	private static final String RULE_SCORERANGE_XPATH = "ACTIONS/SCORERANGE";
+	private static final String RULE_USE_GLOBALRANGE_XPATH = "USE_GLOBALRANGE";
 
-	private static final DefaultXPath DRUG_CLASS_XPATH = new DefaultXPath("/ALGORITHM/DEFINITIONS/DRUGCLASS");
-	private static final DefaultXPath DRUG_CLASS_NAME_XPATH = new DefaultXPath("NAME");
-	private static final DefaultXPath DRUG_CLASS_DRUGLIST_XPATH = new DefaultXPath("DRUGLIST");
+	private static final String DRUG_CLASS_XPATH = "/ALGORITHM/DEFINITIONS/DRUGCLASS";
+	private static final String DRUG_CLASS_NAME_XPATH = "NAME";
+	private static final String DRUG_CLASS_DRUGLIST_XPATH = "DRUGLIST";
 
-	private static final EntityResolver RESOLVER = new EntityResolver() {
-		@Override
-		public InputSource resolveEntity(String publicId, String systemId) {
-			if(systemId.endsWith("/ASI.dtd")) {
-				InputStream in = getClass().getClassLoader().getResourceAsStream(
-						"org/fstrf/stanfordAsiInterpreter/resistance/ASI.dtd");
-				return new InputSource(in);
-			}else if (systemId.endsWith("/ASI2.dtd")){
-				InputStream in = getClass().getClassLoader().getResourceAsStream(
-						"org/fstrf/stanfordAsiInterpreter/resistance/ASI2.dtd");
-				return new InputSource(in);
-			}else if (systemId.endsWith("/ASI2.1.dtd")){
-                InputStream in = getClass().getClassLoader().getResourceAsStream(
-                        "org/fstrf/stanfordAsiInterpreter/resistance/ASI2.1.dtd");
-                return new InputSource(in);
-            } else if (systemId.endsWith("/ASI2.2.dtd")){
-            	InputStream in = getClass()
-            			.getClassLoader()
-            			.getResourceAsStream(
-            			"org/fstrf/stanfordAsiInterpreter/resistance/ASI2.2.dtd");
-            	return new InputSource(in);
-            }
-			return null;
-		}
-	};
 
-	private boolean validateXml;
-
-	public XmlAsiTransformer(boolean validateXml) {
-		this.validateXml = validateXml;
-	}
+	public XmlAsiTransformer() {}
 
 	/**
 	 * Parses algorithm XML file passed in as the is argument into component genes,
@@ -171,64 +140,52 @@ import org.xml.sax.InputSource;
 	 *
 	 * Returns a map of gene names to Gene objects holding specified algorithm logic
 	 *
-	 * @param is an InputStream created from the algorithm XML file
+	 * @param messageXml is a String of the algorithm XML file
 	 */
-	@Override
-	public Map transform(InputStream is) throws ASIParsingException {
+	public Map<String, Gene> transform(String messageXml) throws ASIParsingException {
 		Document doc = null;
-        try {
-            SAXReader saxReader = new SAXReader(this.validateXml);
-            saxReader.setEntityResolver(RESOLVER);
-            doc = saxReader.read(new InputStreamReader(is));
-            doc.getDocument().normalize();
-        } catch(DocumentException de) {
-            throw new ASIParsingException("Not a Stanford resistance analysis XML file", de);
-        }
+        doc = DOMParser.parseFromString(messageXml, "application/xml");
+        doc.normalize();
 
-        Map levels = createLevelMap(doc);
-        Map comments = createCommentMap(doc);
+        Map<String, LevelDefinition> levels = createLevelMap(doc);
+        Map<String, CommentDefinition> comments = createCommentMap(doc);
 
-        Node globalNode = selectUniqueSingleNode(doc, GLOBALRANGE_XPATH);
-        List globalRange = (globalNode != null) ? parseScoreRange(selectUniqueSingleNode(doc, GLOBALRANGE_XPATH).getStringValue(), levels) : new ArrayList();
-        Map drugs = parseDrugs(doc, levels, comments, globalRange);
-        Map drugClasses = parseDrugClasses(doc, drugs);
+        Node globalNode = queryUniqueSingleNode(doc, GLOBALRANGE_XPATH);
+        List<RangeValue> globalRange = (globalNode != null) ? parseScoreRange(queryUniqueSingleNode(doc, GLOBALRANGE_XPATH).textContent, levels) : new ArrayList<>();
+        Map<String, Drug> drugs = parseDrugs(doc, levels, comments, globalRange);
+        Map<String, DrugClass> drugClasses = parseDrugClasses(doc, drugs);
 
-        Map geneEvaluatedDrugs = parseGenes(doc, drugClasses);
-        for(Object o : geneEvaluatedDrugs.keySet()) {
-            Gene g = (Gene) geneEvaluatedDrugs.get(o);
-        }
-        Set geneNamesDrugs = geneEvaluatedDrugs.keySet();
+        Map<String, Gene> geneEvaluatedDrugs = parseGenes(doc, drugClasses);
+        Set<String> geneNamesDrugs = geneEvaluatedDrugs.keySet();
 
-        Map geneEvaluatedMutationComments = parseGeneMutationComments(doc, levels, comments, globalRange);
-        Set geneNamesComments = geneEvaluatedMutationComments.keySet();
+        Map<String, Gene> geneEvaluatedMutationComments = parseGeneMutationComments(doc, levels, comments, globalRange);
+        Set<String> geneNamesComments = geneEvaluatedMutationComments.keySet();
 
-        List<ResultCommentRule> resultCommentRules = parseResultCommentRules(doc,levels,comments,drugs);
+        List<ResultCommentRule> resultCommentRules = parseResultCommentRules(doc, levels, comments, drugs);
 
-        Collection intersection = CollectionUtils.intersection(geneNamesDrugs, geneNamesComments);
+        Set<String> intersection = Sets.intersection(geneNamesDrugs, geneNamesComments);
         if (intersection.size() < geneNamesComments.size()){
         	throw new ASIParsingException("Some genes defined in MUTATION_COMMENTS, have no corresponding GENE_DEFINITION.");
         }
 
-        Set geneNames = new HashSet();
+        Set<String> geneNames = new HashSet<>();
         geneNames.addAll(geneNamesDrugs);
         geneNames.addAll(geneNamesComments);
 
-        Map genes = new HashMap();
+        Map<String, Gene> genes = new HashMap<>();
         /*
          * TODO needs to be revised
          *
          */
-        for (Iterator iterator = geneNames.iterator(); iterator.hasNext();) {
+        for (String geneName : geneNames) {
 			/*
 			 * for every gene
 			 */
-        	String geneName = (String) iterator.next();
-
-        	Gene geneDrugClass = (Gene) geneEvaluatedDrugs.get(geneName);
+        	Gene geneDrugClass = geneEvaluatedDrugs.get(geneName);
         	Gene geneMutationComments = (Gene)geneEvaluatedMutationComments.get(geneName);
 
         	if (geneMutationComments == null){
-        		genes.put(geneName, new Gene(geneName, geneDrugClass.getDrugClasses(), new ArrayList(),resultCommentRules, geneDrugClass.getIndelRangeDefinition(), geneDrugClass.getDefaultLevel()));
+        		genes.put(geneName, new Gene(geneName, geneDrugClass.getDrugClasses(), new ArrayList<>(),resultCommentRules, geneDrugClass.getIndelRangeDefinition(), geneDrugClass.getDefaultLevel()));
         	}
         	else{
         		genes.put(geneName, new Gene(geneName, geneDrugClass.getDrugClasses(), geneMutationComments.getRules(),resultCommentRules, geneDrugClass.getIndelRangeDefinition(), geneDrugClass.getDefaultLevel()));
@@ -237,36 +194,64 @@ import org.xml.sax.InputSource;
 
         return genes;
 	}
+	
+	private List<Node> queryNodes(Node parent, String xpath) {
+		XPathResult result = XPATH_EVALUATOR.evaluate(xpath, parent);
+		List<Node> nodes = new ArrayList<>();
+		Node child;
+		do {
+			child = result.iterateNext();
+			if (child == null) {
+				break;
+			}
+			nodes.add(child);
+		}
+		while (true);
+		
+		return nodes;
+	}
+	
+	private Node querySingleNode(Node parent, String xpath) {
+		List<Node> nodes = queryNodes(parent, xpath);
+		return nodes.size() == 0 ? null : nodes.get(0);
+	}
 
-	private Map createLevelMap(Node root) {
-		List nodes = root.selectNodes(LEVEL_XPATH.getText());
-		Map levels = new HashMap(2 * nodes.size());
+	private Node queryUniqueSingleNode(Node parent, String xpath) throws ASIParsingException {
+		List<Node> nodes = queryNodes(parent, xpath);
+		if(nodes.size() > 1) {
+			throw new ASIParsingException("multiple nodes " + xpath + " exist within parent: " + parent.textContent);
+		}
+		return (nodes.size() == 0) ? null : nodes.get(0);
+	}
 
-		for(Iterator iterator = nodes.iterator(); iterator.hasNext();) {
-			Node node = (Node) iterator.next();
-			String order = node.selectSingleNode(LEVEL_ORDER_XPATH.getText()).getStringValue().trim();
-			LevelDefinition level = new LevelDefinition(Integer.valueOf(order),
-					node.selectSingleNode(LEVEL_TEXT_XPATH.getText()).getStringValue().trim(),
-					node.selectSingleNode(LEVEL_SIR_XPATH.getText()).getStringValue().trim());
+
+	private Map<String, LevelDefinition> createLevelMap(Node root) {
+		Map<String, LevelDefinition> levels = new HashMap<>();
+		
+		for (Node node : queryNodes(root, LEVEL_XPATH)) {
+			String order = querySingleNode(node, LEVEL_ORDER_XPATH).textContent.trim();
+			LevelDefinition level = new LevelDefinition(
+				Integer.valueOf(order),
+				querySingleNode(node, LEVEL_TEXT_XPATH).textContent.trim(),
+				querySingleNode(node, LEVEL_SIR_XPATH).textContent.trim()
+			);
 			levels.put(order, level);
 		}
 		return levels;
 	}
 
-	private Map createCommentMap(Node root) {
-		List nodes = root.selectNodes(COMMENT_XPATH.getText());
-		Map comments = new HashMap(2 * nodes.size());
+	private Map<String, CommentDefinition> createCommentMap(Node root) {
+		Map<String, CommentDefinition> comments = new HashMap<>();
 
-		for(Iterator iterator = nodes.iterator(); iterator.hasNext();) {
-			Node node = (Node) iterator.next();
-			String id = node.selectSingleNode(COMMENT_ID_XPATH.getText()).getStringValue().trim();
-			String text = node.selectSingleNode(COMMENT_TEXT_XPATH.getText()).getStringValue().trim();
-			Node sort = node.selectSingleNode(COMMENT_SORT_XPATH.getText());
+		for (Node node : queryNodes(root, COMMENT_XPATH)) {
+			String id = querySingleNode(node, COMMENT_ID_XPATH).textContent;
+			String text = querySingleNode(node, COMMENT_TEXT_XPATH).textContent.trim();
+			Node sort = querySingleNode(node, COMMENT_SORT_XPATH);
 			CommentDefinition comment;
 			if(sort == null) {
 				comment = new CommentDefinition(id, text);
 			} else {
-				comment = new CommentDefinition(id, text, Integer.valueOf(sort.getStringValue()));
+				comment = new CommentDefinition(id, text, Integer.valueOf(sort.textContent));
 			}
 
 			comments.put(id, comment);
@@ -285,8 +270,8 @@ import org.xml.sax.InputSource;
 	 * @return A list of RangeValue objects
 	 * @throws ASIParsingException
 	 */
-	public List parseScoreRange(String scoreRange, Map levels) throws ASIParsingException {
-		List rangeValues = new ArrayList();
+	public List<RangeValue> parseScoreRange(String scoreRange, Map<String, LevelDefinition> levels) throws ASIParsingException {
+		List<RangeValue> rangeValues = new ArrayList<>();
 		Matcher matcher = SCORE_RANGE_PATTERN.matcher(scoreRange);
 		while(matcher.find()) {
 			double min = (matcher.group(1).trim().equals("-INF")) ? Double.NEGATIVE_INFINITY : Double.parseDouble(matcher.group(1).trim());
@@ -316,18 +301,17 @@ import org.xml.sax.InputSource;
      * Gathers all drugs in the given algorithm file.
      *
      */
-	private Map parseDrugs(Node root, Map levels, Map comments, List globalRange) throws ASIParsingException {
+	private Map<String, Drug> parseDrugs(Node root, Map<String, LevelDefinition> levels, Map<String, CommentDefinition> comments, List<RangeValue> globalRange) throws ASIParsingException {
 		// traverse through the list of Drugs and add them to the list
-		Map drugs = new HashMap();
+		Map<String, Drug> drugs = new HashMap<>();
 
-		List drugNodes = root.selectNodes(DRUG_XPATH.getText());
-		for(Iterator iterator = drugNodes.iterator(); iterator.hasNext();) {
-			Node drug = (Node) iterator.next();
-        	String drugName = drug.selectSingleNode(DRUG_NAME_XPATH.getText()).getStringValue().trim();
+		List<Node> drugNodes = queryNodes(root, DRUG_XPATH);
+		for (Node drug : drugNodes) {
+        	String drugName = querySingleNode(drug, DRUG_NAME_XPATH).textContent.trim();
         	String drugFullName = null;
         	int defaultLevel = 0;
         	try {
-        	    String defaultLevelString = drug.selectSingleNode(RULE_DEFAULT_LEVEL_XPATH.getText()).getStringValue();
+        	    String defaultLevelString = querySingleNode(drug, RULE_DEFAULT_LEVEL_XPATH).textContent;
                 if(defaultLevelString != null) {
                     defaultLevel = Integer.parseInt(defaultLevelString);
                 }
@@ -335,65 +319,62 @@ import org.xml.sax.InputSource;
         	catch(NullPointerException e) {
         	    //TODO: don't allow missing DEFAUL_LEVEL tag
         	}
-            if ( drug.selectSingleNode(DRUG_FULLNAME_XPATH.getText()) != null ) {
-        		drugFullName = drug.selectSingleNode(DRUG_FULLNAME_XPATH.getText()).getStringValue().trim();
+        	Node fullNameNode = querySingleNode(drug, DRUG_FULLNAME_XPATH);
+            if ( fullNameNode != null ) {
+        		drugFullName = fullNameNode.textContent.trim();
         	}
         	List<MutationType> drugMutationTypes = new ArrayList<MutationType>();
-            List nodes = drug.selectNodes(DRUG_MUTATION_TYPE_XPATH.getText());
-            if ( nodes != null ) {
-                for(Iterator iterator2 = nodes.iterator(); iterator2.hasNext();) {
-                    Node node = (Node) iterator2.next();
-                    String typeName = node.selectSingleNode(DRUG_TYPE_NAME_XPATH.getText()).getStringValue().trim();
-                    String drugListStr = node.selectSingleNode(DRUG_MUTATION_LIST_XPATH.getText()).getStringValue().trim();
-                    String[] drugNames = drugListStr.split(",");
-                    drugMutationTypes.add(new MutationType(typeName, Arrays.asList(drugNames)));
-                }
+            List<Node> nodes = queryNodes(drug, DRUG_MUTATION_TYPE_XPATH);
+            for (Node node : nodes) {
+                String typeName = querySingleNode(node, DRUG_TYPE_NAME_XPATH).textContent.trim();
+                String drugListStr = querySingleNode(node, DRUG_MUTATION_LIST_XPATH).textContent.trim();
+                String[] drugNames = drugListStr.split(",");
+                drugMutationTypes.add(new MutationType(typeName, Arrays.asList(drugNames)));
             }
 
         	// get all rules for one drug
-        	List ruleNodes = drug.selectNodes(RULE_XPATH.getText());
-        	List drugRules = parseRules(ruleNodes,levels, comments, globalRange);
+        	List<Node> ruleNodes = queryNodes(drug, RULE_XPATH);
+        	List<Rule> drugRules = parseRules(ruleNodes, levels, comments, globalRange);
         	drugs.put(drugName, new Drug(drugName, drugFullName, drugRules, drugMutationTypes, defaultLevel));
         }
 		return drugs;
 	}
 
-	private List parseRules(List ruleNodes, Map levels, Map comments, List globalRange) throws ASIParsingException {
+	private List<Rule> parseRules(List<Node> ruleNodes, Map<String, LevelDefinition> levels, Map<String, CommentDefinition> comments, List<RangeValue> globalRange) throws ASIParsingException {
 
-		List drugRules = new ArrayList();
-		for(Iterator iterator2 = ruleNodes.iterator(); iterator2.hasNext();) {
-			Node rule = (Node) iterator2.next();
-    		RuleCondition condition = new RuleCondition(rule.selectSingleNode(RULE_CONDITION_XPATH.getText()).getStringValue().trim());
+		List<Rule> drugRules = new ArrayList<>();
+		for (Node rule : ruleNodes) {
+    		RuleCondition condition = new RuleCondition(querySingleNode(rule, RULE_CONDITION_XPATH).textContent.trim());
 
-    		List ruleActions = new ArrayList();
+    		List<RuleAction<?, ?>> ruleActions = new ArrayList<>();
     		// attempt to retrieve all of the possible action nodes (e.g.: comment, score range, level)
-    		Node commentNode = selectUniqueSingleNode(rule, RULE_COMMENT_XPATH);
-    		Node levelNode = selectUniqueSingleNode(rule, RULE_LEVEL_XPATH);
-    		Node scoreRangeNode = selectUniqueSingleNode(rule, RULE_SCORERANGE_XPATH);
+    		Node commentNode = queryUniqueSingleNode(rule, RULE_COMMENT_XPATH);
+    		Node levelNode = queryUniqueSingleNode(rule, RULE_LEVEL_XPATH);
+    		Node scoreRangeNode = queryUniqueSingleNode(rule, RULE_SCORERANGE_XPATH);
 
     		if(commentNode != null) {
-    			CommentDefinition definition = (CommentDefinition) getRequiredDefinition(comments, commentNode);
+    			CommentDefinition definition = getRequiredDefinition(comments, commentNode);
     			ruleActions.add(new CommentAction(definition));
     		}
     		if(levelNode != null) {
-    			LevelDefinition definition = (LevelDefinition) getRequiredDefinition(levels, levelNode);
+    			LevelDefinition definition = getRequiredDefinition(levels, levelNode);
     			ruleActions.add(new LevelAction(definition));
     		}
     		if(scoreRangeNode != null) {
     			// If a global range reference exists map to the global range else parse out a new range
-    			List scoreRange;
-    			if(scoreRangeNode.selectNodes(RULE_USE_GLOBALRANGE_XPATH.getText()).size() == 1) {
+    			List<RangeValue> scoreRange;
+    			if(queryNodes(scoreRangeNode, RULE_USE_GLOBALRANGE_XPATH).size() == 1) {
     				if(globalRange.size() == 0) {
-    					throw new ASIParsingException("required global range does not exist: " + scoreRangeNode.getPath());
+    					throw new ASIParsingException("required global range does not exist: " + scoreRangeNode.textContent);
     				}
     				scoreRange = globalRange;
     			} else {
-    				scoreRange = parseScoreRange(scoreRangeNode.getStringValue().trim(), levels);
+    				scoreRange = parseScoreRange(scoreRangeNode.textContent.trim(), levels);
     			}
     			ruleActions.add(new ScoreRangeAction(scoreRange));
     		}
     		if (commentNode == null && levelNode == null && scoreRangeNode == null) {
-    			throw new ASIParsingException("no action exists for rule: " + rule.getPath()+ "/ \n" + condition.getStatement());
+    			throw new ASIParsingException("no action exists for rule: " + rule.textContent + "/ \n" + condition.getStatement());
     		}
 
     		drugRules.add(new Rule(condition, ruleActions));
@@ -403,29 +384,29 @@ import org.xml.sax.InputSource;
 		return drugRules;
 	}
 
-	private Map parseDrugClasses(Node root, Map drugs) throws ASIParsingException {
-		Set tagDefinedDrugNames = new HashSet();
+	private Map<String, DrugClass> parseDrugClasses(Node root, Map<String, Drug> drugs) throws ASIParsingException {
+		Set<String> tagDefinedDrugNames = new HashSet<>();
 		tagDefinedDrugNames.addAll(drugs.keySet());
 
-		Map drugClasses = new HashMap();
-		List nodes = root.selectNodes(DRUG_CLASS_XPATH .getText());
+		Map<String, DrugClass> drugClasses = new HashMap<>();
+		List<Node> nodes = queryNodes(root, DRUG_CLASS_XPATH);
 		/*
 		 * for every drug class node create a DrugClass object
 		 */
-		for (Iterator iter = nodes.iterator(); iter.hasNext();) {
-			Node drugClassNode = (Node) iter.next();
-			String className = selectUniqueSingleNode(drugClassNode,DRUG_CLASS_NAME_XPATH).getStringValue().trim();
-			String drugListStr = selectUniqueSingleNode(drugClassNode,DRUG_CLASS_DRUGLIST_XPATH).getStringValue().trim();
+		for (Node drugClassNode : nodes) {
+			String className = queryUniqueSingleNode(drugClassNode, DRUG_CLASS_NAME_XPATH).textContent.trim();
+			String drugListStr = queryUniqueSingleNode(drugClassNode, DRUG_CLASS_DRUGLIST_XPATH).textContent.trim();
 			String[] drugNames = drugListStr.split(",");
 
-			Set drugList = new HashSet();
-			for (int i = 0; i < drugNames.length; i++) {
-				Drug drug = (Drug) drugs.get(drugNames[i].trim());
+			Set<Drug> drugList = new HashSet<>();
+			for (String drugName : drugNames) {
+				drugName = drugName.trim();
+				Drug drug = drugs.get(drugName);
 				if(drug == null) {
-					throw new ASIParsingException(drugNames[i].trim() + " has not been defined as a drug.");
+					throw new ASIParsingException(drugName + " has not been defined as a drug.");
 				}
 				if (!isUniqueDefinedDrug(drug.getDrugName(), drugClasses)){
-					throw new ASIParsingException("The drug: " +drug.getDrugName() + "; has been defined for more than one drug class.");
+					throw new ASIParsingException("The drug: " + drug.getDrugName() + "; has been defined for more than one drug class.");
 				}
 
 				/*
@@ -449,50 +430,48 @@ import org.xml.sax.InputSource;
 	}
 
 
-	private Map parseGenes(Node root, Map drugClasses) throws ASIParsingException {
-		List nodes = root.selectNodes(GENE_DEFINITION_XPATH.getText());
+	private Map<String, Gene> parseGenes(Node root, Map<String, DrugClass> drugClasses) throws ASIParsingException {
+		List<Node> nodes = queryNodes(root, GENE_DEFINITION_XPATH);
 		if (nodes.size() == 0){
 			throw new ASIParsingException("no gene specified");
 		}
 
-		Map genes = new HashMap(2 * nodes.size());
+		Map<String, Gene> genes = new HashMap<>();
 		/*
 		 * create a map of genes
 		 * every gene has associated a list of DrugClass objects
 		 */
-		for(Iterator iterator = nodes.iterator(); iterator.hasNext();) {
-			Node node = (Node) iterator.next();
-			String geneName = node.selectSingleNode(GENE_DEFINITION_NAME_XPATH.getText()).getStringValue().trim();
+		for(Node node : nodes) {
+			String geneName = querySingleNode(node, GENE_DEFINITION_NAME_XPATH).textContent.trim();
 			/*
 			 * get the names of drug classes
 			 */
-			//String drugClassListStr = selectUniqueSingleNode(node,GENE_DRUGCLASSLIST_XPATH).getStringValue().trim();
-			List drugClassListNodes =  node.selectNodes(GENE_DEFINITION_DRUGCLASSLIST_XPATH.getText().trim());
+			List<Node> drugClassListNodes = queryNodes(node, GENE_DEFINITION_DRUGCLASSLIST_XPATH);
 			if (drugClassListNodes.size() > 1){
-				throw new ASIParsingException("duplicate node "+GENE_DEFINITION_DRUGCLASSLIST_XPATH.getText());
+				throw new ASIParsingException("duplicate node "+GENE_DEFINITION_DRUGCLASSLIST_XPATH);
 			}
 
 			IndelRangeDefinition indelRange = null;
-			Node indelRangeNode =  node.selectSingleNode(GENE_DEFINITION_INDELRANGE_XPATH.getText());
+			Node indelRangeNode = querySingleNode(node, GENE_DEFINITION_INDELRANGE_XPATH);
             if (indelRangeNode != null){
-                String inputListStr = selectUniqueSingleNode(indelRangeNode,GENE_DEFINITION_INDELRANGE_INPUT_XPATH).getStringValue().trim();
+                String inputListStr = queryUniqueSingleNode(indelRangeNode, GENE_DEFINITION_INDELRANGE_INPUT_XPATH).textContent.trim();
                 String[] indelInputs = inputListStr.split(" ");
-                String indelOutput = selectUniqueSingleNode(indelRangeNode,GENE_DEFINITION_INDELRANGE_OUTPUT_XPATH).getStringValue().trim();
+                String indelOutput = queryUniqueSingleNode(indelRangeNode, GENE_DEFINITION_INDELRANGE_OUTPUT_XPATH).textContent.trim();
                 indelRange = new IndelRangeDefinition(Arrays.asList(indelInputs), indelOutput);
             }
 
-			Set drugClassSet = new HashSet();
+			Set<DrugClass> drugClassSet = new HashSet<>();
 			if (drugClassListNodes.size() == 1){
-				String drugClassListStr = ((Node)drugClassListNodes.get(0)).getStringValue().trim();
+				String drugClassListStr = drugClassListNodes.get(0).textContent.trim();
 				if (drugClassListStr.trim().equals("")){
-					throw new ASIParsingException("drug class list missing for gene "+ geneName);
+					throw new ASIParsingException("drug class list missing for gene " + geneName);
 				}
 				String[] drugClassNames = drugClassListStr.split(",");
 				/*
 				 * create the DrugClass list
 				 */
-				for (int i = 0; i < drugClassNames.length; i++) {
-					drugClassSet.add(drugClasses.get(drugClassNames[i].trim()));
+				for (String drugClassName : drugClassNames) {
+					drugClassSet.add(drugClasses.get(drugClassName.trim()));
 				}
 
 			}
@@ -501,18 +480,17 @@ import org.xml.sax.InputSource;
 		return genes;
 	}
 
-	private Map parseGeneMutationComments(Node root, Map levels, Map comments, List globalRange) throws ASIParsingException {
+	private Map<String, Gene> parseGeneMutationComments(Node root, Map<String, LevelDefinition> levels, Map<String, CommentDefinition> comments, List<RangeValue> globalRange) throws ASIParsingException {
 		/*
 		 * get all the gene nodes specified in GENE_MUTATION_COMMENTS
 		 */
-		List nodes = root.selectNodes(GENE_MUTATION_COMMENTS_XPATH.getText().trim());
-		Map genes = new HashMap(2 * nodes.size());
+		List<Node> nodes = queryNodes(root, GENE_MUTATION_COMMENTS_XPATH);
+		Map<String, Gene> genes = new HashMap<>();
 		/*
 		 * for every gene node
 		 */
-		for (Iterator iterator = nodes.iterator(); iterator.hasNext();) {
-			Node geneNode = (Node) iterator.next();
-			Node geneNameNode = selectUniqueSingleNode(geneNode,GENE_MUTATION_COMMENTS__NAME_XPATH);
+		for (Node geneNode : nodes) {
+			Node geneNameNode = queryUniqueSingleNode(geneNode,GENE_MUTATION_COMMENTS__NAME_XPATH);
 			/*
 			 * if no gene name throw an ASIParsingException
 			 */
@@ -523,18 +501,18 @@ import org.xml.sax.InputSource;
 			/*
 			 * get the gene rules
 			 */
-			List geneRuleNodes = geneNode.selectNodes(GENE_RULE_XPATH.getText().trim());
+			List<Node> geneRuleNodes = queryNodes(geneNode, GENE_RULE_XPATH);
 
 
 			if (geneRuleNodes.size() == 0){
 				/*
 				 * no rules for the current gene
 				 */
-				throw new ASIParsingException("no rule for gene "+geneNameNode.getText());
+				throw new ASIParsingException("no rule for gene " + geneNameNode.textContent);
 			}
 
-			String geneName = geneNameNode.getText().trim();
-			List geneRules = parseRules(geneRuleNodes, levels, comments, globalRange);
+			String geneName = geneNameNode.textContent.trim();
+			List<Rule> geneRules = parseRules(geneRuleNodes, levels, comments, globalRange);
         	/*
         	 * for every gene rule
         	 */
@@ -545,19 +523,16 @@ import org.xml.sax.InputSource;
 		return genes;
 	}
 
-	private boolean isUniqueDefinedDrug(String drugName, Map drugClasses) {
+	private boolean isUniqueDefinedDrug(String drugName, Map<String, DrugClass> drugClasses) {
 		/*
 		 * search for every class if the drug is already associated with a different one
 		 */
-		for (Iterator iterator = drugClasses.keySet().iterator(); iterator.hasNext();) {
-			String className = (String) iterator.next();
-			DrugClass drugClass = (DrugClass)drugClasses.get(className);
-			Set drugList = drugClass.getDrugs();
+		for (DrugClass drugClass : drugClasses.values()) {
+			Set<Drug> drugList = drugClass.getDrugs();
 			/*
 			 * for every drug of the class
 			 */
-			for (Iterator iterator2 = drugList.iterator(); iterator2.hasNext();) {
-				Drug drug = (Drug) iterator2.next();
+			for (Drug drug : drugList) {
 				if (drugName.equals(drug.getDrugName())){
 					return false;
 				}
@@ -566,60 +541,45 @@ import org.xml.sax.InputSource;
 		return true;
 	}
 
-	private Node selectUniqueSingleNode(Node parent, XPath xpath) throws ASIParsingException {
-		List nodes = parent.selectNodes(xpath.getText());
-		if(nodes.size() > 1) {
-			throw new ASIParsingException("unique node: " + xpath.getText() + ", does not exist within parent: " + parent.getPath());
+	private <T extends Definition> T getRequiredDefinition(Map<String, T> definitions, Node key) throws ASIParsingException {
+		T obj = definitions.get(key.textContent.trim());
+		if(obj == null) {
+			throw new ASIParsingException("required definition: " + key.textContent + " does not exist.");
 		}
-		return (nodes.size() == 0) ? null : (Node) nodes.get(0);
+		return obj;
 	}
 
-	private Definition getRequiredDefinition(Map definitions, Node key) throws ASIParsingException {
-		Object obj = definitions.get(key.getStringValue().trim());
-		if(obj == null) {
-			throw new ASIParsingException("required definition: " + key.getPath() + " does not exist.");
-		}
-		return (Definition) obj;
-	}
 	/**
 	 * Returns a map of metadata about algorithm XML file passed in as is argument.
 	 *
-	 * @param	is InputStream of algorithm XML file
+	 * @param	messageXml is a String of the algorithm XML file
 	 * @return	Map of metadata about algorithm XML file
 	 */
-	@Override
-	public Map getAlgorithmInfo(InputStream is) throws ASIParsingException {
-		//TODO this should return an object AlgorithmInfo instead of a Map; when someone changes a key name it affects the applications using it.
+	public Map<String, Map<String, ?>> getAlgorithmInfo(String messageXml) throws ASIParsingException {
 		Document doc = null;
-        try {
-            SAXReader saxReader = new SAXReader(this.validateXml);
-            saxReader.setEntityResolver(RESOLVER);
-            doc = saxReader.read(new InputStreamReader(is));
-            doc.getDocument().normalize();
-        } catch(DocumentException de) {
-            throw new ASIParsingException("Not a Stanford resistance analysis XML file", de);
-        }
+        doc = DOMParser.parseFromString(messageXml, "application/xml");
+        doc.normalize();
 
-        Map map = new HashMap();
+        Map<String, Map<String, ?>> map = new HashMap<>();
 
-        Map algNameVersionDate = parseForAlgNameVersionDate(doc);
+        Map<String, String> algNameVersionDate = parseForAlgNameVersionDate(doc);
         map.put("ALGNAME_ALGVERSION_ALGDATE", algNameVersionDate);
         map.put("ALGNAME_ALGVERSION", algNameVersionDate);
 
         // get the lowest levelDefinition as defined when the order = 1
         LevelDefinition lowestLevelDefinition = (LevelDefinition) createLevelMap(doc).get("1");
-        Map lowestLevelOriginalSir = new HashMap();
+        Map<String, String> lowestLevelOriginalSir = new HashMap<>();
         lowestLevelOriginalSir.put("ORIGINAL", lowestLevelDefinition.getText());
         lowestLevelOriginalSir.put("SIR", lowestLevelDefinition.getSir());
         map.put("ORDER1_ORIGINAL_SIR", lowestLevelOriginalSir);
 
-        Map drugAndFullNames = parseForDrugAndFullNames(doc);
+        Map<String, String> drugAndFullNames = parseForDrugAndFullNames(doc);
         map.put("DRUG_FULLNAME", drugAndFullNames);
 
-        Map drugClassAndDrugs = parseForDrugClassesAndDrugs(doc,drugAndFullNames);
+        Map<String, Set<String>> drugClassAndDrugs = parseForDrugClassesAndDrugs(doc, drugAndFullNames);
         map.put("DRUGCLASS_DRUGLIST", drugClassAndDrugs);
 
-        Map geneAndDrugClasses = parseForGeneAndDrugClasses(doc, drugClassAndDrugs);
+        Map<String, Set<String>> geneAndDrugClasses = parseForGeneAndDrugClasses(doc, drugClassAndDrugs);
         map.put("GENE_DRUGCLASSLIST", geneAndDrugClasses);
 
         return map;
@@ -631,17 +591,18 @@ import org.xml.sax.InputSource;
 	 * @return
 	 * @throws ASIParsingException
 	 */
-	private Map parseForAlgNameVersionDate(Node root) throws ASIParsingException {
+	private Map<String, String> parseForAlgNameVersionDate(Node root) throws ASIParsingException {
 		// traverse through the list of Drugs and add them to the list
-		Map algInfo = new HashMap();
+		Map<String, String> algInfo = new HashMap<>();
 
-		String algName = root.selectSingleNode(ALGORITHM_NAME_XPATH.getText()).getStringValue().trim();
-		String algVersion = root.selectSingleNode(ALGORITHM_VERSION_XPATH.getText()).getStringValue().trim();
+		String algName = querySingleNode(root, ALGORITHM_NAME_XPATH).textContent.trim();
+		String algVersion = querySingleNode(root, ALGORITHM_VERSION_XPATH).textContent.trim();
 
 		// must check because algorithm version was added later on
 		String algDate = "NA";
-		if ( root.selectSingleNode(ALGORITHM_DATE_XPATH.getText()) != null )
-			algDate = root.selectSingleNode(ALGORITHM_DATE_XPATH.getText()).getStringValue().trim();
+		Node dateNode = querySingleNode(root, ALGORITHM_DATE_XPATH);
+		if (dateNode != null)
+			algDate = dateNode.textContent.trim();
 
 		algInfo.put("ALGNAME", algName);
 		algInfo.put("ALGVERSION", algVersion);
@@ -652,17 +613,17 @@ import org.xml.sax.InputSource;
 
 	// derived from parseDrugs() above; except that for efficiency we don't want the rules
 	// returns: a HashMap<String, String> drugName => drugFullName
-	private Map parseForDrugAndFullNames(Node root) throws ASIParsingException {
+	private Map<String, String> parseForDrugAndFullNames(Node root) throws ASIParsingException {
 		// traverse through the list of Drugs and add them to the list
-		Map drugs = new HashMap();
+		Map<String, String> drugs = new HashMap<>();
 
-		List drugNodes = root.selectNodes(DRUG_XPATH.getText());
-		for(Iterator iterator = drugNodes.iterator(); iterator.hasNext();) {
-			Node drug = (Node) iterator.next();
-	    	String drugName = drug.selectSingleNode(DRUG_NAME_XPATH.getText()).getStringValue().trim();
+		List<Node> drugNodes = queryNodes(root, DRUG_XPATH);
+		for(Node drug : drugNodes) {
+	    	String drugName = querySingleNode(drug, DRUG_NAME_XPATH).textContent.trim();
 	    	String drugFullName = null;
-	    	if ( drug.selectSingleNode(DRUG_FULLNAME_XPATH.getText()) != null ) {
-	    		drugFullName = drug.selectSingleNode(DRUG_FULLNAME_XPATH.getText()).getStringValue().trim();
+	    	Node fullNameNode = querySingleNode(drug, DRUG_FULLNAME_XPATH);
+	    	if (fullNameNode != null) {
+	    		drugFullName = fullNameNode.textContent.trim();
 	    	}
 
 	    	drugs.put(drugName, drugFullName);
@@ -671,24 +632,23 @@ import org.xml.sax.InputSource;
 	}
 
 	// derived from parseDrugClasses() above; except that for efficiency we don't want the rules and thus no Drug objects
-	private Map parseForDrugClassesAndDrugs(Node root, Map drugs) throws ASIParsingException {
-		Set tagDefinedDrugNames = new HashSet();
+	private Map<String, Set<String>> parseForDrugClassesAndDrugs(Node root, Map<String, String> drugs) throws ASIParsingException {
+		Set<String> tagDefinedDrugNames = new HashSet<>();
 		tagDefinedDrugNames.addAll(drugs.keySet());
 
-		Map drugClasses = new HashMap();
-		List nodes = root.selectNodes(DRUG_CLASS_XPATH .getText());
+		Map<String, Set<String>> drugClasses = new HashMap<>();
+		List<Node> nodes = queryNodes(root, DRUG_CLASS_XPATH);
 		/*
 		 * for every drug class node create a DrugClass object
 		 */
-		for (Iterator iter = nodes.iterator(); iter.hasNext();) {
-			Node drugClassNode = (Node) iter.next();
-			String className = selectUniqueSingleNode(drugClassNode,DRUG_CLASS_NAME_XPATH).getStringValue().trim();
-			String drugListStr = selectUniqueSingleNode(drugClassNode,DRUG_CLASS_DRUGLIST_XPATH).getStringValue().trim();
+		for (Node drugClassNode : nodes) {
+			String className = queryUniqueSingleNode(drugClassNode, DRUG_CLASS_NAME_XPATH).textContent.trim();
+			String drugListStr = queryUniqueSingleNode(drugClassNode, DRUG_CLASS_DRUGLIST_XPATH).textContent.trim();
 			String[] drugNames = drugListStr.split(",");
 
-			Set drugList = new HashSet();
-			for (int i = 0; i < drugNames.length; i++) {
-				String drugName = drugNames[i].trim();
+			Set<String> drugList = new HashSet<>();
+			for (String drugName : drugNames) {
+				drugName = drugName.trim();
 				if( !drugs.containsKey(drugName) ) {
 					throw new ASIParsingException(drugName + " has not been defined as a drug.");
 				}
@@ -717,13 +677,12 @@ import org.xml.sax.InputSource;
 	}
 
 	// derived from isUniqueDefinedDrug() above; except that for efficiency we don't want the rules	and thus no Drug objects
-	private boolean isUniqueDefinedDrug2(String inDrugName, Map drugClasses) {
+	private boolean isUniqueDefinedDrug2(String inDrugName, Map<String, Set<String>> drugClasses) {
 		/*
 		 * search for every class if the drug is already associated with a different one
 		 */
-		for (Iterator iterator = drugClasses.keySet().iterator(); iterator.hasNext();) {
-			String className = (String) iterator.next();
-			Set drugList = (Set) drugClasses.get(className);
+		for (String className : drugClasses.keySet()) {
+			Set<String> drugList = drugClasses.get(className);
 			/*
 			 * for every drug of the class
 			 */
@@ -734,32 +693,30 @@ import org.xml.sax.InputSource;
 	}
 
 	// derived from parseGenes() above; except that for efficiency we don't want the rules and thus no Drug objects
-	private Map parseForGeneAndDrugClasses(Node root, Map drugClasses) throws ASIParsingException {
-		List nodes = root.selectNodes(GENE_DEFINITION_XPATH.getText());
+	private Map<String, Set<String>> parseForGeneAndDrugClasses(Node root, Map<String, Set<String>> drugClasses) throws ASIParsingException {
+		List<Node> nodes = queryNodes(root, GENE_DEFINITION_XPATH);
 		if (nodes.size() == 0){
 			throw new ASIParsingException("no gene specified");
 		}
 
-		Map genes = new HashMap(2 * nodes.size());
+		Map<String, Set<String>> genes = new HashMap<>();
 		/*
 		 * create a map of genes
 		 * every gene has associated a list of DrugClass objects
 		 */
-		for(Iterator iterator = nodes.iterator(); iterator.hasNext();) {
-			Node node = (Node) iterator.next();
-			String geneName = node.selectSingleNode(GENE_DEFINITION_NAME_XPATH.getText()).getStringValue().trim();
+		for(Node node : nodes) {
+			String geneName = querySingleNode(node, GENE_DEFINITION_NAME_XPATH).textContent.trim();
 			/*
 			 * get the names of drug classes
 			 */
-			//String drugClassListStr = selectUniqueSingleNode(node,GENE_DRUGCLASSLIST_XPATH).getStringValue().trim();
-			List drugClassListNodes =  node.selectNodes(GENE_DEFINITION_DRUGCLASSLIST_XPATH.getText().trim());
+			List<Node> drugClassListNodes =  queryNodes(node, GENE_DEFINITION_DRUGCLASSLIST_XPATH);
 			if (drugClassListNodes.size() > 1){
-				throw new ASIParsingException("duplicate node "+GENE_DEFINITION_DRUGCLASSLIST_XPATH.getText());
+				throw new ASIParsingException("duplicate node "+ GENE_DEFINITION_DRUGCLASSLIST_XPATH);
 			}
 
-			Set drugClassSet = new HashSet();
+			Set<String> drugClassSet = new HashSet<>();
 			if (drugClassListNodes.size() == 1){
-				String drugClassListStr = ((Node)drugClassListNodes.get(0)).getStringValue().trim();
+				String drugClassListStr = (drugClassListNodes.get(0)).textContent.trim();
 				if (drugClassListStr.trim().equals("")){
 					throw new ASIParsingException("drug class list missing for gene "+ geneName);
 				}
@@ -767,9 +724,9 @@ import org.xml.sax.InputSource;
 				/*
 				 * create the DrugClass list
 				 */
-				for (int i = 0; i < drugClassNames.length; i++) {
-					String drugClassName = drugClassNames[i].trim();
-					if ( drugClasses.containsKey(drugClassName) )
+				for (String drugClassName : drugClassNames) {
+					drugClassName = drugClassName.trim();
+					if (drugClasses.containsKey(drugClassName))
 						drugClassSet.add(drugClassName);
 					else
 						throw new ASIParsingException(drugClassName + " has not been defined as a drugClass.");
@@ -782,19 +739,19 @@ import org.xml.sax.InputSource;
 		return genes;
 	}
 
-	private List<ResultCommentRule> parseResultCommentRules(Node root, Map levels, Map comments, Map definedDrugs) throws ASIParsingException {
+	private List<ResultCommentRule> parseResultCommentRules(Node root, Map<String, LevelDefinition> levels, Map<String, CommentDefinition> comments, Map<String, Drug> definedDrugs) throws ASIParsingException {
 
 		//Get all the result comment nodes
-		List<Node> nodes = root.selectNodes(RESULT_COMMENT_XPATH.getText().trim());
+		List<Node> nodes = queryNodes(root, RESULT_COMMENT_XPATH);
 
 		List<ResultCommentRule> resultCommentRules = new ArrayList<ResultCommentRule>();
 
-		for (Node ruleNode: nodes){
+		for (Node ruleNode : nodes){
 
-			Node levelConditionNode = selectUniqueSingleNode(ruleNode,RESULT_COMMENT_DRUG_LEVEL_CONDITIONS);
+			Node levelConditionNode = queryUniqueSingleNode(ruleNode, RESULT_COMMENT_DRUG_LEVEL_CONDITIONS);
 
 			// Get the drug level condition nodes
-			List<Node> drugLevelConditionNodes = levelConditionNode.selectNodes(RESULT_COMMENT_DRUG_LEVEL_CONDITION.getText().trim());
+			List<Node> drugLevelConditionNodes = queryNodes(levelConditionNode, RESULT_COMMENT_DRUG_LEVEL_CONDITION);
 
 			//if no conditions, throw an ASIParsingException
 			if (drugLevelConditionNodes.size() == 0) {
@@ -807,7 +764,7 @@ import org.xml.sax.InputSource;
 				drugLevelConditions.add(parseDrugLevelCondition(drugLevelConditionNode,levels,definedDrugs));
 			}
 
-			Node levelActionNode = selectUniqueSingleNode(ruleNode,RESULT_COMMENT_LEVEL_ACTION);
+			Node levelActionNode = queryUniqueSingleNode(ruleNode,RESULT_COMMENT_LEVEL_ACTION);
 			//if no level action, throw an ASIParsingException
 			if (levelActionNode == null){
 				throw new ASIParsingException("no level action specified for result comment");
@@ -821,11 +778,11 @@ import org.xml.sax.InputSource;
 
 	}
 
-	private DrugLevelCondition parseDrugLevelCondition(Node levelConditionNode,Map levels, Map drugs) throws ASIParsingException{
+	private DrugLevelCondition parseDrugLevelCondition(Node levelConditionNode,Map<String, LevelDefinition> levels, Map<String, Drug> drugs) throws ASIParsingException{
 		//search drugLevelConditionNode for each of the comparison operators
 		//	Treat this like actions where there can be multiple, and throw exception if there are none
 
-		String drugName = selectUniqueSingleNode(levelConditionNode,RESULT_COMMENT_DRUG_NAME).getText();
+		String drugName = queryUniqueSingleNode(levelConditionNode,RESULT_COMMENT_DRUG_NAME).textContent;
 
 		//verify that the drug is specified in the algorithm
 		if (!drugs.containsKey(drugName)) {
@@ -836,47 +793,47 @@ import org.xml.sax.InputSource;
 
 		//find elements and call addComparison if they exist
 
-		Node LTENode = selectUniqueSingleNode(levelConditionNode, LTE);
-		Node GTENode = selectUniqueSingleNode(levelConditionNode, GTE);
-		Node LTNode = selectUniqueSingleNode(levelConditionNode, LT);
-		Node GTNode = selectUniqueSingleNode(levelConditionNode, GT);
-		Node EQNode = selectUniqueSingleNode(levelConditionNode, EQ);
-		Node NEQNode = selectUniqueSingleNode(levelConditionNode, NEQ);
+		Node LTENode = queryUniqueSingleNode(levelConditionNode, LTE);
+		Node GTENode = queryUniqueSingleNode(levelConditionNode, GTE);
+		Node LTNode = queryUniqueSingleNode(levelConditionNode, LT);
+		Node GTNode = queryUniqueSingleNode(levelConditionNode, GT);
+		Node EQNode = queryUniqueSingleNode(levelConditionNode, EQ);
+		Node NEQNode = queryUniqueSingleNode(levelConditionNode, NEQ);
 
 		boolean anyNodeSpecified = false;
 
 		if (LTENode != null){
-			String levelString = LTENode.getText();
+			String levelString = LTENode.textContent;
 			Integer level = getValidatedLevelFromString(levelString,levels);
 			drugLevelCondition.addComparison(level,"LTE");
 			anyNodeSpecified = true;
 		}
 		if (GTENode != null){
-			String levelString = GTENode.getText();
+			String levelString = GTENode.textContent;
 			Integer level = getValidatedLevelFromString(levelString,levels);
 			drugLevelCondition.addComparison(level,"GTE");
 			anyNodeSpecified = true;
 		}
 		if (LTNode != null){
-			String levelString = LTNode.getText();
+			String levelString = LTNode.textContent;
 			Integer level = getValidatedLevelFromString(levelString,levels);
 			drugLevelCondition.addComparison(level,"LT");
 			anyNodeSpecified = true;
 		}
 		if (GTNode != null){
-			String levelString = GTNode.getText();
+			String levelString = GTNode.textContent;
 			Integer level = getValidatedLevelFromString(levelString,levels);
 			drugLevelCondition.addComparison(level,"GT");
 			anyNodeSpecified = true;
 		}
 		if (EQNode != null){
-			String levelString = EQNode.getText();
+			String levelString = EQNode.textContent;
 			Integer level = getValidatedLevelFromString(levelString,levels);
 			drugLevelCondition.addComparison(level,"EQ");
 			anyNodeSpecified = true;
 		}
 		if (NEQNode != null){
-			String levelString = NEQNode.getText();
+			String levelString = NEQNode.textContent;
 			Integer level = getValidatedLevelFromString(levelString,levels);
 			drugLevelCondition.addComparison(level,"NEQ");
 			anyNodeSpecified = true;
@@ -889,7 +846,7 @@ import org.xml.sax.InputSource;
 		return drugLevelCondition;
 	}
 
-	private Integer getValidatedLevelFromString(String levelString, Map levels) throws ASIParsingException{
+	private Integer getValidatedLevelFromString(String levelString, Map<String, LevelDefinition> levels) throws ASIParsingException{
 		Integer level;
 
 		//validate as integer
@@ -907,18 +864,18 @@ import org.xml.sax.InputSource;
 		return level;
 	}
 
-	private List<CommentAction> parseLevelActions(Node levelActionNode,Map comments) throws ASIParsingException{
+	private List<CommentAction> parseLevelActions(Node levelActionNode,Map<String, CommentDefinition> comments) throws ASIParsingException{
 
-		List<CommentAction> actions = new ArrayList();
+		List<CommentAction> actions = new ArrayList<>();
 
 		//get comment node from LEVEL_ACTION
-		Node commentNode = selectUniqueSingleNode(levelActionNode,RESULT_COMMENT_LEVEL_ACTION_COMMENT_XPATH);
+		Node commentNode = queryUniqueSingleNode(levelActionNode,RESULT_COMMENT_LEVEL_ACTION_COMMENT_XPATH);
 		//if no comment, throw parsing exception
 		if (commentNode == null){
 			throw new ASIParsingException("no comment specified for level action");
 		}
 
-		CommentDefinition definition = (CommentDefinition) getRequiredDefinition(comments, commentNode);
+		CommentDefinition definition = getRequiredDefinition(comments, commentNode);
 		actions.add(new CommentAction(definition));
 
 		return actions;

@@ -29,13 +29,12 @@ was not intended, designed, or validated to guide patient care.
 
 package org.fstrf.stanfordAsiInterpreter.resistance.grammar.node;
 
-import java.util.*;
 import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
 
-@SuppressWarnings("all") public final class AExcludestatement extends PExcludestatement
+public final class AExcludestatement extends PExcludestatement<AExcludestatement>
 {
     private TExclude _exclude_;
-    private PResidue _residue_;
+    private PResidue<?> _residue_;
 
     public AExcludestatement()
     {
@@ -43,18 +42,20 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
 
     public AExcludestatement(
         TExclude _exclude_,
-        PResidue _residue_)
+        PResidue<?> _residue_)
     {
         setExclude(_exclude_);
 
         setResidue(_residue_);
 
     }
-    public Object clone()
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @Override
+    public AExcludestatement clone()
     {
         return new AExcludestatement(
-            (TExclude) cloneNode(_exclude_),
-            (PResidue) cloneNode(_residue_));
+            cloneNode(_exclude_),
+            cloneNode((PResidue) _residue_));
     }
 
     public void apply(Switch sw)
@@ -87,12 +88,12 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
         _exclude_ = node;
     }
 
-    public PResidue getResidue()
+    public PResidue<?> getResidue()
     {
         return _residue_;
     }
 
-    public void setResidue(PResidue node)
+    public void setResidue(PResidue<?> node)
     {
         if(_residue_ != null)
         {
@@ -112,14 +113,16 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
         _residue_ = node;
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @Override
     public String toString()
     {
         return ""
             + toString(_exclude_)
-            + toString(_residue_);
+            + toString((PResidue) _residue_);
     }
 
-    void removeChild(Node child)
+    void removeChild(Node<?> child)
     {
         if(_exclude_ == child)
         {
@@ -135,7 +138,7 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
 
     }
 
-    void replaceChild(Node oldChild, Node newChild)
+    <U extends Node<U>>void replaceChild(U oldChild, U newChild)
     {
         if(_exclude_ == oldChild)
         {
@@ -145,7 +148,7 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
 
         if(_residue_ == oldChild)
         {
-            setResidue((PResidue) newChild);
+            setResidue((PResidue<?>) newChild);
             return;
         }
 

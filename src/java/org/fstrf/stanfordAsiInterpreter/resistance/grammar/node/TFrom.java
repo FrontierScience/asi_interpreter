@@ -31,7 +31,7 @@ package org.fstrf.stanfordAsiInterpreter.resistance.grammar.node;
 
 import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
 
-@SuppressWarnings("all") public final class TFrom extends Token
+public final class TFrom extends Token<TFrom>
 {
     public TFrom()
     {
@@ -45,16 +45,19 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
         setPos(pos);
     }
 
-    public Object clone()
+    @Override
+    public TFrom clone()
     {
       return new TFrom(getLine(), getPos());
     }
 
+    @Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseTFrom(this);
     }
 
+    @Override
     public void setText(String text)
     {
         throw new RuntimeException("Cannot change TFrom text.");

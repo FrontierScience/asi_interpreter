@@ -31,7 +31,7 @@ package org.fstrf.stanfordAsiInterpreter.resistance.grammar.node;
 
 import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
 
-@SuppressWarnings("all") public final class TInteger extends Token
+@SuppressWarnings("all") public final class TInteger extends Token<TInteger>
 {
     public TInteger(String text)
     {
@@ -45,7 +45,7 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
         setPos(pos);
     }
 
-    public Object clone()
+    public TInteger clone()
     {
       return new TInteger(getText(), getLine(), getPos());
     }

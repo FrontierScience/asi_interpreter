@@ -30,7 +30,7 @@ package org.fstrf.stanfordAsiInterpreter.resistance.definition;
 import org.fstrf.stanfordAsiInterpreter.resistance.ASIEvaluationException;
 
 
-@SuppressWarnings("all") public class LevelAction implements RuleAction{
+public class LevelAction implements RuleAction<LevelAction, LevelDefinition> {
 
 	private LevelDefinition level;
 	
@@ -42,12 +42,14 @@ import org.fstrf.stanfordAsiInterpreter.resistance.ASIEvaluationException;
 		return this.level;
 	}
 
-	public Definition evaluate(Object result) throws ASIEvaluationException {
+	@Override
+	public LevelDefinition evaluate(Object result) throws ASIEvaluationException {
 		Boolean reslt = (Boolean) result;
 		return reslt.booleanValue() ? this.level : null;
 	}
 
-	public boolean supports(Class resultType) {
+	@Override
+	public boolean supports(Class<?> resultType) {
 		return resultType.equals(Boolean.class);
 	}
 }

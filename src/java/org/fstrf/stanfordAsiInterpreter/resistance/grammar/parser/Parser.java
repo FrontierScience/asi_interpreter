@@ -113,7 +113,7 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.TSelect;
 import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.Token;
 import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.TypedLinkedList;
 
-@SuppressWarnings("all") public class Parser
+public class Parser
 {
     public final Analysis ignoredTokens = new AnalysisAdapter();
 

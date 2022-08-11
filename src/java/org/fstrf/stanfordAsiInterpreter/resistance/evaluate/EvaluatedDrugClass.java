@@ -27,36 +27,36 @@ was not intended, designed, or validated to guide patient care.
 
 package org.fstrf.stanfordAsiInterpreter.resistance.evaluate;
 
-import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import org.fstrf.stanfordAsiInterpreter.resistance.definition.DrugClass;
 
-@SuppressWarnings("all") public class EvaluatedDrugClass {
+import com.google.common.base.Strings;
 
-	private static final MessageFormat FORMAT =
-		new MessageFormat("'{'Drug Class: {0}, Evaluated Drugs: {1}'}'");
+public class EvaluatedDrugClass {
+
+	private static final String FORMAT = "{Drug Class: %s, Evaluated Drugs: %s}";
 
 	private DrugClass drugClass;
-	private List evaluatedDrugs;
+	private List<EvaluatedDrug> evaluatedDrugs;
 
-	public EvaluatedDrugClass(DrugClass drugClass, Collection evaluatedDrugs) {
+	public EvaluatedDrugClass(DrugClass drugClass, Collection<EvaluatedDrug> evaluatedDrugs) {
 		this.drugClass = drugClass;
-		this.evaluatedDrugs = (List) evaluatedDrugs;
+		this.evaluatedDrugs = new ArrayList<>(evaluatedDrugs);
 	}
 
 	public DrugClass getDrugClass() {
 		return this.drugClass;
 	}
 
-	public Collection getEvaluatedDrugs() {
+	public Collection<EvaluatedDrug> getEvaluatedDrugs() {
 		return this.evaluatedDrugs;
 	}
 
 	@Override
     public String toString() {
-		Object[] objs = { this.drugClass, this.evaluatedDrugs };
-		return FORMAT.format(objs);
+		return Strings.lenientFormat(FORMAT, drugClass, evaluatedDrugs);
 	}
 }

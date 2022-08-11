@@ -39,7 +39,7 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.lexer.Lexer;
 import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.Start;
 import org.fstrf.stanfordAsiInterpreter.resistance.grammar.parser.Parser;
 
-@SuppressWarnings("all") public class RuleCondition {
+public class RuleCondition {
 
 	private static final int DEFAULT_BUFFER_SIZE = 1024;
 
@@ -61,7 +61,7 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.parser.Parser;
 		return this.statement;
 	}
 
-	public EvaluatedCondition evaluate(List mutations, MutationComparator comparator) {
+	public <T extends MutationComparator<String>> EvaluatedCondition evaluate(List<String> mutations, T comparator) {
 	    AsiGrammarAdapter adapter = new AsiGrammarAdapter(mutations, comparator);
 	    this.conditionTree.apply(adapter);
 	    return new EvaluatedCondition(this, adapter);

@@ -29,7 +29,7 @@ was not intended, designed, or validated to guide patient care.
 
 package org.fstrf.stanfordAsiInterpreter.resistance.grammar.node;
 
-@SuppressWarnings("all") public abstract class Token extends Node
+public abstract class Token<T extends Token<T>> extends Node<T>
 {
     private String text;
     private int line;
@@ -65,16 +65,19 @@ package org.fstrf.stanfordAsiInterpreter.resistance.grammar.node;
         this.pos = pos;
     }
 
+    @Override
     public String toString()
     {
         return text + " ";
     }
 
-    void removeChild(Node child)
+    @Override
+    void removeChild(Node<?> child)
     {
     }
 
-    void replaceChild(Node oldChild, Node newChild)
+    @Override
+    <U extends Node<U>> void replaceChild(U oldChild, U newChild)
     {
     }
 }

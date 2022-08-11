@@ -1,10 +1,24 @@
+package org.fstrf.stanfordAsiInterpreter.resistance;
+
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.io.ByteArrayInputStream;
+
+public class DtdASI {
+	
+	public static InputStream load() {
+		return new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8));
+	}
+	
+	private static String xml = """
 <!-- 
 This DTD is being put together to indicate the format the various
 drug resistance algorithms should use.
 -->
 
 
-<!ELEMENT ALGORITHM (ALGNAME, ALGVERSION?, DEFINITIONS, DRUG*, MUTATION_COMMENTS?)>
+<!ELEMENT ALGORITHM (ALGNAME, ALGVERSION?, PROCESSING_DIRECTIVES?, 
+                     DEFINITIONS, DRUG*, MUTATION_COMMENTS?)>
 
 <!-- *************************************************************** -->
 <!ELEMENT ALGNAME (#PCDATA)>
@@ -15,9 +29,16 @@ drug resistance algorithms should use.
 <!-- *************************************************************** -->
 
 <!-- *************************************************************** -->
+<!ELEMENT PROCESSING_DIRECTIVES (SHOW_ATYPICAL_MUTATIONS?,
+                                 RESTRICTED_POSITION_SCORING?)>
+<!ELEMENT SHOW_ATYPICAL_MUTATIONS EMPTY>
+<!ELEMENT RESTRICTED_POSITION_SCORING EMPTY>
+<!-- *************************************************************** -->
+
+<!-- *************************************************************** -->
 <!ELEMENT DEFINITIONS (GENE_DEFINITION*, LEVEL_DEFINITION*, DRUGCLASS*, GLOBALRANGE?,
                        COMMENT_DEFINITIONS?)>
-<!ELEMENT GENE_DEFINITION (NAME, DRUGCLASSLIST?)>
+<!ELEMENT GENE_DEFINITION (NAME, DRUGCLASSLIST?)> 
 <!ELEMENT DRUGCLASSLIST (#PCDATA)>                    
 <!ELEMENT LEVEL_DEFINITION (ORDER, ORIGINAL, SIR)>
 <!ELEMENT ORDER (#PCDATA)>
@@ -51,3 +72,5 @@ drug resistance algorithms should use.
 <!ELEMENT MUTATION_COMMENTS (GENE*)>
 <!ELEMENT GENE (NAME, RULE+)>
 <!-- *************************************************************** -->
+""";
+}

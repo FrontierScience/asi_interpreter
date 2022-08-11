@@ -29,10 +29,9 @@ was not intended, designed, or validated to guide patient care.
 
 package org.fstrf.stanfordAsiInterpreter.resistance.grammar.node;
 
-import java.util.*;
 import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
 
-@SuppressWarnings("all") public final class AFloatNumber extends PNumber
+public final class AFloatNumber extends PNumber<AFloatNumber>
 {
     private TFloat _float_;
 
@@ -46,7 +45,9 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
         setFloat(_float_);
 
     }
-    public Object clone()
+    
+    @Override
+    public AFloatNumber clone()
     {
         return new AFloatNumber(
             (TFloat) cloneNode(_float_));
@@ -88,7 +89,7 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
             + toString(_float_);
     }
 
-    void removeChild(Node child)
+    void removeChild(Node<?> child)
     {
         if(_float_ == child)
         {
@@ -98,7 +99,7 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
 
     }
 
-    void replaceChild(Node oldChild, Node newChild)
+    <U extends Node<U>>void replaceChild(U oldChild, U newChild)
     {
         if(_float_ == oldChild)
         {

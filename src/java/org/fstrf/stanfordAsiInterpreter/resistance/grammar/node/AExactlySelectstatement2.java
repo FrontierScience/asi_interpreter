@@ -29,16 +29,15 @@ was not intended, designed, or validated to guide patient care.
 
 package org.fstrf.stanfordAsiInterpreter.resistance.grammar.node;
 
-import java.util.*;
 import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
 
-@SuppressWarnings("all") public final class AExactlySelectstatement2 extends PSelectstatement2
+public final class AExactlySelectstatement2 extends PSelectstatement2<AExactlySelectstatement2>
 {
     private TExactly _exactly_;
     private TInteger _integer_;
     private TFrom _from_;
     private TLPar _lPar_;
-    private PSelectlist _selectlist_;
+    private PSelectlist<?> _selectlist_;
     private TRPar _rPar_;
 
     public AExactlySelectstatement2()
@@ -50,7 +49,7 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
         TInteger _integer_,
         TFrom _from_,
         TLPar _lPar_,
-        PSelectlist _selectlist_,
+        PSelectlist<?> _selectlist_,
         TRPar _rPar_)
     {
         setExactly(_exactly_);
@@ -66,15 +65,17 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
         setRPar(_rPar_);
 
     }
-    public Object clone()
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @Override
+    public AExactlySelectstatement2 clone()
     {
         return new AExactlySelectstatement2(
-            (TExactly) cloneNode(_exactly_),
-            (TInteger) cloneNode(_integer_),
-            (TFrom) cloneNode(_from_),
-            (TLPar) cloneNode(_lPar_),
-            (PSelectlist) cloneNode(_selectlist_),
-            (TRPar) cloneNode(_rPar_));
+            cloneNode(_exactly_),
+            cloneNode(_integer_),
+            cloneNode(_from_),
+            cloneNode(_lPar_),
+            cloneNode((PSelectlist) _selectlist_),
+            cloneNode(_rPar_));
     }
 
     public void apply(Switch sw)
@@ -182,12 +183,12 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
         _lPar_ = node;
     }
 
-    public PSelectlist getSelectlist()
+    public PSelectlist<?> getSelectlist()
     {
         return _selectlist_;
     }
 
-    public void setSelectlist(PSelectlist node)
+    public void setSelectlist(PSelectlist<?> node)
     {
         if(_selectlist_ != null)
         {
@@ -232,6 +233,8 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
         _rPar_ = node;
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @Override
     public String toString()
     {
         return ""
@@ -239,11 +242,11 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
             + toString(_integer_)
             + toString(_from_)
             + toString(_lPar_)
-            + toString(_selectlist_)
+            + toString((PSelectlist) _selectlist_)
             + toString(_rPar_);
     }
 
-    void removeChild(Node child)
+    void removeChild(Node<?> child)
     {
         if(_exactly_ == child)
         {
@@ -283,7 +286,7 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
 
     }
 
-    void replaceChild(Node oldChild, Node newChild)
+    <U extends Node<U>>void replaceChild(U oldChild, U newChild)
     {
         if(_exactly_ == oldChild)
         {
@@ -311,7 +314,7 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
 
         if(_selectlist_ == oldChild)
         {
-            setSelectlist((PSelectlist) newChild);
+            setSelectlist((PSelectlist<?>) newChild);
             return;
         }
 

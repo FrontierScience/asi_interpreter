@@ -27,12 +27,11 @@ was not intended, designed, or validated to guide patient care.
 
 package org.fstrf.stanfordAsiInterpreter.resistance.definition;
 
-import java.text.MessageFormat;
+import com.google.common.base.Strings;
 
-@SuppressWarnings("all") public class LevelDefinition implements Definition {
+public class LevelDefinition implements Definition {
 
-	private static final MessageFormat FORMAT = 
-		new MessageFormat("'{'order: {0,number,integer}, text: {1}, sir: {2}'}'");
+	private static final String FORMAT = "{order: %s, text: %s, sir: %s}";
 	
 	private Integer order;
 	private String text;
@@ -56,12 +55,12 @@ import java.text.MessageFormat;
 		return this.sir;
 	}
 	
+	@Override
 	public String getResistance() {
 		return this.text;
 	}
 	
-	public String toString(){
-		Object[] objs = { this.order, this.text, this.sir };
-		return FORMAT.format(objs);
+	public String toString() {
+		return Strings.lenientFormat(FORMAT, order, text, sir);
 	}
 }

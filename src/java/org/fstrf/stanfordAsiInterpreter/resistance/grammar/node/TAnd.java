@@ -31,7 +31,7 @@ package org.fstrf.stanfordAsiInterpreter.resistance.grammar.node;
 
 import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
 
-@SuppressWarnings("all") public final class TAnd extends Token
+public final class TAnd extends Token<TAnd>
 {
     public TAnd()
     {
@@ -45,16 +45,19 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
         setPos(pos);
     }
 
-    public Object clone()
+    @Override
+    public TAnd clone()
     {
       return new TAnd(getLine(), getPos());
     }
 
+    @Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseTAnd(this);
     }
 
+    @Override
     public void setText(String text)
     {
         throw new RuntimeException("Cannot change TAnd text.");

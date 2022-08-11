@@ -31,7 +31,7 @@ package org.fstrf.stanfordAsiInterpreter.resistance.grammar.node;
 
 import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
 
-@SuppressWarnings("all") public final class TAminoAcid extends Token
+public final class TAminoAcid extends Token<TAminoAcid>
 {
     public TAminoAcid(String text)
     {
@@ -45,11 +45,13 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
         setPos(pos);
     }
 
-    public Object clone()
+    @Override
+    public TAminoAcid clone()
     {
       return new TAminoAcid(getText(), getLine(), getPos());
     }
 
+    @Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseTAminoAcid(this);

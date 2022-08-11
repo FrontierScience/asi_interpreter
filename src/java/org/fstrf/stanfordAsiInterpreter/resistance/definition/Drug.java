@@ -29,10 +29,10 @@ package org.fstrf.stanfordAsiInterpreter.resistance.definition;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
 import org.fstrf.stanfordAsiInterpreter.resistance.ASIEvaluationException;
+import org.fstrf.stanfordAsiInterpreter.resistance.evaluate.EvaluatedCondition;
 import org.fstrf.stanfordAsiInterpreter.resistance.evaluate.EvaluatedDrug;
 import org.fstrf.stanfordAsiInterpreter.resistance.grammar.MutationComparator;
 
@@ -42,18 +42,18 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.MutationComparator;
  * Can contain any number of <code>mutationTypes</code>, consisting of a name and a list of mutations. Encountered mutations are output along with the mutation type name.
  * Must contain a <code>defaultLevel</code>. If no rules trigger for this drug, it will default to this resistance level.
  */
-@SuppressWarnings("all") public class Drug {
+public class Drug {
 
 	private String name;
 	private String fullName;
 	/*
 	 * collection of DrugRule objects
 	 */
-	private List drugRules;
+	private List<Rule> drugRules;
     private List<MutationType> mutationTypes;
     private int defaultLevel;
 
-	public Drug(String drugName, String drugFullName, List drugRules, List<MutationType> mutationTypes, int defaultLevel) {
+	public Drug(String drugName, String drugFullName, List<Rule> drugRules, List<MutationType> mutationTypes, int defaultLevel) {
 		this.fullName = drugFullName;
 		this.name = drugName;
 		this.drugRules = drugRules;
@@ -69,7 +69,7 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.MutationComparator;
 		return this.fullName;
 	}
 
-	public List getDrugRules() {
+	public List<Rule> getDrugRules() {
 		return this.drugRules;
 	}
 
@@ -89,10 +89,9 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.MutationComparator;
     /**
      * Evaluates the drug based on the given rules and mutations.
      */
-	public EvaluatedDrug evaluate(List mutations, MutationComparator comparator) throws ASIEvaluationException {
-		Collection evaluatedConditions = new ArrayList();
-		for(Iterator iter = this.drugRules.iterator(); iter.hasNext();) {
-			Rule rule = (Rule) iter.next();
+	public <T extends MutationComparator<String>> EvaluatedDrug evaluate(List<String> mutations, T comparator) throws ASIEvaluationException {
+		Collection<EvaluatedCondition> evaluatedConditions = new ArrayList<>();
+		for(Rule rule : this.drugRules) {
 			evaluatedConditions.add(rule.evaluate(mutations, comparator));
 		}
 		List<MutationType> evaluatedMutationTypes = new ArrayList<MutationType>();

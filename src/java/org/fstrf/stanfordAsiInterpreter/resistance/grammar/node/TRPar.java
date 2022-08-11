@@ -31,7 +31,7 @@ package org.fstrf.stanfordAsiInterpreter.resistance.grammar.node;
 
 import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
 
-@SuppressWarnings("all") public final class TRPar extends Token
+public final class TRPar extends Token<TRPar>
 {
     public TRPar()
     {
@@ -45,16 +45,19 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
         setPos(pos);
     }
 
-    public Object clone()
+    @Override
+    public TRPar clone()
     {
       return new TRPar(getLine(), getPos());
     }
 
+    @Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseTRPar(this);
     }
 
+    @Override
     public void setText(String text)
     {
         throw new RuntimeException("Cannot change TRPar text.");

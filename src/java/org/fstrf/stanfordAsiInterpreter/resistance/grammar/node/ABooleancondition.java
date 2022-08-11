@@ -32,18 +32,18 @@ package org.fstrf.stanfordAsiInterpreter.resistance.grammar.node;
 import java.util.*;
 import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
 
-@SuppressWarnings("all") public final class ABooleancondition extends PBooleancondition
+public final class ABooleancondition extends PBooleancondition<ABooleancondition>
 {
-    private PCondition _condition_;
-    private final LinkedList _condition2_ = new TypedLinkedList(new Condition2_Cast());
+    private PCondition<?> _condition_;
+    private final LinkedList<PCondition2<?>> _condition2_ = new TypedLinkedList<>(new Condition2_Cast());
 
     public ABooleancondition()
     {
     }
 
     public ABooleancondition(
-        PCondition _condition_,
-        List _condition2_)
+        PCondition<?> _condition_,
+        List<PCondition2<?>> _condition2_)
     {
         setCondition(_condition_);
 
@@ -53,24 +53,28 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
         }
 
     }
-    public Object clone()
+    
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+	@Override
+    public ABooleancondition clone()
     {
         return new ABooleancondition(
-            (PCondition) cloneNode(_condition_),
-            cloneList(_condition2_));
+            cloneNode((PCondition) _condition_),
+            cloneList((LinkedList) _condition2_));
     }
 
+    @Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseABooleancondition(this);
     }
 
-    public PCondition getCondition()
+    public PCondition<?> getCondition()
     {
         return _condition_;
     }
 
-    public void setCondition(PCondition node)
+    public void setCondition(PCondition<?> node)
     {
         if(_condition_ != null)
         {
@@ -90,25 +94,28 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
         _condition_ = node;
     }
 
-    public LinkedList getCondition2()
+    public LinkedList<PCondition2<?>> getCondition2()
     {
         return _condition2_;
     }
 
-    public void setCondition2(List list)
+    public void setCondition2(List<PCondition2<?>> list)
     {
         _condition2_.clear();
         _condition2_.addAll(list);
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+	@Override
     public String toString()
     {
         return ""
-            + toString(_condition_)
-            + toString(_condition2_);
+            + toString((PCondition) _condition_)
+            + toString((LinkedList) _condition2_);
     }
 
-    void removeChild(Node child)
+    @Override
+    void removeChild(Node<?> child)
     {
         if(_condition_ == child)
         {
@@ -123,21 +130,21 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
 
     }
 
-    void replaceChild(Node oldChild, Node newChild)
+    <U extends Node<U>>void replaceChild(U oldChild, U newChild)
     {
         if(_condition_ == oldChild)
         {
-            setCondition((PCondition) newChild);
+            setCondition((PCondition<?>) newChild);
             return;
         }
 
-        for(ListIterator i = _condition2_.listIterator(); i.hasNext();)
+        for(ListIterator<PCondition2<?>> i = _condition2_.listIterator(); i.hasNext();)
         {
             if(i.next() == oldChild)
             {
                 if(newChild != null)
                 {
-                    i.set(newChild);
+                    i.set((PCondition2<?>) newChild);
                     oldChild.parent(null);
                     return;
                 }
@@ -150,11 +157,11 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
 
     }
 
-    private class Condition2_Cast implements Cast
+    private class Condition2_Cast implements Cast<PCondition2<?>>
     {
-        public Object cast(Object o)
+        public PCondition2<?> cast(Object o)
         {
-            PCondition2 node = (PCondition2) o;
+            PCondition2<?> node = (PCondition2<?>) o;
 
             if((node.parent() != null) &&
                 (node.parent() != ABooleancondition.this))

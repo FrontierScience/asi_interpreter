@@ -30,36 +30,36 @@ was not intended, designed, or validated to guide patient care.
 package org.fstrf.stanfordAsiInterpreter.resistance.grammar.node;
 
 import java.util.*;
-import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
 
-@SuppressWarnings("all") public abstract class Node implements Switchable, Cloneable
+public abstract class Node<T extends Node<T>> implements Switchable, Cloneable
 {
-    private Node parent;
+    private Node<?> parent;
 
-    public abstract Object clone();
+    public abstract T clone();
 
-    public Node parent()
+    public Node<?> parent()
     {
         return parent;
     }
 
-    void parent(Node parent)
+    void parent(Node<?> parent)
     {
         this.parent = parent;
     }
 
-    abstract void removeChild(Node child);
-    abstract void replaceChild(Node oldChild, Node newChild);
+    abstract void removeChild(Node<?> child);
+    abstract <U extends Node<U>> void replaceChild(U oldChild, U newChild);
 
-    public void replaceBy(Node node)
+    @SuppressWarnings("unchecked")
+	public void replaceBy(T node)
     {
         if(parent != null)
         {
-            parent.replaceChild(this, node);
+            parent.replaceChild((T) this, node);
         }
     }
 
-    protected String toString(Node node)
+    protected static <U extends Node<U>> String toString(U node)
     {
         if(node != null)
         {
@@ -69,11 +69,11 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
         return "";
     }
 
-    protected String toString(List list)
+    protected static <U extends Node<U>> String toString(List<U> list)
     {
         StringBuffer s = new StringBuffer();
 
-        for(Iterator i = list.iterator(); i.hasNext();)
+        for(Iterator<U> i = list.iterator(); i.hasNext();)
         {
             s.append(i.next());
         }
@@ -81,23 +81,23 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
         return s.toString();
     }
 
-    protected Node cloneNode(Node node)
+    protected static <U extends Node<U>> U cloneNode(U node)
     {
         if(node != null)
         {
-            return (Node) node.clone();
+            return (U) node.clone();
         }
 
         return null;
     }
 
-    protected List cloneList(List list)
+    protected static <U extends Node<U>> List<U> cloneList(List<U> list)
     {
-        List clone = new LinkedList();
+        List<U> clone = new LinkedList<>();
 
-        for(Iterator i = list.iterator(); i.hasNext();)
+        for(Iterator<U> i = list.iterator(); i.hasNext();)
         {
-            clone.add(((Node) i.next()).clone());
+            clone.add((U) ((U) i.next()).clone());
         }
 
         return clone;

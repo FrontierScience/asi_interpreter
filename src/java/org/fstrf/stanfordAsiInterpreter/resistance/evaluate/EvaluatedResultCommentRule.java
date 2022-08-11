@@ -32,7 +32,7 @@ import java.util.Set;
 import org.fstrf.stanfordAsiInterpreter.resistance.definition.Definition;
 import org.fstrf.stanfordAsiInterpreter.resistance.definition.ResultCommentRule;
 
-@SuppressWarnings("all") public class EvaluatedResultCommentRule
+public class EvaluatedResultCommentRule
 {
 	private ResultCommentRule resultCommentRule;
 	private Boolean evaluationResult;

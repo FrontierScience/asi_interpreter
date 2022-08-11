@@ -29,16 +29,20 @@ was not intended, designed, or validated to guide patient care.
 
 package org.fstrf.stanfordAsiInterpreter.resistance.grammar.node;
 
-@SuppressWarnings("all") public class NoCast implements Cast
+public class NoCast<T> implements Cast<T>
 {
-    public final static NoCast instance = new NoCast();
+    public final static <T> NoCast<T> instance() {
+    	return new NoCast<>();
+    }
 
     private NoCast()
     {
     }
 
-    public Object cast(Object o)
+    @SuppressWarnings("unchecked")
+	@Override
+    public T cast(Object o)
     {
-        return o;
+        return (T) o;
     }
 }

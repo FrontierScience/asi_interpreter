@@ -29,27 +29,28 @@ was not intended, designed, or validated to guide patient care.
 
 package org.fstrf.stanfordAsiInterpreter.resistance.grammar.node;
 
-import java.util.*;
 import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
 
-@SuppressWarnings("all") public final class AExcludeCondition extends PCondition
+public final class AExcludeCondition extends PCondition<AExcludeCondition>
 {
-    private PExcludestatement _excludestatement_;
+    private PExcludestatement<?> _excludestatement_;
 
     public AExcludeCondition()
     {
     }
 
     public AExcludeCondition(
-        PExcludestatement _excludestatement_)
+        PExcludestatement<?> _excludestatement_)
     {
         setExcludestatement(_excludestatement_);
 
     }
-    public Object clone()
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @Override
+    public AExcludeCondition clone()
     {
         return new AExcludeCondition(
-            (PExcludestatement) cloneNode(_excludestatement_));
+            cloneNode((PExcludestatement) _excludestatement_));
     }
 
     public void apply(Switch sw)
@@ -57,12 +58,12 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
         ((Analysis) sw).caseAExcludeCondition(this);
     }
 
-    public PExcludestatement getExcludestatement()
+    public PExcludestatement<?> getExcludestatement()
     {
         return _excludestatement_;
     }
 
-    public void setExcludestatement(PExcludestatement node)
+    public void setExcludestatement(PExcludestatement<?> node)
     {
         if(_excludestatement_ != null)
         {
@@ -82,13 +83,15 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
         _excludestatement_ = node;
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @Override
     public String toString()
     {
         return ""
-            + toString(_excludestatement_);
+            + toString((PExcludestatement) _excludestatement_);
     }
 
-    void removeChild(Node child)
+    void removeChild(Node<?> child)
     {
         if(_excludestatement_ == child)
         {
@@ -98,11 +101,11 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
 
     }
 
-    void replaceChild(Node oldChild, Node newChild)
+    <U extends Node<U>> void replaceChild(U oldChild, U newChild)
     {
         if(_excludestatement_ == oldChild)
         {
-            setExcludestatement((PExcludestatement) newChild);
+            setExcludestatement((PExcludestatement<?>) newChild);
             return;
         }
 

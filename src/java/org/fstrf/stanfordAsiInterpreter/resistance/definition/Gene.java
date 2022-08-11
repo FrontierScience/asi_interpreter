@@ -29,30 +29,30 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.fstrf.stanfordAsiInterpreter.resistance.ASIEvaluationException;
+import org.fstrf.stanfordAsiInterpreter.resistance.evaluate.EvaluatedCondition;
 import org.fstrf.stanfordAsiInterpreter.resistance.evaluate.EvaluatedDrug;
 import org.fstrf.stanfordAsiInterpreter.resistance.evaluate.EvaluatedDrugClass;
 import org.fstrf.stanfordAsiInterpreter.resistance.evaluate.EvaluatedGene;
 import org.fstrf.stanfordAsiInterpreter.resistance.evaluate.EvaluatedResultCommentRule;
 import org.fstrf.stanfordAsiInterpreter.resistance.grammar.MutationComparator;
 
-@SuppressWarnings("all") public class Gene {
+public class Gene {
 
     private String name;
 
     //drugClassList of DrugClass objects
-    private Set drugClasses;
-    private List geneRules;
+    private Set<DrugClass> drugClasses;
+    private List<Rule> geneRules;
     private List<ResultCommentRule> resultCommentRules;
     private IndelRangeDefinition indelRange;
     private int defaultLevel;
 
-    public Gene(String name, Set drugClasses, List geneRules, List<ResultCommentRule> resultCommentRules, IndelRangeDefinition indelRange, int defaultLevel) {
+    public Gene(String name, Set<DrugClass> drugClasses, List<Rule> geneRules, List<ResultCommentRule> resultCommentRules, IndelRangeDefinition indelRange, int defaultLevel) {
         this.name = name;
         this.drugClasses = drugClasses;
         this.geneRules = geneRules;
@@ -61,39 +61,39 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.MutationComparator;
         this.defaultLevel = defaultLevel;
     }
 
-    public Gene(String name, Set drugClasses, List geneRules, List<ResultCommentRule> resultCommentRules, IndelRangeDefinition indelRange) {
+    public Gene(String name, Set<DrugClass> drugClasses, List<Rule> geneRules, List<ResultCommentRule> resultCommentRules, IndelRangeDefinition indelRange) {
         this(name, drugClasses, geneRules, resultCommentRules, indelRange, 0);
     }
 
-    public Gene(String name, Set drugClasses, List geneRules, List<ResultCommentRule> resultCommentRules) {
+    public Gene(String name, Set<DrugClass> drugClasses, List<Rule> geneRules, List<ResultCommentRule> resultCommentRules) {
         this(name, drugClasses, geneRules, resultCommentRules, null);
     }
 
-    public Gene(String name, Set drugClasses, List geneRules) {
+    public Gene(String name, Set<DrugClass> drugClasses, List<Rule> geneRules) {
         this(name, drugClasses, geneRules, new ArrayList<ResultCommentRule>());
     }
 
-    public Gene(String name, Set drugClasses, IndelRangeDefinition indelRange) {
-        this(name, drugClasses, new ArrayList(), new ArrayList<ResultCommentRule>(), indelRange);
+    public Gene(String name, Set<DrugClass> drugClasses, IndelRangeDefinition indelRange) {
+        this(name, drugClasses, new ArrayList<>(), new ArrayList<ResultCommentRule>(), indelRange);
     }
 
-    public Gene(String name, Set drugClasses) {
-        this(name, drugClasses, new ArrayList());
+    public Gene(String name, Set<DrugClass> drugClasses) {
+        this(name, drugClasses, new ArrayList<>());
     }
 
-    public Gene(String name, List geneRules) {
-        this(name, new HashSet(), geneRules);
+    public Gene(String name, List<Rule> geneRules) {
+        this(name, new HashSet<>(), geneRules);
     }
 
     public String getName() {
         return this.name;
     }
 
-    public Set getDrugClasses() {
+    public Set<DrugClass> getDrugClasses() {
         return this.drugClasses;
     }
 
-    public List getRules() {
+    public List<Rule> getRules() {
         return this.geneRules;
     }
 
@@ -118,17 +118,15 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.MutationComparator;
      * @return
      * @throws ASIEvaluationException
      */
-    public EvaluatedGene evaluate(List mutations, MutationComparator comparator) throws ASIEvaluationException {
-        List updatedMutations = this.indelRange != null ? replaceMutationsInRange(mutations, this.indelRange) : mutations;
-        Collection evaluatedGeneRules = new ArrayList();
-        for (Iterator iter = this.geneRules.iterator(); iter.hasNext();) {
-            Rule geneRule = (Rule) iter.next();
+    public <T extends MutationComparator<String>> EvaluatedGene evaluate(List<String> mutations, T comparator) throws ASIEvaluationException {
+        List<String> updatedMutations = this.indelRange != null ? replaceMutationsInRange(mutations, this.indelRange) : mutations;
+        Collection<EvaluatedCondition> evaluatedGeneRules = new ArrayList<>();
+        for (Rule geneRule : geneRules) {
             evaluatedGeneRules.add(geneRule.evaluate(updatedMutations, comparator));
         }
 
-        Collection evaluatedDrugClasses = new ArrayList();
-        for (Iterator iter = this.drugClasses.iterator(); iter.hasNext();) {
-            DrugClass drugClass = (DrugClass) iter.next();
+        Collection<EvaluatedDrugClass> evaluatedDrugClasses = new ArrayList<>();
+        for (DrugClass drugClass : drugClasses) {
             evaluatedDrugClasses.add(drugClass.evaluate(updatedMutations, comparator));
         }
 
@@ -160,9 +158,9 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.MutationComparator;
      * @param indelRange the indel range that defines the mutation updates
      * @return the updated mutation list
      */
-    private static List replaceMutationsInRange(List mutationList, IndelRangeDefinition indelRange)
+    private static List<String> replaceMutationsInRange(List<String> mutationList, IndelRangeDefinition indelRange)
     {
-        List res = new ArrayList();
+        List<String> res = new ArrayList<>();
 
         for(Object o : mutationList) {
             String mut = o.toString();

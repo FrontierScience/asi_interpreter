@@ -27,7 +27,6 @@ was not intended, designed, or validated to guide patient care.
 
 package org.fstrf.stanfordAsiInterpreter.resistance.definition;
 
-import java.util.Iterator;
 import java.util.List;
 
 import org.fstrf.stanfordAsiInterpreter.resistance.ASIEvaluationException;
@@ -36,12 +35,12 @@ import org.fstrf.stanfordAsiInterpreter.resistance.evaluate.EvaluatedCondition;
 import org.fstrf.stanfordAsiInterpreter.resistance.grammar.AsiGrammarEvaluator;
 import org.fstrf.stanfordAsiInterpreter.resistance.grammar.MutationComparator;
 
-@SuppressWarnings("all") public class Rule {
+public class Rule {
 
 	private RuleCondition condition;
-	private List actions;
+	private List<? extends RuleAction<?, ?>> actions;
 
-	public Rule(RuleCondition condition, List actions) throws ASIParsingException {
+	public Rule(RuleCondition condition, List<? extends RuleAction<?, ?>> actions) throws ASIParsingException {
 		if(actions.size() == 0) {
 			throw new ASIParsingException("no action exists for the rule:\n" + condition.getStatement());
 		} else if(moreThanOneScoreRange(actions)) {
@@ -55,15 +54,14 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.MutationComparator;
 		return this.condition;
 	}
 
-	public List getActions() {
+	public List<? extends RuleAction<?, ?>> getActions() {
 		return this.actions;
 	}
 
-	public EvaluatedCondition evaluate(List mutations, MutationComparator comparator) throws ASIEvaluationException {
+	public <T extends MutationComparator<String>> EvaluatedCondition evaluate(List<String> mutations, T comparator) throws ASIEvaluationException {
 		EvaluatedCondition evaluatedCondition =  this.condition.evaluate(mutations, comparator);
 		AsiGrammarEvaluator evaluator = evaluatedCondition.getEvaluator();
-		for(Iterator iter = this.actions.iterator(); iter.hasNext();) {
-			RuleAction action = (RuleAction) iter.next();
+		for(RuleAction<?, ?> action : this.actions) {
 			if(!action.supports(evaluator.getResult().getClass())){
 				throw new ASIEvaluationException("Action: " + action + "; does not support a result of type: " + evaluator.getResult().getClass());
 			}
@@ -72,10 +70,9 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.MutationComparator;
 		return evaluatedCondition;
 	}
 
-	private boolean moreThanOneScoreRange(List actions) {
+	private boolean moreThanOneScoreRange(List<? extends RuleAction<?, ?>> actions) {
 		int scoreRangeActionCount = 0;
-		for(Iterator iterator = actions.iterator(); iterator.hasNext();) {
-			RuleAction action = (RuleAction) iterator.next();
+		for(RuleAction<?, ?> action : actions) {
 			if(action instanceof ScoreRangeAction) {
 				scoreRangeActionCount += 1;
 			}

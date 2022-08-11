@@ -31,54 +31,61 @@ package org.fstrf.stanfordAsiInterpreter.resistance.grammar.node;
 
 import java.util.*;
 
-@SuppressWarnings("all") public class TypedLinkedList extends LinkedList
+public class TypedLinkedList<T> extends LinkedList<T>
 {
-    Cast cast;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 2105563691889628850L;
+	Cast<T> cast;
 
     public TypedLinkedList()
     {
         super();
 
-        cast = NoCast.instance;
+        cast = NoCast.instance();
     }
 
-    public TypedLinkedList(Collection c)
+    public TypedLinkedList(Collection<T> c)
     {
         super(c);
 
-        cast = NoCast.instance;
+        cast = NoCast.instance();
     }
 
-    public TypedLinkedList(Cast cast)
+    public TypedLinkedList(Cast<T> cast)
     {
         super();
 
         this.cast = cast;
     }
 
-    public TypedLinkedList(Collection c, Cast cast)
+    public TypedLinkedList(Collection<T> c, Cast<T> cast)
     {
         super(c);
 
         this.cast = cast;
     }
 
-    public Cast getCast()
+    public Cast<T> getCast()
     {
         return cast;
     }
 
-    public void add(int index, Object element)
+    @Override
+    public void add(int index, T element)
     {
         super.add(index, cast.cast(element));
     }
 
-    public boolean add(Object o)
+    @Override
+    public boolean add(T o)
     {
         return super.add(cast.cast(o));
     }
 
-    public boolean addAll(Collection c)
+    @Override
+    public boolean addAll(Collection<? extends T> c)
     {
         Object[] elements = c.toArray();
         for(int i=0; i<elements.length; i++)
@@ -88,7 +95,8 @@ import java.util.*;
         return true;
     }
 
-    public boolean addAll(int index, Collection c)
+    @Override
+    public boolean addAll(int index, Collection<? extends T> c)
     {
         int pos = index;
         Object[] elements = c.toArray();
@@ -109,16 +117,16 @@ import java.util.*;
         super.addLast(cast.cast(o));
     }
 
-    public ListIterator listIterator(int index)
+    public ListIterator<T> listIterator(int index)
     {
         return new TypedLinkedListIterator(super.listIterator(index));
     }
 
-    private class TypedLinkedListIterator implements ListIterator
+    private class TypedLinkedListIterator implements ListIterator<T>
     {
-        ListIterator iterator;
+        ListIterator<T> iterator;
 
-        TypedLinkedListIterator(ListIterator iterator)
+        TypedLinkedListIterator(ListIterator<T> iterator)
         {
             this.iterator = iterator;
         }
@@ -128,7 +136,7 @@ import java.util.*;
             return iterator.hasNext();
         }
 
-        public Object next()
+        public T next()
         {
             return iterator.next();
         }
@@ -138,7 +146,7 @@ import java.util.*;
             return iterator.hasPrevious();
         }
 
-        public Object previous()
+        public T previous()
         {
             return iterator.previous();
         }
