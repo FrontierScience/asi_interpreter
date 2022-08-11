@@ -45,14 +45,15 @@ public final class AExcludeCondition extends PCondition<AExcludeCondition>
         setExcludestatement(_excludestatement_);
 
     }
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    
     @Override
     public AExcludeCondition clone()
     {
         return new AExcludeCondition(
-            cloneNode((PExcludestatement) _excludestatement_));
+        	(PExcludestatement<?>) cloneNode(_excludestatement_));
     }
 
+    @Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseAExcludeCondition(this);
@@ -83,14 +84,14 @@ public final class AExcludeCondition extends PCondition<AExcludeCondition>
         _excludestatement_ = node;
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
     public String toString()
     {
         return ""
-            + toString((PExcludestatement) _excludestatement_);
+            + toString(_excludestatement_);
     }
 
+    @Override
     void removeChild(Node<?> child)
     {
         if(_excludestatement_ == child)
@@ -101,6 +102,7 @@ public final class AExcludeCondition extends PCondition<AExcludeCondition>
 
     }
 
+    @Override
     <U extends Node<U>> void replaceChild(U oldChild, U newChild)
     {
         if(_excludestatement_ == oldChild)

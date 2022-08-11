@@ -29,27 +29,28 @@ was not intended, designed, or validated to guide patient care.
 
 package org.fstrf.stanfordAsiInterpreter.resistance.grammar.node;
 
-import java.util.*;
 import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
 
-@SuppressWarnings("all") public final class ASelectCondition extends PCondition
+public final class ASelectCondition extends PCondition<ASelectCondition>
 {
-    private PSelectstatement _selectstatement_;
+    private PSelectstatement<?> _selectstatement_;
 
     public ASelectCondition()
     {
     }
 
     public ASelectCondition(
-        PSelectstatement _selectstatement_)
+        PSelectstatement<?> _selectstatement_)
     {
         setSelectstatement(_selectstatement_);
 
     }
-    public Object clone()
+
+    @Override
+    public ASelectCondition clone()
     {
         return new ASelectCondition(
-            (PSelectstatement) cloneNode(_selectstatement_));
+            (PSelectstatement<?>) cloneNode(_selectstatement_));
     }
 
     public void apply(Switch sw)
@@ -57,12 +58,12 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
         ((Analysis) sw).caseASelectCondition(this);
     }
 
-    public PSelectstatement getSelectstatement()
+    public PSelectstatement<?> getSelectstatement()
     {
         return _selectstatement_;
     }
 
-    public void setSelectstatement(PSelectstatement node)
+    public void setSelectstatement(PSelectstatement<?> node)
     {
         if(_selectstatement_ != null)
         {
@@ -82,13 +83,15 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
         _selectstatement_ = node;
     }
 
+    @Override
     public String toString()
     {
         return ""
             + toString(_selectstatement_);
     }
 
-    void removeChild(Node child)
+    @Override
+    void removeChild(Node<?> child)
     {
         if(_selectstatement_ == child)
         {
@@ -98,11 +101,12 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
 
     }
 
-    void replaceChild(Node oldChild, Node newChild)
+    @Override
+    <U extends Node<U>> void replaceChild(U oldChild, U newChild)
     {
         if(_selectstatement_ == oldChild)
         {
-            setSelectstatement((PSelectstatement) newChild);
+            setSelectstatement((PSelectstatement<?>) newChild);
             return;
         }
 

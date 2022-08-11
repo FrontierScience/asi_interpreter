@@ -29,15 +29,14 @@ was not intended, designed, or validated to guide patient care.
 
 package org.fstrf.stanfordAsiInterpreter.resistance.grammar.node;
 
-import java.util.*;
 import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
 
-@SuppressWarnings("all") public final class AScorecondition extends PScorecondition
+public final class AScorecondition extends PScorecondition<AScorecondition>
 {
     private TScore _score_;
     private TFrom _from_;
     private TLPar _lPar_;
-    private PScorelist _scorelist_;
+    private PScorelist<?> _scorelist_;
     private TRPar _rPar_;
 
     public AScorecondition()
@@ -48,7 +47,7 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
         TScore _score_,
         TFrom _from_,
         TLPar _lPar_,
-        PScorelist _scorelist_,
+        PScorelist<?> _scorelist_,
         TRPar _rPar_)
     {
         setScore(_score_);
@@ -62,16 +61,19 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
         setRPar(_rPar_);
 
     }
-    public Object clone()
+    
+	@Override
+    public AScorecondition clone()
     {
         return new AScorecondition(
             (TScore) cloneNode(_score_),
             (TFrom) cloneNode(_from_),
             (TLPar) cloneNode(_lPar_),
-            (PScorelist) cloneNode(_scorelist_),
+            (PScorelist<?>) cloneNode(_scorelist_),
             (TRPar) cloneNode(_rPar_));
     }
 
+	@Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseAScorecondition(this);
@@ -152,12 +154,12 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
         _lPar_ = node;
     }
 
-    public PScorelist getScorelist()
+    public PScorelist<?> getScorelist()
     {
         return _scorelist_;
     }
 
-    public void setScorelist(PScorelist node)
+    public void setScorelist(PScorelist<?> node)
     {
         if(_scorelist_ != null)
         {
@@ -202,6 +204,7 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
         _rPar_ = node;
     }
 
+	@Override
     public String toString()
     {
         return ""
@@ -212,7 +215,8 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
             + toString(_rPar_);
     }
 
-    void removeChild(Node child)
+	@Override
+    void removeChild(Node<?> child)
     {
         if(_score_ == child)
         {
@@ -246,7 +250,8 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
 
     }
 
-    void replaceChild(Node oldChild, Node newChild)
+	@Override
+    <U extends Node<U>> void replaceChild(U oldChild, U newChild)
     {
         if(_score_ == oldChild)
         {
@@ -268,7 +273,7 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
 
         if(_scorelist_ == oldChild)
         {
-            setScorelist((PScorelist) newChild);
+            setScorelist((PScorelist<?>) newChild);
             return;
         }
 

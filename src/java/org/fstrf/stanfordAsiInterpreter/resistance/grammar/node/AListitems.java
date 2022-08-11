@@ -29,13 +29,12 @@ was not intended, designed, or validated to guide patient care.
 
 package org.fstrf.stanfordAsiInterpreter.resistance.grammar.node;
 
-import java.util.*;
 import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
 
-@SuppressWarnings("all") public final class AListitems extends PListitems
+public final class AListitems extends PListitems<AListitems>
 {
     private TComma _comma_;
-    private PResidue _residue_;
+    private PResidue<?> _residue_;
 
     public AListitems()
     {
@@ -43,20 +42,23 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
 
     public AListitems(
         TComma _comma_,
-        PResidue _residue_)
+        PResidue<?> _residue_)
     {
         setComma(_comma_);
 
         setResidue(_residue_);
 
     }
-    public Object clone()
+    
+	@Override
+    public AListitems clone()
     {
         return new AListitems(
             (TComma) cloneNode(_comma_),
-            (PResidue) cloneNode(_residue_));
+            (PResidue<?>) cloneNode(_residue_));
     }
 
+	@Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseAListitems(this);
@@ -87,12 +89,12 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
         _comma_ = node;
     }
 
-    public PResidue getResidue()
+    public PResidue<?> getResidue()
     {
         return _residue_;
     }
 
-    public void setResidue(PResidue node)
+    public void setResidue(PResidue<?> node)
     {
         if(_residue_ != null)
         {
@@ -112,6 +114,7 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
         _residue_ = node;
     }
 
+	@Override
     public String toString()
     {
         return ""
@@ -119,7 +122,8 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
             + toString(_residue_);
     }
 
-    void removeChild(Node child)
+	@Override
+    void removeChild(Node<?> child)
     {
         if(_comma_ == child)
         {
@@ -135,7 +139,8 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
 
     }
 
-    void replaceChild(Node oldChild, Node newChild)
+	@Override
+    <U extends Node<U>>void replaceChild(U oldChild, U newChild)
     {
         if(_comma_ == oldChild)
         {
@@ -145,7 +150,7 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
 
         if(_residue_ == oldChild)
         {
-            setResidue((PResidue) newChild);
+            setResidue((PResidue<?>) newChild);
             return;
         }
 

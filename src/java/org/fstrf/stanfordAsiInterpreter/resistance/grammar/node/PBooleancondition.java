@@ -29,6 +29,6 @@ was not intended, designed, or validated to guide patient care.
 
 package org.fstrf.stanfordAsiInterpreter.resistance.grammar.node;
 
-@SuppressWarnings("all") public abstract class PBooleancondition<T extends PBooleancondition<T>> extends Node<T>
+public abstract class PBooleancondition<T extends PBooleancondition<T>> extends Node<T>
 {
 }

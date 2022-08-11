@@ -31,9 +31,9 @@ package org.fstrf.stanfordAsiInterpreter.resistance.grammar.node;
 
 import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
 
-@SuppressWarnings("all") public final class Start extends Node
+public final class Start extends Node<Start>
 {
-    private PStatement _pStatement_;
+    private PStatement<?> _pStatement_;
     private EOF _eof_;
 
     public Start()
@@ -41,31 +41,33 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
     }
 
     public Start(
-        PStatement _pStatement_,
+        PStatement<?> _pStatement_,
         EOF _eof_)
     {
         setPStatement(_pStatement_);
         setEOF(_eof_);
     }
 
-    public Object clone()
+    @Override
+    public Start clone()
     {
         return new Start(
-            (PStatement) cloneNode(_pStatement_),
+            (PStatement<?>) cloneNode(_pStatement_),
             (EOF) cloneNode(_eof_));
     }
 
+    @Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseStart(this);
     }
 
-    public PStatement getPStatement()
+    public PStatement<?> getPStatement()
     {
         return _pStatement_;
     }
 
-    public void setPStatement(PStatement node)
+    public void setPStatement(PStatement<?> node)
     {
         if(_pStatement_ != null)
         {
@@ -110,7 +112,8 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
         _eof_ = node;
     }
 
-    void removeChild(Node child)
+    @Override
+    void removeChild(Node<?> child)
     {
         if(_pStatement_ == child)
         {
@@ -125,11 +128,12 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
         }
     }
 
-    void replaceChild(Node oldChild, Node newChild)
+    @Override
+    <U extends Node<U>>void replaceChild(U oldChild, U newChild)
     {
         if(_pStatement_ == oldChild)
         {
-            setPStatement((PStatement) newChild);
+            setPStatement((PStatement<?>) newChild);
             return;
         }
 
@@ -140,6 +144,7 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
         }
     }
 
+    @Override
     public String toString()
     {
         return "" +

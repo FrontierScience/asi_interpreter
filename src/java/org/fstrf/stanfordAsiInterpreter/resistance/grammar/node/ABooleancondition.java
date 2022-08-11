@@ -54,13 +54,13 @@ public final class ABooleancondition extends PBooleancondition<ABooleancondition
 
     }
     
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings("unchecked")
 	@Override
     public ABooleancondition clone()
     {
         return new ABooleancondition(
-            cloneNode((PCondition) _condition_),
-            cloneList((LinkedList) _condition2_));
+            (PCondition<?>) cloneNode(_condition_),
+            (List<PCondition2<?>>) cloneList(_condition2_));
     }
 
     @Override
@@ -130,6 +130,7 @@ public final class ABooleancondition extends PBooleancondition<ABooleancondition
 
     }
 
+    @Override
     <U extends Node<U>>void replaceChild(U oldChild, U newChild)
     {
         if(_condition_ == oldChild)

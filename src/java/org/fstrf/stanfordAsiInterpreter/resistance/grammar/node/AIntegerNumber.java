@@ -45,12 +45,14 @@ public final class AIntegerNumber extends PNumber<AIntegerNumber>
         setInteger(_integer_);
 
     }
+    
     @Override
     public AIntegerNumber clone()
     {
-        return new AIntegerNumber(cloneNode(_integer_));
+        return new AIntegerNumber((TInteger) cloneNode(_integer_));
     }
 
+    @Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseAIntegerNumber(this);
@@ -81,6 +83,7 @@ public final class AIntegerNumber extends PNumber<AIntegerNumber>
         _integer_ = node;
     }
 
+    @Override
     public String toString()
     {
         return ""

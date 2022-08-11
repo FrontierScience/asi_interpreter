@@ -59,7 +59,7 @@ public abstract class Node<T extends Node<T>> implements Switchable, Cloneable
         }
     }
 
-    protected static <U extends Node<U>> String toString(U node)
+    protected static String toString(Node<?> node)
     {
         if(node != null)
         {
@@ -69,35 +69,35 @@ public abstract class Node<T extends Node<T>> implements Switchable, Cloneable
         return "";
     }
 
-    protected static <U extends Node<U>> String toString(List<U> list)
+    protected static String toString(List<? extends Node<?>> list)
     {
         StringBuffer s = new StringBuffer();
 
-        for(Iterator<U> i = list.iterator(); i.hasNext();)
+        for(Node<?> node : list)
         {
-            s.append(i.next());
+            s.append(node);
         }
 
         return s.toString();
     }
 
-    protected static <U extends Node<U>> U cloneNode(U node)
+    protected static Object cloneNode(Node<?> node)
     {
         if(node != null)
         {
-            return (U) node.clone();
+            return node.clone();
         }
 
         return null;
     }
 
-    protected static <U extends Node<U>> List<U> cloneList(List<U> list)
+    protected static Object cloneList(List<? extends Node<?>> list)
     {
-        List<U> clone = new LinkedList<>();
+        List<Node<?>> clone = new LinkedList<>();
 
-        for(Iterator<U> i = list.iterator(); i.hasNext();)
+        for(Node<?> node : list)
         {
-            clone.add((U) ((U) i.next()).clone());
+            clone.add(node.clone());
         }
 
         return clone;

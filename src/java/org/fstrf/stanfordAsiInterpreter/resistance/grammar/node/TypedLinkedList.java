@@ -33,9 +33,6 @@ import java.util.*;
 
 public class TypedLinkedList<T> extends LinkedList<T>
 {
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = 2105563691889628850L;
 	Cast<T> cast;
 

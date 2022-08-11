@@ -48,7 +48,7 @@ public final class AAndLogicsymbol extends PLogicsymbol<AAndLogicsymbol>
     public AAndLogicsymbol clone()
     {
         return new AAndLogicsymbol(
-            cloneNode(_and_));
+            (TAnd) cloneNode(_and_));
     }
 
     public void apply(Switch sw)

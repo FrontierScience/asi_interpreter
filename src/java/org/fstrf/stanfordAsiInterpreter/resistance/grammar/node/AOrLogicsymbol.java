@@ -50,7 +50,7 @@ public final class AOrLogicsymbol extends PLogicsymbol<AOrLogicsymbol>
     public AOrLogicsymbol clone()
     {
         return new AOrLogicsymbol(
-            cloneNode(_or_));
+            (TOr) cloneNode(_or_));
     }
 
     @Override

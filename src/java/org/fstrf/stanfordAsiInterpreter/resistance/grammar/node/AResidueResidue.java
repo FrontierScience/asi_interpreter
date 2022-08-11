@@ -57,12 +57,15 @@ public final class AResidueResidue extends PResidue<AResidueResidue>
         }
 
     }
-    public AResidueResidue clone()
+    
+    @SuppressWarnings("unchecked")
+    @Override
+	public AResidueResidue clone()
     {
         return new AResidueResidue(
-            cloneNode(_originalaminoacid_),
-            cloneNode(_integer_),
-            cloneList(_mutatedaminoacid_));
+            (TAminoAcid) cloneNode(_originalaminoacid_),
+            (TInteger) cloneNode(_integer_),
+            (List<TAminoAcid>) cloneList(_mutatedaminoacid_));
     }
 
     @Override

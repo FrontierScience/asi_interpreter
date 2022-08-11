@@ -49,15 +49,16 @@ public final class AExcludestatement extends PExcludestatement<AExcludestatement
         setResidue(_residue_);
 
     }
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+
     @Override
     public AExcludestatement clone()
     {
         return new AExcludestatement(
-            cloneNode(_exclude_),
-            cloneNode((PResidue) _residue_));
+            (TExclude) cloneNode(_exclude_),
+            (PResidue<?>) cloneNode(_residue_));
     }
 
+    @Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseAExcludestatement(this);
@@ -113,15 +114,15 @@ public final class AExcludestatement extends PExcludestatement<AExcludestatement
         _residue_ = node;
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
     public String toString()
     {
         return ""
             + toString(_exclude_)
-            + toString((PResidue) _residue_);
+            + toString(_residue_);
     }
 
+    @Override
     void removeChild(Node<?> child)
     {
         if(_exclude_ == child)
@@ -138,6 +139,7 @@ public final class AExcludestatement extends PExcludestatement<AExcludestatement
 
     }
 
+    @Override
     <U extends Node<U>>void replaceChild(U oldChild, U newChild)
     {
         if(_exclude_ == oldChild)

@@ -78,20 +78,19 @@ public final class AAtleastnotmorethanSelectstatement2 extends PSelectstatement2
 
     }
     
-    @SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
     public AAtleastnotmorethanSelectstatement2 clone()
     {
         return new AAtleastnotmorethanSelectstatement2(
-            cloneNode(_atleast_),
-            cloneNode(_atleastnumber_),
-            cloneNode((PLogicsymbol) _logicsymbol_),
-            cloneNode(_notmorethan_),
-            cloneNode(_notmorethannumber_),
-            cloneNode(_from_),
-            cloneNode(_lPar_),
-            cloneNode((PSelectlist) _selectlist_),
-            cloneNode(_rPar_));
+            (TAtleast) cloneNode(_atleast_),
+            (TInteger) cloneNode(_atleastnumber_),
+            (PLogicsymbol<?>) cloneNode(_logicsymbol_),
+            (TNotmorethan) cloneNode(_notmorethan_),
+            (TInteger) cloneNode(_notmorethannumber_),
+            (TFrom) cloneNode(_from_),
+            (TLPar) cloneNode(_lPar_),
+            (PSelectlist<?>) cloneNode(_selectlist_),
+            (TRPar) cloneNode(_rPar_));
     }
 
     public void apply(Switch sw)
@@ -324,19 +323,18 @@ public final class AAtleastnotmorethanSelectstatement2 extends PSelectstatement2
         _rPar_ = node;
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
     public String toString()
     {
         return ""
             + toString(_atleast_)
             + toString(_atleastnumber_)
-            + toString((PLogicsymbol) _logicsymbol_)
+            + toString(_logicsymbol_)
             + toString(_notmorethan_)
             + toString(_notmorethannumber_)
             + toString(_from_)
             + toString(_lPar_)
-            + toString((PSelectlist) _selectlist_)
+            + toString(_selectlist_)
             + toString(_rPar_);
     }
 

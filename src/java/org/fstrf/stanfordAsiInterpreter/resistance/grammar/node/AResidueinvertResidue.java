@@ -70,16 +70,17 @@ public final class AResidueinvertResidue extends PResidue<AResidueinvertResidue>
 
     }
     
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     public AResidueinvertResidue clone()
     {
         return new AResidueinvertResidue(
-            cloneNode(_originalaminoacid_),
-            cloneNode(_integer_),
-            cloneNode(_lPar_),
-            cloneNode(_not_),
-            cloneList(_mutatedaminoacid_),
-            cloneNode(_rPar_));
+            (TAminoAcid) cloneNode(_originalaminoacid_),
+            (TInteger) cloneNode(_integer_),
+            (TLPar) cloneNode(_lPar_),
+            (TNot) cloneNode(_not_),
+            (List<TAminoAcid>) cloneList(_mutatedaminoacid_),
+            (TRPar) cloneNode(_rPar_));
     }
 
    	@Override

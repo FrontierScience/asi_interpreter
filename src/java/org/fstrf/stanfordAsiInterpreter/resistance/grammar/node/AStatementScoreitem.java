@@ -29,25 +29,24 @@ was not intended, designed, or validated to guide patient care.
 
 package org.fstrf.stanfordAsiInterpreter.resistance.grammar.node;
 
-import java.util.*;
 import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
 
-@SuppressWarnings("all") public final class AStatementScoreitem extends PScoreitem
+public final class AStatementScoreitem extends PScoreitem<AStatementScoreitem>
 {
-    private PBooleancondition _booleancondition_;
+    private PBooleancondition<?> _booleancondition_;
     private TMapper _mapper_;
     private TMin _min_;
-    private PNumber _number_;
+    private PNumber<?> _number_;
 
     public AStatementScoreitem()
     {
     }
 
     public AStatementScoreitem(
-        PBooleancondition _booleancondition_,
+        PBooleancondition<?> _booleancondition_,
         TMapper _mapper_,
         TMin _min_,
-        PNumber _number_)
+        PNumber<?> _number_)
     {
         setBooleancondition(_booleancondition_);
 
@@ -58,26 +57,28 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
         setNumber(_number_);
 
     }
-    public Object clone()
+    @Override
+    public AStatementScoreitem clone()
     {
         return new AStatementScoreitem(
-            (PBooleancondition) cloneNode(_booleancondition_),
+            (PBooleancondition<?>) cloneNode(_booleancondition_),
             (TMapper) cloneNode(_mapper_),
             (TMin) cloneNode(_min_),
-            (PNumber) cloneNode(_number_));
+            (PNumber<?>) cloneNode(_number_));
     }
 
+    @Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseAStatementScoreitem(this);
     }
 
-    public PBooleancondition getBooleancondition()
+    public PBooleancondition<?> getBooleancondition()
     {
         return _booleancondition_;
     }
 
-    public void setBooleancondition(PBooleancondition node)
+    public void setBooleancondition(PBooleancondition<?> node)
     {
         if(_booleancondition_ != null)
         {
@@ -147,12 +148,12 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
         _min_ = node;
     }
 
-    public PNumber getNumber()
+    public PNumber<?> getNumber()
     {
         return _number_;
     }
 
-    public void setNumber(PNumber node)
+    public void setNumber(PNumber<?> node)
     {
         if(_number_ != null)
         {
@@ -172,6 +173,7 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
         _number_ = node;
     }
 
+    @Override
     public String toString()
     {
         return ""
@@ -181,7 +183,8 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
             + toString(_number_);
     }
 
-    void removeChild(Node child)
+    @Override
+    void removeChild(Node<?> child)
     {
         if(_booleancondition_ == child)
         {
@@ -209,11 +212,12 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
 
     }
 
-    void replaceChild(Node oldChild, Node newChild)
+    @Override
+    <U extends Node<U>> void replaceChild(U oldChild, U newChild)
     {
         if(_booleancondition_ == oldChild)
         {
-            setBooleancondition((PBooleancondition) newChild);
+            setBooleancondition((PBooleancondition<?>) newChild);
             return;
         }
 
@@ -231,7 +235,7 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
 
         if(_number_ == oldChild)
         {
-            setNumber((PNumber) newChild);
+            setNumber((PNumber<?>) newChild);
             return;
         }
 

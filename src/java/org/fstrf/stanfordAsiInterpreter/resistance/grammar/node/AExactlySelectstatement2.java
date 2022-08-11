@@ -65,17 +65,16 @@ public final class AExactlySelectstatement2 extends PSelectstatement2<AExactlySe
         setRPar(_rPar_);
 
     }
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
     public AExactlySelectstatement2 clone()
     {
         return new AExactlySelectstatement2(
-            cloneNode(_exactly_),
-            cloneNode(_integer_),
-            cloneNode(_from_),
-            cloneNode(_lPar_),
-            cloneNode((PSelectlist) _selectlist_),
-            cloneNode(_rPar_));
+            (TExactly) cloneNode(_exactly_),
+            (TInteger) cloneNode(_integer_),
+            (TFrom) cloneNode(_from_),
+            (TLPar) cloneNode(_lPar_),
+            (PSelectlist<?>) cloneNode(_selectlist_),
+            (TRPar) cloneNode(_rPar_));
     }
 
     public void apply(Switch sw)
@@ -233,7 +232,6 @@ public final class AExactlySelectstatement2 extends PSelectstatement2<AExactlySe
         _rPar_ = node;
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
     public String toString()
     {
@@ -242,7 +240,7 @@ public final class AExactlySelectstatement2 extends PSelectstatement2<AExactlySe
             + toString(_integer_)
             + toString(_from_)
             + toString(_lPar_)
-            + toString((PSelectlist) _selectlist_)
+            + toString(_selectlist_)
             + toString(_rPar_);
     }
 

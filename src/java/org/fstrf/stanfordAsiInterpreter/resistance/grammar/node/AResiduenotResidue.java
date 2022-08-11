@@ -61,13 +61,16 @@ public final class AResiduenotResidue extends PResidue<AResiduenotResidue>
         }
 
     }
+    
+    @SuppressWarnings("unchecked")
+	@Override
     public AResiduenotResidue clone()
     {
         return new AResiduenotResidue(
             (TNot) cloneNode(_not_),
             (TAminoAcid) cloneNode(_originalaminoacid_),
             (TInteger) cloneNode(_integer_),
-            cloneList(_mutatedaminoacid_));
+            (List<TAminoAcid>) cloneList(_mutatedaminoacid_));
     }
 
     public void apply(Switch sw)

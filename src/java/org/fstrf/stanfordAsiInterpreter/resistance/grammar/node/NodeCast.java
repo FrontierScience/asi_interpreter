@@ -30,7 +30,7 @@ was not intended, designed, or validated to guide patient care.
 package org.fstrf.stanfordAsiInterpreter.resistance.grammar.node;
 
 
-@SuppressWarnings("all") public class NodeCast implements Cast
+public class NodeCast implements Cast<Node<?>>
 {
     public final static NodeCast instance = new NodeCast();
 
@@ -38,8 +38,8 @@ package org.fstrf.stanfordAsiInterpreter.resistance.grammar.node;
     {
     }
 
-    public Object cast(Object o)
+    public Node<?> cast(Object o)
     {
-        return (Node) o;
+        return (Node<?>) o;
     }
 }

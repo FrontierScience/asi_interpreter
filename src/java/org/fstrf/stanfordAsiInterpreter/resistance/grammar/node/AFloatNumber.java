@@ -53,6 +53,7 @@ public final class AFloatNumber extends PNumber<AFloatNumber>
             (TFloat) cloneNode(_float_));
     }
 
+    @Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseAFloatNumber(this);
@@ -83,12 +84,14 @@ public final class AFloatNumber extends PNumber<AFloatNumber>
         _float_ = node;
     }
 
+    @Override
     public String toString()
     {
         return ""
             + toString(_float_);
     }
 
+    @Override
     void removeChild(Node<?> child)
     {
         if(_float_ == child)
@@ -99,6 +102,7 @@ public final class AFloatNumber extends PNumber<AFloatNumber>
 
     }
 
+    @Override
     <U extends Node<U>>void replaceChild(U oldChild, U newChild)
     {
         if(_float_ == oldChild)

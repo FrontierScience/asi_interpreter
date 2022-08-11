@@ -50,13 +50,12 @@ public final class ACondition2 extends PCondition2<ACondition2>
 
     }
     
-    @SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
     public ACondition2 clone()
     {
         return new ACondition2(
-            cloneNode((PLogicsymbol) _logicsymbol_),
-            cloneNode((PCondition) _condition_));
+        	(PLogicsymbol<?>) cloneNode(_logicsymbol_),
+        	(PCondition<?>) cloneNode(_condition_));
     }
 
 	@Override
@@ -115,12 +114,11 @@ public final class ACondition2 extends PCondition2<ACondition2>
         _condition_ = node;
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
 	public String toString()
     {
         return ""
-            + toString((PLogicsymbol) _logicsymbol_)
-            + toString((PCondition) _condition_);
+            + toString(_logicsymbol_)
+            + toString(_condition_);
     }
 
     void removeChild(Node<?> child)

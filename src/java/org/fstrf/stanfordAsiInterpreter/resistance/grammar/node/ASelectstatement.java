@@ -29,13 +29,12 @@ was not intended, designed, or validated to guide patient care.
 
 package org.fstrf.stanfordAsiInterpreter.resistance.grammar.node;
 
-import java.util.*;
 import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
 
-@SuppressWarnings("all") public final class ASelectstatement extends PSelectstatement
+public final class ASelectstatement extends PSelectstatement<ASelectstatement>
 {
     private TSelect _select_;
-    private PSelectstatement2 _selectstatement2_;
+    private PSelectstatement2<?> _selectstatement2_;
 
     public ASelectstatement()
     {
@@ -43,20 +42,23 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
 
     public ASelectstatement(
         TSelect _select_,
-        PSelectstatement2 _selectstatement2_)
+        PSelectstatement2<?> _selectstatement2_)
     {
         setSelect(_select_);
 
         setSelectstatement2(_selectstatement2_);
 
     }
-    public Object clone()
+
+    @Override
+    public ASelectstatement clone()
     {
         return new ASelectstatement(
             (TSelect) cloneNode(_select_),
-            (PSelectstatement2) cloneNode(_selectstatement2_));
+            (PSelectstatement2<?>) cloneNode(_selectstatement2_));
     }
 
+    @Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseASelectstatement(this);
@@ -87,12 +89,12 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
         _select_ = node;
     }
 
-    public PSelectstatement2 getSelectstatement2()
+    public PSelectstatement2<?> getSelectstatement2()
     {
         return _selectstatement2_;
     }
 
-    public void setSelectstatement2(PSelectstatement2 node)
+    public void setSelectstatement2(PSelectstatement2<?> node)
     {
         if(_selectstatement2_ != null)
         {
@@ -112,6 +114,7 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
         _selectstatement2_ = node;
     }
 
+    @Override
     public String toString()
     {
         return ""
@@ -119,7 +122,8 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
             + toString(_selectstatement2_);
     }
 
-    void removeChild(Node child)
+    @Override
+    void removeChild(Node<?> child)
     {
         if(_select_ == child)
         {
@@ -135,7 +139,8 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
 
     }
 
-    void replaceChild(Node oldChild, Node newChild)
+    @Override
+    <U extends Node<U>> void replaceChild(U oldChild, U newChild)
     {
         if(_select_ == oldChild)
         {
@@ -145,7 +150,7 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
 
         if(_selectstatement2_ == oldChild)
         {
-            setSelectstatement2((PSelectstatement2) newChild);
+            setSelectstatement2((PSelectstatement2<?>) newChild);
             return;
         }
 
