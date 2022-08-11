@@ -38,7 +38,8 @@ public class NodeCast implements Cast<Node<?>>
     {
     }
 
-    public Node<?> cast(Object o)
+    @Override
+	public Node<?> cast(Object o)
     {
         return (Node<?>) o;
     }

@@ -29,7 +29,7 @@ was not intended, designed, or validated to guide patient care.
 
 package org.fstrf.stanfordAsiInterpreter.resistance.grammar.node;
 
-import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.Analysis;
 
 public final class AAtleastnotmorethanSelectstatement2 extends PSelectstatement2<AAtleastnotmorethanSelectstatement2>
 {
@@ -93,7 +93,8 @@ public final class AAtleastnotmorethanSelectstatement2 extends PSelectstatement2
             (TRPar) cloneNode(_rPar_));
     }
 
-    public void apply(Switch sw)
+    @Override
+	public void apply(Switch sw)
     {
         ((Analysis) sw).caseAAtleastnotmorethanSelectstatement2(this);
     }
@@ -338,7 +339,8 @@ public final class AAtleastnotmorethanSelectstatement2 extends PSelectstatement2
             + toString(_rPar_);
     }
 
-    void removeChild(Node<?> child)
+    @Override
+	void removeChild(Node<?> child)
     {
         if(_atleast_ == child)
         {
@@ -396,7 +398,8 @@ public final class AAtleastnotmorethanSelectstatement2 extends PSelectstatement2
 
     }
 
-    <U extends Node<U>>void replaceChild(U oldChild, U newChild)
+    @Override
+	<U extends Node<U>>void replaceChild(U oldChild, U newChild)
     {
         if(_atleast_ == oldChild)
         {

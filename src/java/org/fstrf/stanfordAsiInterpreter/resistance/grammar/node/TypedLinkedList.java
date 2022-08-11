@@ -29,7 +29,9 @@ was not intended, designed, or validated to guide patient care.
 
 package org.fstrf.stanfordAsiInterpreter.resistance.grammar.node;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.ListIterator;
 
 public class TypedLinkedList<T> extends LinkedList<T>
 {
@@ -104,17 +106,20 @@ public class TypedLinkedList<T> extends LinkedList<T>
         return true;
     }
 
-    public void addFirst(Object o)
+    @Override
+	public void addFirst(Object o)
     {
         super.addFirst(cast.cast(o));
     }
 
-    public void addLast(Object o)
+    @Override
+	public void addLast(Object o)
     {
         super.addLast(cast.cast(o));
     }
 
-    public ListIterator<T> listIterator(int index)
+    @Override
+	public ListIterator<T> listIterator(int index)
     {
         return new TypedLinkedListIterator(super.listIterator(index));
     }
@@ -128,47 +133,56 @@ public class TypedLinkedList<T> extends LinkedList<T>
             this.iterator = iterator;
         }
 
-        public boolean hasNext()
+        @Override
+		public boolean hasNext()
         {
             return iterator.hasNext();
         }
 
-        public T next()
+        @Override
+		public T next()
         {
             return iterator.next();
         }
 
-        public boolean hasPrevious()
+        @Override
+		public boolean hasPrevious()
         {
             return iterator.hasPrevious();
         }
 
-        public T previous()
+        @Override
+		public T previous()
         {
             return iterator.previous();
         }
 
-        public int nextIndex()
+        @Override
+		public int nextIndex()
         {
             return iterator.nextIndex();
         }
 
-        public int previousIndex()
+        @Override
+		public int previousIndex()
         {
             return iterator.previousIndex();
         }
 
-        public void remove()
+        @Override
+		public void remove()
         {
             iterator.remove();
         }
 
-        public void set(Object o)
+        @Override
+		public void set(Object o)
         {
             iterator.set(cast.cast(o));
         }
 
-        public void add(Object o)
+        @Override
+		public void add(Object o)
         {
             iterator.add(cast.cast(o));
         }

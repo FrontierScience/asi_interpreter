@@ -29,7 +29,7 @@ was not intended, designed, or validated to guide patient care.
 
 package org.fstrf.stanfordAsiInterpreter.resistance.grammar.node;
 
-import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.Analysis;
 
 public final class AAtleastSelectstatement2 extends PSelectstatement2<AAtleastSelectstatement2>
 {
@@ -78,7 +78,8 @@ public final class AAtleastSelectstatement2 extends PSelectstatement2<AAtleastSe
             (TRPar) cloneNode(_rPar_));
     }
 
-    public void apply(Switch sw)
+    @Override
+	public void apply(Switch sw)
     {
         ((Analysis) sw).caseAAtleastSelectstatement2(this);
     }

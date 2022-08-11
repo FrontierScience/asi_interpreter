@@ -29,8 +29,11 @@ was not intended, designed, or validated to guide patient care.
 
 package org.fstrf.stanfordAsiInterpreter.resistance.grammar.node;
 
-import java.util.*;
-import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
+
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.Analysis;
 
 public final class AResiduenotResidue extends PResidue<AResiduenotResidue>
 {
@@ -73,7 +76,8 @@ public final class AResiduenotResidue extends PResidue<AResiduenotResidue>
             (List<TAminoAcid>) cloneList(_mutatedaminoacid_));
     }
 
-    public void apply(Switch sw)
+    @Override
+	public void apply(Switch sw)
     {
         ((Analysis) sw).caseAResiduenotResidue(this);
     }
@@ -244,7 +248,8 @@ public final class AResiduenotResidue extends PResidue<AResiduenotResidue>
 
     private class Mutatedaminoacid_Cast implements Cast<TAminoAcid>
     {
-        public TAminoAcid cast(Object o)
+        @Override
+		public TAminoAcid cast(Object o)
         {
             TAminoAcid node = (TAminoAcid) o;
 

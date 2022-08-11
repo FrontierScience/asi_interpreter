@@ -29,8 +29,11 @@ was not intended, designed, or validated to guide patient care.
 
 package org.fstrf.stanfordAsiInterpreter.resistance.grammar.node;
 
-import java.util.*;
-import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
+
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.Analysis;
 
 public final class ABooleancondition extends PBooleancondition<ABooleancondition>
 {
@@ -105,13 +108,12 @@ public final class ABooleancondition extends PBooleancondition<ABooleancondition
         _condition2_.addAll(list);
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
     public String toString()
     {
         return ""
-            + toString((PCondition) _condition_)
-            + toString((LinkedList) _condition2_);
+            + toString(_condition_)
+            + toString(_condition2_);
     }
 
     @Override
@@ -160,7 +162,8 @@ public final class ABooleancondition extends PBooleancondition<ABooleancondition
 
     private class Condition2_Cast implements Cast<PCondition2<?>>
     {
-        public PCondition2<?> cast(Object o)
+        @Override
+		public PCondition2<?> cast(Object o)
         {
             PCondition2<?> node = (PCondition2<?>) o;
 

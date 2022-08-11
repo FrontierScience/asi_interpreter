@@ -29,7 +29,7 @@ was not intended, designed, or validated to guide patient care.
 
 package org.fstrf.stanfordAsiInterpreter.resistance.grammar.node;
 
-import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.Analysis;
 
 public final class ASelectCondition extends PCondition<ASelectCondition>
 {
@@ -53,7 +53,8 @@ public final class ASelectCondition extends PCondition<ASelectCondition>
             (PSelectstatement<?>) cloneNode(_selectstatement_));
     }
 
-    public void apply(Switch sw)
+    @Override
+	public void apply(Switch sw)
     {
         ((Analysis) sw).caseASelectCondition(this);
     }

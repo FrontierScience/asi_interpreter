@@ -29,13 +29,15 @@ was not intended, designed, or validated to guide patient care.
 
 package org.fstrf.stanfordAsiInterpreter.resistance.grammar.node;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
 
 public abstract class Node<T extends Node<T>> implements Switchable, Cloneable
 {
     private Node<?> parent;
 
-    public abstract T clone();
+    @Override
+	public abstract T clone();
 
     public Node<?> parent()
     {

@@ -29,9 +29,42 @@ was not intended, designed, or validated to guide patient care.
 
 package org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis;
 
-import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.*;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AAndLogicsymbol;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AAtleastSelectstatement2;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AAtleastnotmorethanSelectstatement2;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.ABooleancondition;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.ACondition2;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AExactlySelectstatement2;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AExcludeCondition;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AExcludestatement;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AFloatNumber;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AIntegerNumber;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AListitems;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.ALogicstatementStatement;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AMaxScoreitem;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.ANotmorethanSelectstatement2;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AOrLogicsymbol;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AResidueCondition;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AResidueResidue;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AResidueinvertResidue;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AResiduenotResidue;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AScoreStatement;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AScorecondition;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AScoreitems;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AScorelist;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.ASelectCondition;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.ASelectlist;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.ASelectstatement;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AStatementCondition;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AStatementScoreitem;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.Node;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.PCondition2;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.PListitems;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.PScoreitems;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.Start;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.TAminoAcid;
 
-@SuppressWarnings("all") public class ReversedDepthFirstAdapter extends AnalysisAdapter
+public class ReversedDepthFirstAdapter extends AnalysisAdapter
 {
     public void inStart(Start node)
     {
@@ -43,15 +76,16 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.*;
         defaultOut(node);
     }
 
-    public void defaultIn(Node node)
+    public void defaultIn(Node<?> node)
     {
     }
 
-    public void defaultOut(Node node)
+    public void defaultOut(Node<?> node)
     {
     }
 
-    public void caseStart(Start node)
+    @Override
+	public void caseStart(Start node)
     {
         inStart(node);
         node.getEOF().apply(this);
@@ -69,7 +103,8 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.*;
         defaultOut(node);
     }
 
-    public void caseALogicstatementStatement(ALogicstatementStatement node)
+    @Override
+	public void caseALogicstatementStatement(ALogicstatementStatement node)
     {
         inALogicstatementStatement(node);
         if(node.getBooleancondition() != null)
@@ -89,7 +124,8 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.*;
         defaultOut(node);
     }
 
-    public void caseAScoreStatement(AScoreStatement node)
+    @Override
+	public void caseAScoreStatement(AScoreStatement node)
     {
         inAScoreStatement(node);
         if(node.getScorecondition() != null)
@@ -109,14 +145,15 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.*;
         defaultOut(node);
     }
 
-    public void caseABooleancondition(ABooleancondition node)
+    @Override
+	public void caseABooleancondition(ABooleancondition node)
     {
         inABooleancondition(node);
         {
             Object temp[] = node.getCondition2().toArray();
             for(int i = temp.length - 1; i >= 0; i--)
             {
-                ((PCondition2) temp[i]).apply(this);
+                ((PCondition2<?>) temp[i]).apply(this);
             }
         }
         if(node.getCondition() != null)
@@ -136,7 +173,8 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.*;
         defaultOut(node);
     }
 
-    public void caseAStatementCondition(AStatementCondition node)
+    @Override
+	public void caseAStatementCondition(AStatementCondition node)
     {
         inAStatementCondition(node);
         if(node.getRPar() != null)
@@ -164,7 +202,8 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.*;
         defaultOut(node);
     }
 
-    public void caseAResidueCondition(AResidueCondition node)
+    @Override
+	public void caseAResidueCondition(AResidueCondition node)
     {
         inAResidueCondition(node);
         if(node.getResidue() != null)
@@ -184,7 +223,8 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.*;
         defaultOut(node);
     }
 
-    public void caseAExcludeCondition(AExcludeCondition node)
+    @Override
+	public void caseAExcludeCondition(AExcludeCondition node)
     {
         inAExcludeCondition(node);
         if(node.getExcludestatement() != null)
@@ -204,7 +244,8 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.*;
         defaultOut(node);
     }
 
-    public void caseASelectCondition(ASelectCondition node)
+    @Override
+	public void caseASelectCondition(ASelectCondition node)
     {
         inASelectCondition(node);
         if(node.getSelectstatement() != null)
@@ -224,7 +265,8 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.*;
         defaultOut(node);
     }
 
-    public void caseACondition2(ACondition2 node)
+    @Override
+	public void caseACondition2(ACondition2 node)
     {
         inACondition2(node);
         if(node.getCondition() != null)
@@ -248,7 +290,8 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.*;
         defaultOut(node);
     }
 
-    public void caseAAndLogicsymbol(AAndLogicsymbol node)
+    @Override
+	public void caseAAndLogicsymbol(AAndLogicsymbol node)
     {
         inAAndLogicsymbol(node);
         if(node.getAnd() != null)
@@ -268,7 +311,8 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.*;
         defaultOut(node);
     }
 
-    public void caseAOrLogicsymbol(AOrLogicsymbol node)
+    @Override
+	public void caseAOrLogicsymbol(AOrLogicsymbol node)
     {
         inAOrLogicsymbol(node);
         if(node.getOr() != null)
@@ -288,7 +332,8 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.*;
         defaultOut(node);
     }
 
-    public void caseAResidueResidue(AResidueResidue node)
+    @Override
+	public void caseAResidueResidue(AResidueResidue node)
     {
         inAResidueResidue(node);
         {
@@ -319,7 +364,8 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.*;
         defaultOut(node);
     }
 
-    public void caseAResiduenotResidue(AResiduenotResidue node)
+    @Override
+	public void caseAResiduenotResidue(AResiduenotResidue node)
     {
         inAResiduenotResidue(node);
         {
@@ -354,7 +400,8 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.*;
         defaultOut(node);
     }
 
-    public void caseAResidueinvertResidue(AResidueinvertResidue node)
+    @Override
+	public void caseAResidueinvertResidue(AResidueinvertResidue node)
     {
         inAResidueinvertResidue(node);
         if(node.getRPar() != null)
@@ -397,7 +444,8 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.*;
         defaultOut(node);
     }
 
-    public void caseAExcludestatement(AExcludestatement node)
+    @Override
+	public void caseAExcludestatement(AExcludestatement node)
     {
         inAExcludestatement(node);
         if(node.getResidue() != null)
@@ -421,7 +469,8 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.*;
         defaultOut(node);
     }
 
-    public void caseASelectstatement(ASelectstatement node)
+    @Override
+	public void caseASelectstatement(ASelectstatement node)
     {
         inASelectstatement(node);
         if(node.getSelectstatement2() != null)
@@ -445,7 +494,8 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.*;
         defaultOut(node);
     }
 
-    public void caseAExactlySelectstatement2(AExactlySelectstatement2 node)
+    @Override
+	public void caseAExactlySelectstatement2(AExactlySelectstatement2 node)
     {
         inAExactlySelectstatement2(node);
         if(node.getRPar() != null)
@@ -485,7 +535,8 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.*;
         defaultOut(node);
     }
 
-    public void caseAAtleastSelectstatement2(AAtleastSelectstatement2 node)
+    @Override
+	public void caseAAtleastSelectstatement2(AAtleastSelectstatement2 node)
     {
         inAAtleastSelectstatement2(node);
         if(node.getRPar() != null)
@@ -525,7 +576,8 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.*;
         defaultOut(node);
     }
 
-    public void caseANotmorethanSelectstatement2(ANotmorethanSelectstatement2 node)
+    @Override
+	public void caseANotmorethanSelectstatement2(ANotmorethanSelectstatement2 node)
     {
         inANotmorethanSelectstatement2(node);
         if(node.getRPar() != null)
@@ -565,7 +617,8 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.*;
         defaultOut(node);
     }
 
-    public void caseAAtleastnotmorethanSelectstatement2(AAtleastnotmorethanSelectstatement2 node)
+    @Override
+	public void caseAAtleastnotmorethanSelectstatement2(AAtleastnotmorethanSelectstatement2 node)
     {
         inAAtleastnotmorethanSelectstatement2(node);
         if(node.getRPar() != null)
@@ -617,14 +670,15 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.*;
         defaultOut(node);
     }
 
-    public void caseASelectlist(ASelectlist node)
+    @Override
+	public void caseASelectlist(ASelectlist node)
     {
         inASelectlist(node);
         {
             Object temp[] = node.getListitems().toArray();
             for(int i = temp.length - 1; i >= 0; i--)
             {
-                ((PListitems) temp[i]).apply(this);
+                ((PListitems<?>) temp[i]).apply(this);
             }
         }
         if(node.getResidue() != null)
@@ -644,7 +698,8 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.*;
         defaultOut(node);
     }
 
-    public void caseAListitems(AListitems node)
+    @Override
+	public void caseAListitems(AListitems node)
     {
         inAListitems(node);
         if(node.getResidue() != null)
@@ -668,7 +723,8 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.*;
         defaultOut(node);
     }
 
-    public void caseAScorecondition(AScorecondition node)
+    @Override
+	public void caseAScorecondition(AScorecondition node)
     {
         inAScorecondition(node);
         if(node.getRPar() != null)
@@ -704,14 +760,15 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.*;
         defaultOut(node);
     }
 
-    public void caseAScorelist(AScorelist node)
+    @Override
+	public void caseAScorelist(AScorelist node)
     {
         inAScorelist(node);
         {
             Object temp[] = node.getScoreitems().toArray();
             for(int i = temp.length - 1; i >= 0; i--)
             {
-                ((PScoreitems) temp[i]).apply(this);
+                ((PScoreitems<?>) temp[i]).apply(this);
             }
         }
         if(node.getScoreitem() != null)
@@ -731,7 +788,8 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.*;
         defaultOut(node);
     }
 
-    public void caseAStatementScoreitem(AStatementScoreitem node)
+    @Override
+	public void caseAStatementScoreitem(AStatementScoreitem node)
     {
         inAStatementScoreitem(node);
         if(node.getNumber() != null)
@@ -763,7 +821,8 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.*;
         defaultOut(node);
     }
 
-    public void caseAMaxScoreitem(AMaxScoreitem node)
+    @Override
+	public void caseAMaxScoreitem(AMaxScoreitem node)
     {
         inAMaxScoreitem(node);
         if(node.getRPar() != null)
@@ -795,7 +854,8 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.*;
         defaultOut(node);
     }
 
-    public void caseAScoreitems(AScoreitems node)
+    @Override
+	public void caseAScoreitems(AScoreitems node)
     {
         inAScoreitems(node);
         if(node.getScoreitem() != null)
@@ -819,7 +879,8 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.*;
         defaultOut(node);
     }
 
-    public void caseAIntegerNumber(AIntegerNumber node)
+    @Override
+	public void caseAIntegerNumber(AIntegerNumber node)
     {
         inAIntegerNumber(node);
         if(node.getInteger() != null)
@@ -839,7 +900,8 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.*;
         defaultOut(node);
     }
 
-    public void caseAFloatNumber(AFloatNumber node)
+    @Override
+	public void caseAFloatNumber(AFloatNumber node)
     {
         inAFloatNumber(node);
         if(node.getFloat() != null)

@@ -59,7 +59,7 @@ public class DrugClass {
 		return this.name;
 	}
 
-	public EvaluatedDrugClass evaluate(List<String> mutations, MutationComparator comparator) throws ASIEvaluationException {
+	public <T extends MutationComparator<String>> EvaluatedDrugClass evaluate(List<String> mutations, T comparator) throws ASIEvaluationException {
 		ArrayList<EvaluatedDrug> evaluatedDrugs = new ArrayList<>();
 		for(Drug drug : drugs) {
 			evaluatedDrugs.add(drug.evaluate(mutations, comparator));

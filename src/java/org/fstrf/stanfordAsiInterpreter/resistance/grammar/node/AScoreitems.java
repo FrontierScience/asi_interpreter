@@ -29,7 +29,7 @@ was not intended, designed, or validated to guide patient care.
 
 package org.fstrf.stanfordAsiInterpreter.resistance.grammar.node;
 
-import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.Analysis;
 
 public final class AScoreitems extends PScoreitems<AScoreitems>
 {
@@ -58,7 +58,8 @@ public final class AScoreitems extends PScoreitems<AScoreitems>
             (PScoreitem<?>) cloneNode(_scoreitem_));
     }
 
-    public void apply(Switch sw)
+    @Override
+	public void apply(Switch sw)
     {
         ((Analysis) sw).caseAScoreitems(this);
     }
@@ -121,7 +122,8 @@ public final class AScoreitems extends PScoreitems<AScoreitems>
             + toString(_scoreitem_);
     }
 
-    void removeChild(Node<?> child)
+    @Override
+	void removeChild(Node<?> child)
     {
         if(_comma_ == child)
         {
@@ -137,7 +139,8 @@ public final class AScoreitems extends PScoreitems<AScoreitems>
 
     }
 
-    <U extends Node<U>> void replaceChild(U oldChild, U newChild)
+    @Override
+	<U extends Node<U>> void replaceChild(U oldChild, U newChild)
     {
         if(_comma_ == oldChild)
         {

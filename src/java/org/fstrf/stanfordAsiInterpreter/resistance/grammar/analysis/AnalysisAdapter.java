@@ -29,15 +29,67 @@ was not intended, designed, or validated to guide patient care.
 
 package org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis;
 
-import java.util.*;
-import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.*;
+import java.util.Hashtable;
 
-@SuppressWarnings("all") public class AnalysisAdapter implements Analysis
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AAndLogicsymbol;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AAtleastSelectstatement2;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AAtleastnotmorethanSelectstatement2;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.ABooleancondition;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.ACondition2;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AExactlySelectstatement2;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AExcludeCondition;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AExcludestatement;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AFloatNumber;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AIntegerNumber;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AListitems;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.ALogicstatementStatement;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AMaxScoreitem;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.ANotmorethanSelectstatement2;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AOrLogicsymbol;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AResidueCondition;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AResidueResidue;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AResidueinvertResidue;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AResiduenotResidue;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AScoreStatement;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AScorecondition;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AScoreitems;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AScorelist;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.ASelectCondition;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.ASelectlist;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.ASelectstatement;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AStatementCondition;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AStatementScoreitem;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.EOF;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.Node;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.Start;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.TAminoAcid;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.TAnd;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.TAtleast;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.TBlank;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.TComma;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.TExactly;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.TExclude;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.TFloat;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.TFrom;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.TInteger;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.TLPar;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.TMapper;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.TMax;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.TMin;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.TNot;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.TNotmorethan;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.TOr;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.TRPar;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.TScore;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.TSelect;
+
+public class AnalysisAdapter implements Analysis
 {
-    private Hashtable in;
-    private Hashtable out;
+    private Hashtable<Node<?>, Object> in;
+    private Hashtable<Node<?>, Object> out;
 
-    public Object getIn(Node node)
+    @Override
+    public Object getIn(Node<?> node)
     {
         if(in == null)
         {
@@ -47,11 +99,12 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.*;
         return in.get(node);
     }
 
-    public void setIn(Node node, Object in)
+    @Override
+    public void setIn(Node<?> node, Object in)
     {
         if(this.in == null)
         {
-            this.in = new Hashtable(1);
+            this.in = new Hashtable<>(1);
         }
 
         if(in != null)
@@ -64,7 +117,8 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.*;
         }
     }
 
-    public Object getOut(Node node)
+    @Override
+    public Object getOut(Node<?> node)
     {
         if(out == null)
         {
@@ -74,11 +128,12 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.*;
         return out.get(node);
     }
 
-    public void setOut(Node node, Object out)
+    @Override
+    public void setOut(Node<?> node, Object out)
     {
         if(this.out == null)
         {
-            this.out = new Hashtable(1);
+            this.out = new Hashtable<>(1);
         }
 
         if(out != null)
@@ -90,257 +145,307 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.*;
             this.out.remove(node);
         }
     }
+    @Override
     public void caseStart(Start node)
     {
         defaultCase(node);
     }
 
+    @Override
     public void caseALogicstatementStatement(ALogicstatementStatement node)
     {
         defaultCase(node);
     }
 
+    @Override
     public void caseAScoreStatement(AScoreStatement node)
     {
         defaultCase(node);
     }
 
+    @Override
     public void caseABooleancondition(ABooleancondition node)
     {
         defaultCase(node);
     }
 
+    @Override
     public void caseAStatementCondition(AStatementCondition node)
     {
         defaultCase(node);
     }
 
+    @Override
     public void caseAResidueCondition(AResidueCondition node)
     {
         defaultCase(node);
     }
 
+    @Override
     public void caseAExcludeCondition(AExcludeCondition node)
     {
         defaultCase(node);
     }
 
+    @Override
     public void caseASelectCondition(ASelectCondition node)
     {
         defaultCase(node);
     }
 
+    @Override
     public void caseACondition2(ACondition2 node)
     {
         defaultCase(node);
     }
 
+    @Override
     public void caseAAndLogicsymbol(AAndLogicsymbol node)
     {
         defaultCase(node);
     }
 
+    @Override
     public void caseAOrLogicsymbol(AOrLogicsymbol node)
     {
         defaultCase(node);
     }
 
+    @Override
     public void caseAResidueResidue(AResidueResidue node)
     {
         defaultCase(node);
     }
 
+    @Override
     public void caseAResiduenotResidue(AResiduenotResidue node)
     {
         defaultCase(node);
     }
 
+    @Override
     public void caseAResidueinvertResidue(AResidueinvertResidue node)
     {
         defaultCase(node);
     }
 
+    @Override
     public void caseAExcludestatement(AExcludestatement node)
     {
         defaultCase(node);
     }
 
+    @Override
     public void caseASelectstatement(ASelectstatement node)
     {
         defaultCase(node);
     }
 
+    @Override
     public void caseAExactlySelectstatement2(AExactlySelectstatement2 node)
     {
         defaultCase(node);
     }
 
+    @Override
     public void caseAAtleastSelectstatement2(AAtleastSelectstatement2 node)
     {
         defaultCase(node);
     }
 
+    @Override
     public void caseANotmorethanSelectstatement2(ANotmorethanSelectstatement2 node)
     {
         defaultCase(node);
     }
 
+    @Override
     public void caseAAtleastnotmorethanSelectstatement2(AAtleastnotmorethanSelectstatement2 node)
     {
         defaultCase(node);
     }
 
+    @Override
     public void caseASelectlist(ASelectlist node)
     {
         defaultCase(node);
     }
 
+    @Override
     public void caseAListitems(AListitems node)
     {
         defaultCase(node);
     }
 
+    @Override
     public void caseAScorecondition(AScorecondition node)
     {
         defaultCase(node);
     }
 
+    @Override
     public void caseAScorelist(AScorelist node)
     {
         defaultCase(node);
     }
 
+    @Override
     public void caseAStatementScoreitem(AStatementScoreitem node)
     {
         defaultCase(node);
     }
 
+    @Override
     public void caseAMaxScoreitem(AMaxScoreitem node)
     {
         defaultCase(node);
     }
 
+    @Override
     public void caseAScoreitems(AScoreitems node)
     {
         defaultCase(node);
     }
 
+    @Override
     public void caseAIntegerNumber(AIntegerNumber node)
     {
         defaultCase(node);
     }
 
+    @Override
     public void caseAFloatNumber(AFloatNumber node)
     {
         defaultCase(node);
     }
 
+    @Override
     public void caseTMin(TMin node)
     {
         defaultCase(node);
     }
 
+    @Override
     public void caseTAnd(TAnd node)
     {
         defaultCase(node);
     }
 
+    @Override
     public void caseTOr(TOr node)
     {
         defaultCase(node);
     }
 
+    @Override
     public void caseTNot(TNot node)
     {
         defaultCase(node);
     }
 
+    @Override
     public void caseTExclude(TExclude node)
     {
         defaultCase(node);
     }
 
+    @Override
     public void caseTSelect(TSelect node)
     {
         defaultCase(node);
     }
 
+    @Override
     public void caseTFrom(TFrom node)
     {
         defaultCase(node);
     }
 
+    @Override
     public void caseTAtleast(TAtleast node)
     {
         defaultCase(node);
     }
 
+    @Override
     public void caseTExactly(TExactly node)
     {
         defaultCase(node);
     }
 
+    @Override
     public void caseTNotmorethan(TNotmorethan node)
     {
         defaultCase(node);
     }
 
+    @Override
     public void caseTScore(TScore node)
     {
         defaultCase(node);
     }
 
+    @Override
     public void caseTMax(TMax node)
     {
         defaultCase(node);
     }
 
+    @Override
     public void caseTLPar(TLPar node)
     {
         defaultCase(node);
     }
 
+    @Override
     public void caseTRPar(TRPar node)
     {
         defaultCase(node);
     }
 
-    public void caseTMapper(TMapper node)
+    @Override
+	public void caseTMapper(TMapper node)
     {
         defaultCase(node);
     }
 
+    @Override
     public void caseTComma(TComma node)
     {
         defaultCase(node);
     }
 
+    @Override
     public void caseTBlank(TBlank node)
     {
         defaultCase(node);
     }
 
+    @Override
     public void caseTInteger(TInteger node)
     {
         defaultCase(node);
     }
 
+    @Override
     public void caseTFloat(TFloat node)
     {
         defaultCase(node);
     }
 
+    @Override
     public void caseTAminoAcid(TAminoAcid node)
     {
         defaultCase(node);
     }
 
+    @Override
     public void caseEOF(EOF node)
     {
         defaultCase(node);
     }
 
-    public void defaultCase(Node node)
+    public void defaultCase(Node<?> node)
     {
     }
 }

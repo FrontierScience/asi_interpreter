@@ -29,13 +29,37 @@ was not intended, designed, or validated to guide patient care.
 
 package org.fstrf.stanfordAsiInterpreter.resistance.grammar.lexer;
 
-import java.io.*;
-import java.util.*;
-import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.*;
+import java.io.BufferedInputStream;
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.io.PushbackReader;
 
-@SuppressWarnings("all") public class Lexer
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.EOF;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.TAminoAcid;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.TAnd;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.TAtleast;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.TBlank;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.TComma;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.TExactly;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.TExclude;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.TFloat;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.TFrom;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.TInteger;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.TLPar;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.TMapper;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.TMax;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.TMin;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.TNot;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.TNotmorethan;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.TOr;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.TRPar;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.TScore;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.TSelect;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.Token;
+
+public class Lexer
 {
-    protected Token token;
+    protected Token<?> token;
     protected State state = State.INITIAL;
 
     private PushbackReader in;
@@ -54,7 +78,7 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.*;
         this.in = in;
     }
  
-    public Token peek() throws LexerException, IOException
+    public Token<?> peek() throws LexerException, IOException
     {
         while(token == null)
         {
@@ -65,7 +89,7 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.*;
         return token;
     }
 
-    public Token next() throws LexerException, IOException
+    public Token<?> next() throws LexerException, IOException
     {
         while(token == null)
         {
@@ -73,12 +97,12 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.*;
             filter();
         }
 
-        Token result = token;
+        Token<?> result = token;
         token = null;
         return result;
     }
 
-    protected Token getToken() throws IOException, LexerException
+    protected Token<?> getToken() throws IOException, LexerException
     {
         int dfa_state = 0;
 
@@ -91,8 +115,8 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.*;
         int accept_pos = -1;
         int accept_line = -1;
 
-        int[][][] gotoTable = this.gotoTable[state.id()];
-        int[] accept = this.accept[state.id()];
+        int[][][] gotoTable = Lexer.gotoTable[state.id()];
+        int[] accept = Lexer.accept[state.id()];
         text.setLength(0);
 
         while(true)
@@ -182,7 +206,7 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.*;
                     {
                     case 0:
                         {
-                            Token token = new0(
+                            Token<?> token = new0(
                                 start_line + 1,
                                 start_pos + 1);
                             pushBack(accept_length);
@@ -192,7 +216,7 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.*;
                         }
                     case 1:
                         {
-                            Token token = new1(
+                            Token<?> token = new1(
                                 start_line + 1,
                                 start_pos + 1);
                             pushBack(accept_length);
@@ -202,7 +226,7 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.*;
                         }
                     case 2:
                         {
-                            Token token = new2(
+                            Token<?> token = new2(
                                 start_line + 1,
                                 start_pos + 1);
                             pushBack(accept_length);
@@ -212,7 +236,7 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.*;
                         }
                     case 3:
                         {
-                            Token token = new3(
+                            Token<?> token = new3(
                                 start_line + 1,
                                 start_pos + 1);
                             pushBack(accept_length);
@@ -222,7 +246,7 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.*;
                         }
                     case 4:
                         {
-                            Token token = new4(
+                            Token<?> token = new4(
                                 start_line + 1,
                                 start_pos + 1);
                             pushBack(accept_length);
@@ -232,7 +256,7 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.*;
                         }
                     case 5:
                         {
-                            Token token = new5(
+                            Token<?> token = new5(
                                 start_line + 1,
                                 start_pos + 1);
                             pushBack(accept_length);
@@ -242,7 +266,7 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.*;
                         }
                     case 6:
                         {
-                            Token token = new6(
+                            Token<?> token = new6(
                                 start_line + 1,
                                 start_pos + 1);
                             pushBack(accept_length);
@@ -252,7 +276,7 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.*;
                         }
                     case 7:
                         {
-                            Token token = new7(
+                            Token<?> token = new7(
                                 start_line + 1,
                                 start_pos + 1);
                             pushBack(accept_length);
@@ -262,7 +286,7 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.*;
                         }
                     case 8:
                         {
-                            Token token = new8(
+                            Token<?> token = new8(
                                 start_line + 1,
                                 start_pos + 1);
                             pushBack(accept_length);
@@ -272,7 +296,7 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.*;
                         }
                     case 9:
                         {
-                            Token token = new9(
+                            Token<?> token = new9(
                                 start_line + 1,
                                 start_pos + 1);
                             pushBack(accept_length);
@@ -282,7 +306,7 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.*;
                         }
                     case 10:
                         {
-                            Token token = new10(
+                            Token<?> token = new10(
                                 start_line + 1,
                                 start_pos + 1);
                             pushBack(accept_length);
@@ -292,7 +316,7 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.*;
                         }
                     case 11:
                         {
-                            Token token = new11(
+                            Token<?> token = new11(
                                 start_line + 1,
                                 start_pos + 1);
                             pushBack(accept_length);
@@ -302,7 +326,7 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.*;
                         }
                     case 12:
                         {
-                            Token token = new12(
+                            Token<?> token = new12(
                                 start_line + 1,
                                 start_pos + 1);
                             pushBack(accept_length);
@@ -312,7 +336,7 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.*;
                         }
                     case 13:
                         {
-                            Token token = new13(
+                            Token<?> token = new13(
                                 start_line + 1,
                                 start_pos + 1);
                             pushBack(accept_length);
@@ -322,7 +346,7 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.*;
                         }
                     case 14:
                         {
-                            Token token = new14(
+                            Token<?> token = new14(
                                 start_line + 1,
                                 start_pos + 1);
                             pushBack(accept_length);
@@ -332,7 +356,7 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.*;
                         }
                     case 15:
                         {
-                            Token token = new15(
+                            Token<?> token = new15(
                                 start_line + 1,
                                 start_pos + 1);
                             pushBack(accept_length);
@@ -342,7 +366,7 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.*;
                         }
                     case 16:
                         {
-                            Token token = new16(
+                            Token<?> token = new16(
                                 getText(accept_length),
                                 start_line + 1,
                                 start_pos + 1);
@@ -353,7 +377,7 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.*;
                         }
                     case 17:
                         {
-                            Token token = new17(
+                            Token<?> token = new17(
                                 getText(accept_length),
                                 start_line + 1,
                                 start_pos + 1);
@@ -364,7 +388,7 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.*;
                         }
                     case 18:
                         {
-                            Token token = new18(
+                            Token<?> token = new18(
                                 getText(accept_length),
                                 start_line + 1,
                                 start_pos + 1);
@@ -375,7 +399,7 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.*;
                         }
                     case 19:
                         {
-                            Token token = new19(
+                            Token<?> token = new19(
                                 getText(accept_length),
                                 start_line + 1,
                                 start_pos + 1);
@@ -406,26 +430,26 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.*;
         }
     }
 
-    Token new0(int line, int pos) { return new TMin(line, pos); }
-    Token new1(int line, int pos) { return new TAnd(line, pos); }
-    Token new2(int line, int pos) { return new TOr(line, pos); }
-    Token new3(int line, int pos) { return new TNot(line, pos); }
-    Token new4(int line, int pos) { return new TExclude(line, pos); }
-    Token new5(int line, int pos) { return new TSelect(line, pos); }
-    Token new6(int line, int pos) { return new TFrom(line, pos); }
-    Token new7(int line, int pos) { return new TAtleast(line, pos); }
-    Token new8(int line, int pos) { return new TExactly(line, pos); }
-    Token new9(int line, int pos) { return new TNotmorethan(line, pos); }
-    Token new10(int line, int pos) { return new TScore(line, pos); }
-    Token new11(int line, int pos) { return new TMax(line, pos); }
-    Token new12(int line, int pos) { return new TLPar(line, pos); }
-    Token new13(int line, int pos) { return new TRPar(line, pos); }
-    Token new14(int line, int pos) { return new TMapper(line, pos); }
-    Token new15(int line, int pos) { return new TComma(line, pos); }
-    Token new16(String text, int line, int pos) { return new TBlank(text, line, pos); }
-    Token new17(String text, int line, int pos) { return new TInteger(text, line, pos); }
-    Token new18(String text, int line, int pos) { return new TFloat(text, line, pos); }
-    Token new19(String text, int line, int pos) { return new TAminoAcid(text, line, pos); }
+    Token<?> new0(int line, int pos) { return new TMin(line, pos); }
+    Token<?> new1(int line, int pos) { return new TAnd(line, pos); }
+    Token<?> new2(int line, int pos) { return new TOr(line, pos); }
+    Token<?> new3(int line, int pos) { return new TNot(line, pos); }
+    Token<?> new4(int line, int pos) { return new TExclude(line, pos); }
+    Token<?> new5(int line, int pos) { return new TSelect(line, pos); }
+    Token<?> new6(int line, int pos) { return new TFrom(line, pos); }
+    Token<?> new7(int line, int pos) { return new TAtleast(line, pos); }
+    Token<?> new8(int line, int pos) { return new TExactly(line, pos); }
+    Token<?> new9(int line, int pos) { return new TNotmorethan(line, pos); }
+    Token<?> new10(int line, int pos) { return new TScore(line, pos); }
+    Token<?> new11(int line, int pos) { return new TMax(line, pos); }
+    Token<?> new12(int line, int pos) { return new TLPar(line, pos); }
+    Token<?> new13(int line, int pos) { return new TRPar(line, pos); }
+    Token<?> new14(int line, int pos) { return new TMapper(line, pos); }
+    Token<?> new15(int line, int pos) { return new TComma(line, pos); }
+    Token<?> new16(String text, int line, int pos) { return new TBlank(text, line, pos); }
+    Token<?> new17(String text, int line, int pos) { return new TInteger(text, line, pos); }
+    Token<?> new18(String text, int line, int pos) { return new TFloat(text, line, pos); }
+    Token<?> new19(String text, int line, int pos) { return new TAminoAcid(text, line, pos); }
 
     private int getChar() throws IOException
     {
@@ -455,7 +479,7 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.*;
         }
     }
 
-    protected void unread(Token token) throws IOException
+    protected void unread(Token<?> token) throws IOException
     {
         String text = token.getText();
         int length = text.length();

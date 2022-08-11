@@ -62,7 +62,7 @@ public class RuleCondition {
 	}
 
 	public <T extends MutationComparator<String>> EvaluatedCondition evaluate(List<String> mutations, T comparator) {
-	    AsiGrammarAdapter adapter = new AsiGrammarAdapter(mutations, comparator);
+	    AsiGrammarAdapter<T> adapter = new AsiGrammarAdapter<>(mutations, comparator);
 	    this.conditionTree.apply(adapter);
 	    return new EvaluatedCondition(this, adapter);
 	}

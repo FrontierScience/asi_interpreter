@@ -29,7 +29,7 @@ was not intended, designed, or validated to guide patient care.
 
 package org.fstrf.stanfordAsiInterpreter.resistance.grammar.node;
 
-import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.Analysis;
 
 public final class AExactlySelectstatement2 extends PSelectstatement2<AExactlySelectstatement2>
 {
@@ -77,7 +77,8 @@ public final class AExactlySelectstatement2 extends PSelectstatement2<AExactlySe
             (TRPar) cloneNode(_rPar_));
     }
 
-    public void apply(Switch sw)
+    @Override
+	public void apply(Switch sw)
     {
         ((Analysis) sw).caseAExactlySelectstatement2(this);
     }
@@ -244,7 +245,8 @@ public final class AExactlySelectstatement2 extends PSelectstatement2<AExactlySe
             + toString(_rPar_);
     }
 
-    void removeChild(Node<?> child)
+    @Override
+	void removeChild(Node<?> child)
     {
         if(_exactly_ == child)
         {
@@ -284,7 +286,8 @@ public final class AExactlySelectstatement2 extends PSelectstatement2<AExactlySe
 
     }
 
-    <U extends Node<U>>void replaceChild(U oldChild, U newChild)
+    @Override
+	<U extends Node<U>>void replaceChild(U oldChild, U newChild)
     {
         if(_exactly_ == oldChild)
         {

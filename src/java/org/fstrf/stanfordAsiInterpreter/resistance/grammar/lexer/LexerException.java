@@ -29,9 +29,11 @@ was not intended, designed, or validated to guide patient care.
 
 package org.fstrf.stanfordAsiInterpreter.resistance.grammar.lexer;
 
-@SuppressWarnings("all") public class LexerException extends Exception
+public class LexerException extends Exception
 {
-    public LexerException(String message)
+	private static final long serialVersionUID = -9044917329245959132L;
+
+	public LexerException(String message)
     {
         super(message);
     }

@@ -29,8 +29,12 @@ was not intended, designed, or validated to guide patient care.
 
 package org.fstrf.stanfordAsiInterpreter.resistance.grammar.node;
 
-import java.util.*;
-import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
+
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.Analysis;
+
 
 public final class ASelectlist extends PSelectlist<ASelectlist>
 {
@@ -63,7 +67,8 @@ public final class ASelectlist extends PSelectlist<ASelectlist>
             (List<PListitems<?>>) cloneList(_listitems_));
     }
 
-    public void apply(Switch sw)
+    @Override
+	public void apply(Switch sw)
     {
         ((Analysis) sw).caseASelectlist(this);
     }

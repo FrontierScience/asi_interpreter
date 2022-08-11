@@ -29,7 +29,7 @@ was not intended, designed, or validated to guide patient care.
 
 package org.fstrf.stanfordAsiInterpreter.resistance.grammar.node;
 
-import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.Analysis;
 
 public final class AAndLogicsymbol extends PLogicsymbol<AAndLogicsymbol>
 {
@@ -45,13 +45,15 @@ public final class AAndLogicsymbol extends PLogicsymbol<AAndLogicsymbol>
         setAnd(_and_);
 
     }
-    public AAndLogicsymbol clone()
+    @Override
+	public AAndLogicsymbol clone()
     {
         return new AAndLogicsymbol(
             (TAnd) cloneNode(_and_));
     }
 
-    public void apply(Switch sw)
+    @Override
+	public void apply(Switch sw)
     {
         ((Analysis) sw).caseAAndLogicsymbol(this);
     }
@@ -81,7 +83,8 @@ public final class AAndLogicsymbol extends PLogicsymbol<AAndLogicsymbol>
         _and_ = node;
     }
 
-    public String toString()
+    @Override
+	public String toString()
     {
         return ""
             + toString(_and_);

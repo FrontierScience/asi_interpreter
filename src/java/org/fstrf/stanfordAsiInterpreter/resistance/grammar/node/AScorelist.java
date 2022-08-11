@@ -29,8 +29,11 @@ was not intended, designed, or validated to guide patient care.
 
 package org.fstrf.stanfordAsiInterpreter.resistance.grammar.node;
 
-import java.util.*;
-import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
+
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.Analysis;
 
 public final class AScorelist extends PScorelist<AScorelist>
 {
@@ -158,7 +161,8 @@ public final class AScorelist extends PScorelist<AScorelist>
 
     private class Scoreitems_Cast implements Cast<PScoreitems<?>>
     {
-        public PScoreitems<?> cast(Object o)
+        @Override
+		public PScoreitems<?> cast(Object o)
         {
             PScoreitems<?> node = (PScoreitems<?>) o;
 
