@@ -9,6 +9,7 @@
   <inherits name="com.google.common.base.Base" />
   <inherits name="com.google.common.collect.Collect" />
   <source path="" />
+  <source path="regex" />
   <source path="definition" />
   <source path="evaluate" />
   <source path="grammar" />

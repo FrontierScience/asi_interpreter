@@ -51,13 +51,13 @@ import org.fstrf.stanfordAsiInterpreter.resistance.definition.Rule;
 import org.fstrf.stanfordAsiInterpreter.resistance.definition.RuleAction;
 import org.fstrf.stanfordAsiInterpreter.resistance.definition.RuleCondition;
 import org.fstrf.stanfordAsiInterpreter.resistance.definition.ScoreRangeAction;
+import org.fstrf.stanfordAsiInterpreter.resistance.regex.Matcher;
+import org.fstrf.stanfordAsiInterpreter.resistance.regex.Pattern;
 
 import com.google.common.collect.Sets;
 
 import edu.stanford.hivdb.asijs.DOMParser;
 import edu.stanford.hivdb.asijs.XPathEvaluator;
-import edu.stanford.hivdb.asijs.jre.java.util.regex.Matcher;
-import edu.stanford.hivdb.asijs.jre.java.util.regex.Pattern;
 import elemental2.dom.Document;
 import elemental2.dom.Node;
 import elemental2.dom.XPathResult;

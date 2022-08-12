@@ -32,13 +32,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import org.fstrf.stanfordAsiInterpreter.resistance.regex.Matcher;
+import org.fstrf.stanfordAsiInterpreter.resistance.regex.Pattern;
 
 import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.TAminoAcid;
 import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.TInteger;
 
-import com.google.gwt.thirdparty.guava.common.collect.Sets;
+import com.google.common.collect.Sets;
 
 public class StringMutationComparator implements MutationComparator<String> {
 	
