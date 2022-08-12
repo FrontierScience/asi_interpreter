@@ -376,7 +376,7 @@ public class AsiGrammarAdapter<T extends MutationComparator<String>> extends Dep
 		double value = (node.parent() instanceof AMaxScoreitem) ? this.maxValueFromStack(size) : this.sumValuesFromStack(size);
 		this.stack.push(Double.valueOf(value));
 	}
-
+	
 	/**
      * If the score item's residue has evaluated to TRUE, push on the score associated
      * with this item, otherwise push on a score of 0.
@@ -397,7 +397,7 @@ public class AsiGrammarAdapter<T extends MutationComparator<String>> extends Dep
             this.scoredItems.add(new ScoredItem(node.toString(), this.scoredItemMutations, score));
         }
         else {
-        	this.stack.push(Double.valueOf(Double.NaN));
+        	this.stack.push(NOT_SCORED);
         }
         this.scoredItemMutations = new HashSet<>();
     }
@@ -453,7 +453,7 @@ public class AsiGrammarAdapter<T extends MutationComparator<String>> extends Dep
         double summation = 0;
         for(int i=0; i<n; i++) {
             Double value = (Double.valueOf(this.stack.pop().toString()));
-            if (!(value.equals(NOT_SCORED))){
+            if (!Double.isNaN(value)) {
             	summation += value.doubleValue();
             }
         }
@@ -470,7 +470,7 @@ public class AsiGrammarAdapter<T extends MutationComparator<String>> extends Dep
     	double max = Double.NEGATIVE_INFINITY;
     	for(int i=0; i<n; i++) {
     		Double value = (Double.valueOf(this.stack.pop().toString()));
-    		if( !(value.equals(NOT_SCORED)) && value.doubleValue() > max ) {
+    		if( !Double.isNaN(value) && value.doubleValue() > max ) {
     			max = value.doubleValue();
     		}
     	}
