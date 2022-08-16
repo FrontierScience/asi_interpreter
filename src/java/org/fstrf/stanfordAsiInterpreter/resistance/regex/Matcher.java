@@ -25,7 +25,11 @@ public class Matcher {
     
     public Boolean matches() {
         result = pattern.exec(input);
-        return result.getIndex() == 0 && pattern.getLastIndex() == input.length();
+        return (
+            result != null &&
+            result.getIndex() == 0 &&
+            pattern.getLastIndex() == input.length()
+        );
     }
 
 }
