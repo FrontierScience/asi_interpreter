@@ -1,5 +1,5 @@
 /**
-Copyright 2017 Frontier Science & Technology Research Foundation
+Copyright 2022 Stanford HIVDB team
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -22,19 +22,13 @@ this software for patient care or in clinical settings. This software
 was developed solely for use in medical and public health research, and
 was not intended, designed, or validated to guide patient care.
 */
+package org.fstrf.stanfordAsiInterpreter.resistance.client;
 
-package test.org.fstrf.stanfordAsiInterpreter.resistance.xml;
+import com.google.gwt.core.client.EntryPoint;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
+public class ASIJsEntryPoint implements EntryPoint {
 
-public class XmlAsiTransformerTestSuite extends TestSuite {
-    public static Test suite() {
-        TestSuite suite = new TestSuite();
-        suite.addTestSuite(XMLDefinitionsTest.class);
-        suite.addTestSuite(DrugTest.class);
-        suite.addTestSuite(RuleTest.class);
-        suite.addTestSuite(XMLResultCommentsTest.class);
-        return suite;
+    @Override
+    public void onModuleLoad() {
     }
 }

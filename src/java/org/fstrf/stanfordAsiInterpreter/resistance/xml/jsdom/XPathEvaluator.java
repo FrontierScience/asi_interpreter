@@ -1,5 +1,5 @@
 /**
-Copyright 2017 Frontier Science & Technology Research Foundation
+Copyright 2022 Stanford HIVDB team
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -22,19 +22,28 @@ this software for patient care or in clinical settings. This software
 was developed solely for use in medical and public health research, and
 was not intended, designed, or validated to guide patient care.
 */
+package org.fstrf.stanfordAsiInterpreter.resistance.xml.jsdom;
 
-package test.org.fstrf.stanfordAsiInterpreter.resistance.xml;
+import elemental2.dom.Node;
+import elemental2.dom.XPathNSResolver;
+import elemental2.dom.XPathResult;
+import jsinterop.annotations.JsPackage;
+import jsinterop.annotations.JsType;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
+@JsType(isNative = true, namespace = JsPackage.GLOBAL)
+public class XPathEvaluator {
+    public native XPathExpression createExpression(String expr, XPathNSResolver resolver);
 
-public class XmlAsiTransformerTestSuite extends TestSuite {
-    public static Test suite() {
-        TestSuite suite = new TestSuite();
-        suite.addTestSuite(XMLDefinitionsTest.class);
-        suite.addTestSuite(DrugTest.class);
-        suite.addTestSuite(RuleTest.class);
-        suite.addTestSuite(XMLResultCommentsTest.class);
-        return suite;
-    }
+    public native XPathExpression createExpression(String expr);
+
+    public native XPathNSResolver createNSResolver(Node nodeResolver);
+
+    public native XPathResult evaluate(String expr, Node contextNode, XPathNSResolver resolver, int type,
+            Object result);
+
+    public native XPathResult evaluate(String expr, Node contextNode, XPathNSResolver resolver, int type);
+
+    public native XPathResult evaluate(String expr, Node contextNode, XPathNSResolver resolver);
+
+    public native XPathResult evaluate(String expr, Node contextNode);
 }

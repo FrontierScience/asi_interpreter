@@ -1,0 +1,13 @@
+{
+  "name": "asi_interpreter",
+  "version": "1.6.0.0-hivdb2",
+  "description": "ASI (Algorithm Specification Interface) Interpreter",
+  "main": "dist/asi-js.js",
+  "repository": "https://github.com/hivdb/asi_interpreter.git",
+  "author": "Philip Tzou <philip.npc@gmail.com>",
+  "license": "Apache-2.0",
+  "private": false,
+  "scripts": {
+    "build": "./gradlew compileGwt"
+  }
+}

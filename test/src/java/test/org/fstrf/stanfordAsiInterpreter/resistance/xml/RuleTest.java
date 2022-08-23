@@ -21,14 +21,10 @@ that governs the use and development of this software, Frontier Science
 this software for patient care or in clinical settings. This software 
 was developed solely for use in medical and public health research, and 
 was not intended, designed, or validated to guide patient care.
-*/ 
-
-
+*/
 
 package test.org.fstrf.stanfordAsiInterpreter.resistance.xml;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -46,254 +42,238 @@ import org.fstrf.stanfordAsiInterpreter.resistance.definition.Drug;
 import org.fstrf.stanfordAsiInterpreter.resistance.definition.DrugClass;
 import org.fstrf.stanfordAsiInterpreter.resistance.definition.Gene;
 import org.fstrf.stanfordAsiInterpreter.resistance.definition.LevelDefinition;
+import org.fstrf.stanfordAsiInterpreter.resistance.definition.RangeValue;
 import org.fstrf.stanfordAsiInterpreter.resistance.definition.Rule;
 import org.fstrf.stanfordAsiInterpreter.resistance.definition.ScoreRangeAction;
-import org.fstrf.stanfordAsiInterpreter.resistance.evaluate.EvaluatedGene;
-import org.fstrf.stanfordAsiInterpreter.resistance.grammar.MutationComparator;
 import org.fstrf.stanfordAsiInterpreter.resistance.grammar.StringMutationComparator;
 import org.fstrf.stanfordAsiInterpreter.resistance.xml.XmlAsiTransformer;
+import org.junit.Assert;
 
-import junit.framework.Assert;
 import junit.framework.TestCase;
 
-@SuppressWarnings("all") public class RuleTest extends TestCase{
+public class RuleTest extends TestCase {
 
-	private InputStream asiXmlFileStream;
+    private InputStream asiXmlFileStream;
     private String geneName;
-    private List mutations;
+    private List<String> mutations;
     private boolean strictComparison;
     private boolean validateXml;
-    private MutationComparator mutationComparator;
-	private String mutationList;
-    
+    private StringMutationComparator mutationComparator;
+    private String mutationList;
+
     public void setUp() {
-	    this.strictComparison = false;
-		this.validateXml = true;
-		this.geneName = "RT";
-		this.mutationComparator = new StringMutationComparator(this.strictComparison);
-		this.mutationList = "41L,75MA,98G,100I,90M";
-		setMutations(mutationList, mutationComparator);
-	}
+        this.strictComparison = false;
+        this.validateXml = true;
+        this.geneName = "RT";
+        this.mutationComparator = new StringMutationComparator(this.strictComparison);
+        this.mutationList = "41L,75MA,98G,100I,90M";
+        setMutations(mutationList, mutationComparator);
+    }
+
     private void setAsiXmlFile(String filePath) {
-		try {
-			this.asiXmlFileStream = RuleTest.class.getClassLoader().getResourceAsStream(filePath);
-		} catch(RuntimeException re) {
-			System.err.println("Invalid ASI XML File: " + filePath);
-			throw re;
-		}
-	}
-	
-	private void setMutations(String mutationsString, MutationComparator comparator) {
-		this.mutations = Arrays.asList(mutationsString.split(","));
-		if(!comparator.areMutationsValid(this.mutations)) {
-			throw new RuntimeException("Mutations are not valid: " + mutationsString);
-		}
-	}
-	
-	public void testMissingRequiredRuleElements(){
-		/*
-		 * a rule is missing the condition for DLV drug
-		 */
-		try{
-			setAsiXmlFile("resistance_xml/HIVDB_missingCondition.xml");
-			AsiTransformer transformer = new XmlAsiTransformer(this.validateXml);
-			transformer.transform(this.asiXmlFileStream);
-		}
-		catch (ASIParsingException e){		
-			System.out.println("CONDITION tag is a required element:"+"\n\t"+e.getMessage());
-			int actualErrMessage = e.getMessage().indexOf("Not a Stanford resistance analysis XML file");
-			Assert.assertEquals(true, (actualErrMessage > -1));
-		}	
-		catch (Exception ex){
-			System.out.println("ex:"+ex.getMessage());
-			Assert.fail(ex.getMessage());
-		}
-		
-		/*
-		 * a rule is missing the ACTIONS tag for DLV drug
-		 */
-		try{
-			setAsiXmlFile("resistance_xml/HIVDB_missingActions.xml");
-			AsiTransformer transformer = new XmlAsiTransformer(this.validateXml);
-			transformer.transform(this.asiXmlFileStream);
-		}
-		catch (ASIParsingException e){		
-			System.out.println("ACTIONS tag is a required element:"+"\n\t"+e.getMessage());
-			int actualErrMessage = e.getMessage().indexOf("Not a Stanford resistance analysis XML file");
-			Assert.assertEquals(true, (actualErrMessage > -1));
-		}	
-		catch (Exception ex){
-			System.out.println("ex:"+ex.getMessage());
-			Assert.fail(ex.getMessage());
-		}
-	}
-	
-	
-	public void testRequiredGlobalRange(){
-		try{
-			setAsiXmlFile("resistance_xml/HIVDB_missingRequiredGlobalRange.xml");
-			AsiTransformer transformer = new XmlAsiTransformer(this.validateXml);
-			transformer.transform(this.asiXmlFileStream);
-		}
-		catch (ASIParsingException e){		
-			System.out.println("GLOBALRANGE tag is a required element (some rules are using USE_GLOBALRANGE tag):"+"\n\t"+e.getMessage());
-			int actualErrMessage = e.getMessage().indexOf("required global range does not exist");
-			Assert.assertEquals(true, (actualErrMessage > -1));
-		}	
-		catch (Exception ex){
-			System.out.println("ex:"+ex.getMessage());
-			Assert.fail(ex.getMessage());
-		}
-	}
-	
-	public void testBooleanResultRuleActionTye() {
-		/*
-		 * for ETR drug, drug class NNRTI, for the rule, which is a boolean condition,
-		 * the actions contain a SCORRANGE action
-		 */
-		Map geneMap = new HashMap();
-		XmlAsiTransformer transformer = null;
-		try{
-			setAsiXmlFile("resistance_xml/HIVDB_invalidRuleActionType.xml");
-			transformer = new XmlAsiTransformer(this.validateXml);
-			geneMap = transformer.transform(this.asiXmlFileStream);
-		}
-		catch (ASIParsingException e){
-			System.out.println("testInvalidRuleActionTye ASIParsingException:"+e.getMessage());
-			Assert.fail(e.getMessage());
-		}
-		catch (Exception ex){
-			System.out.println("testInvalidRuleActionTye Exception:"+ex.getMessage());
-			Assert.fail(ex.getMessage());
-		}
-		
-		try{
-			Gene gene =  (Gene) geneMap.get(this.geneName);
-			Set drugClasses = (Set)gene.getDrugClasses();
-			DrugClass drugClass = null;
-			for (Iterator iterator = drugClasses.iterator(); iterator.hasNext();) {
-				drugClass = (DrugClass) iterator.next();
-				if (drugClass.getClassName().equals("NNRTI")){
-					break;
-				}
-			}
-			Drug drug = null;
-			for (Iterator iterator = drugClass.getDrugs().iterator(); iterator.hasNext();) {
-				drug = (Drug) iterator.next();
-				if (drug.getDrugName().equals("ETR")){
-					break;
-				}
-			}
-			
-			Map levels = new HashMap();
-			levels.put("1", new LevelDefinition(new Integer(1),"level 1","S"));
-			levels.put("2", new LevelDefinition(new Integer(1),"level 1","S"));
-			
-			String scoreRangeStr = "(-INF TO 10 => 1, 11 TO INF  => 2)";
-			List scoreRange = transformer.parseScoreRange(scoreRangeStr, levels);
-			Rule drugRule = (Rule) drug.getDrugRules().get(0);
-			drugRule.getActions().add(new ScoreRangeAction(scoreRange));
-			
-			try{
-				EvaluatedGene evaluatedGene = gene.evaluate(this.mutations, this.mutationComparator);
-			}
-	    	catch (ASIEvaluationException e){
-	    		System.out.println("the action does not support a result of type:"+"\n\t"+e.getMessage());
-				int actualErrMessage = e.getMessage().indexOf("does not support a result of type:");
-				Assert.assertEquals(true, (actualErrMessage > -1));
-	    	}
-		} //try
-		catch (ASIParsingException asiParsingException){
-			System.out.println("testInvalidRuleActionTye ASIParsingException (evaluate):"+asiParsingException.getMessage());
-			Assert.fail(asiParsingException.getMessage());
-		}
-	}
-	
-	
-	public void testDoubleResultRuleActionTye() {
-		/*
-		 * for ETR drug, drug class NNRTI, for the rule, which is a score condition,
-		 * the actions contain a COMMENT action
-		 */
-		Map geneMap = new HashMap();
-		XmlAsiTransformer transformer = null;
-		try{
-			setAsiXmlFile("resistance_xml/HIVDB_invalidDoubleResultRuleActionType.xml");
-			transformer = new XmlAsiTransformer(this.validateXml);
-			geneMap = transformer.transform(this.asiXmlFileStream);
-		}
-		catch (ASIParsingException e){
-			System.out.println("testInvalidRuleActionTye ASIParsingException:"+e.getMessage());
-			Assert.fail(e.getMessage());
-		}
-		catch (Exception ex){
-			System.out.println("testInvalidRuleActionTye Exception:"+ex.getMessage());
-			Assert.fail(ex.getMessage());
-		}
-		
-		Gene gene =  (Gene) geneMap.get(this.geneName);
-		Set drugClasses = (Set)gene.getDrugClasses();
-		DrugClass drugClass = null;
-		for (Iterator iterator = drugClasses.iterator(); iterator.hasNext();) {
-			drugClass = (DrugClass) iterator.next();
-			if (drugClass.getClassName().equals("NNRTI")){
-				break;
-			}
-		}
-		Drug drug = null;
-		for (Iterator iterator = drugClass.getDrugs().iterator(); iterator.hasNext();) {
-			drug = (Drug) iterator.next();
-			if (drug.getDrugName().equals("ETR")){
-				break;
-			}
-		}
-		
-		Rule drugRule = (Rule) drug.getDrugRules().get(0);
-		drugRule.getActions().add(new CommentAction(new CommentDefinition("test","used in JUnit tests",new Integer(1))));
-		
-		try{
-			EvaluatedGene evaluatedGene = gene.evaluate(this.mutations, this.mutationComparator);
-		}
-		catch (ASIEvaluationException e){
-			System.out.println("the action does not support a result of type:"+"\n\t"+e.getMessage());
-			int actualErrMessage = e.getMessage().indexOf("does not support a result of type:");
-			Assert.assertEquals(true, (actualErrMessage > -1));
-		}
-	}
+        try {
+            this.asiXmlFileStream = RuleTest.class.getClassLoader().getResourceAsStream(filePath);
+        } catch (RuntimeException re) {
+            System.err.println("Invalid ASI XML File: " + filePath);
+            throw re;
+        }
+    }
 
+    private void setMutations(String mutationsString, StringMutationComparator comparator) {
+        this.mutations = Arrays.asList(mutationsString.split(","));
+        if (!comparator.areMutationsValid(this.mutations)) {
+            throw new RuntimeException("Mutations are not valid: " + mutationsString);
+        }
+    }
 
-	public void testResultOutOfRange() {
-		/*
-		 * for ETR drug, drug class NNRTI, for the second rule, which is a boolean condition
-		 * the actions contain a SCORRANGE action
-		 */
-		Map geneMap = new HashMap();
-		XmlAsiTransformer transformer = null;
-		try{
-			setAsiXmlFile("resistance_xml/HIVDB_evaluationExceptioScoreRangeAction.xml");
-			transformer = new XmlAsiTransformer(this.validateXml);
-			geneMap = transformer.transform(this.asiXmlFileStream);
-		}
-		catch (ASIParsingException e){
-			System.out.println("testInvalidRuleActionTye ASIParsingException:"+e.getMessage());
-			Assert.fail(e.getMessage());
-		}
-		catch (Exception ex){
-			System.out.println("testInvalidRuleActionTye Exception:"+ex.getMessage());
-			Assert.fail(ex.getMessage());
-		}
-		
-		Gene gene =  (Gene) geneMap.get(this.geneName);
-		
-		try{
-			EvaluatedGene evaluatedGene = gene.evaluate(this.mutations, this.mutationComparator);
-		}
-		catch (ASIEvaluationException e){
-			System.out.println("No score range has been defined for a score of:"+"\n\t"+e.getMessage());
-			int actualErrMessage = e.getMessage().indexOf("No score range has been defined for a score of:");
-			Assert.assertEquals(true, (actualErrMessage > -1));
-		}
-	}
+    public void testMissingRequiredRuleElements() {
+        /*
+         * a rule is missing the condition for DLV drug
+         */
+        try {
+            setAsiXmlFile("resistance_xml/HIVDB_missingCondition.xml");
+            AsiTransformer transformer = new XmlAsiTransformer(this.validateXml);
+            transformer.transform(this.asiXmlFileStream);
+        } catch (ASIParsingException e) {
+            System.out.println("CONDITION tag is a required element:" + "\n\t" + e.getMessage());
+            int actualErrMessage = e.getMessage().indexOf("Not a Stanford resistance analysis XML file");
+            Assert.assertEquals(true, (actualErrMessage > -1));
+        } catch (Exception ex) {
+            System.out.println("ex:" + ex.getMessage());
+            Assert.fail(ex.getMessage());
+        }
 
+        /*
+         * a rule is missing the ACTIONS tag for DLV drug
+         */
+        try {
+            setAsiXmlFile("resistance_xml/HIVDB_missingActions.xml");
+            AsiTransformer transformer = new XmlAsiTransformer(this.validateXml);
+            transformer.transform(this.asiXmlFileStream);
+        } catch (ASIParsingException e) {
+            System.out.println("ACTIONS tag is a required element:" + "\n\t" + e.getMessage());
+            int actualErrMessage = e.getMessage().indexOf("Not a Stanford resistance analysis XML file");
+            Assert.assertEquals(true, (actualErrMessage > -1));
+        } catch (Exception ex) {
+            System.out.println("ex:" + ex.getMessage());
+            Assert.fail(ex.getMessage());
+        }
+    }
+
+    public void testRequiredGlobalRange() {
+        try {
+            setAsiXmlFile("resistance_xml/HIVDB_missingRequiredGlobalRange.xml");
+            AsiTransformer transformer = new XmlAsiTransformer(this.validateXml);
+            transformer.transform(this.asiXmlFileStream);
+        } catch (ASIParsingException e) {
+            System.out.println("GLOBALRANGE tag is a required element (some rules are using USE_GLOBALRANGE tag):"
+                    + "\n\t" + e.getMessage());
+            int actualErrMessage = e.getMessage().indexOf("required global range does not exist");
+            Assert.assertEquals(true, (actualErrMessage > -1));
+        } catch (Exception ex) {
+            System.out.println("ex:" + ex.getMessage());
+            Assert.fail(ex.getMessage());
+        }
+    }
+
+    public void testBooleanResultRuleActionTye() {
+        /*
+         * for ETR drug, drug class NNRTI, for the rule, which is a boolean condition,
+         * the actions contain a SCORRANGE action
+         */
+        Map<String, Gene> geneMap = new HashMap<>();
+        XmlAsiTransformer transformer = null;
+        try {
+            setAsiXmlFile("resistance_xml/HIVDB_invalidRuleActionType.xml");
+            transformer = new XmlAsiTransformer(this.validateXml);
+            geneMap = transformer.transform(this.asiXmlFileStream);
+        } catch (ASIParsingException e) {
+            System.out.println("testInvalidRuleActionTye ASIParsingException:" + e.getMessage());
+            Assert.fail(e.getMessage());
+        } catch (Exception ex) {
+            System.out.println("testInvalidRuleActionTye Exception:" + ex.getMessage());
+            Assert.fail(ex.getMessage());
+        }
+
+        try {
+            Gene gene = geneMap.get(this.geneName);
+            Set<DrugClass> drugClasses = gene.getDrugClasses();
+            DrugClass drugClass = null;
+            for (Iterator<DrugClass> iterator = drugClasses.iterator(); iterator.hasNext();) {
+                drugClass = iterator.next();
+                if (drugClass.getClassName().equals("NNRTI")) {
+                    break;
+                }
+            }
+            Drug drug = null;
+            for (Iterator<Drug> iterator = drugClass.getDrugs().iterator(); iterator.hasNext();) {
+                drug = iterator.next();
+                if (drug.getDrugName().equals("ETR")) {
+                    break;
+                }
+            }
+
+            Map<String, LevelDefinition> levels = new HashMap<>();
+            levels.put("1", new LevelDefinition(Integer.valueOf(1), "level 1", "S"));
+            levels.put("2", new LevelDefinition(Integer.valueOf(1), "level 1", "S"));
+
+            String scoreRangeStr = "(-INF TO 10 => 1, 11 TO INF  => 2)";
+            List<RangeValue> scoreRange = transformer.parseScoreRange(scoreRangeStr, levels);
+            Rule drugRule = drug.getDrugRules().get(0);
+            drugRule.getActions().add(new ScoreRangeAction(scoreRange));
+
+            try {
+                gene.evaluate(this.mutations, this.mutationComparator);
+            } catch (ASIEvaluationException e) {
+                System.out.println("the action does not support a result of type:" + "\n\t" + e.getMessage());
+                int actualErrMessage = e.getMessage().indexOf("does not support a result of type:");
+                Assert.assertEquals(true, (actualErrMessage > -1));
+            }
+        } // try
+        catch (ASIParsingException asiParsingException) {
+            System.out.println(
+                    "testInvalidRuleActionTye ASIParsingException (evaluate):" + asiParsingException.getMessage());
+            Assert.fail(asiParsingException.getMessage());
+        }
+    }
+
+    public void testDoubleResultRuleActionTye() {
+        /*
+         * for ETR drug, drug class NNRTI, for the rule, which is a score condition, the
+         * actions contain a COMMENT action
+         */
+        Map<String, Gene> geneMap = new HashMap<>();
+        XmlAsiTransformer transformer = null;
+        try {
+            setAsiXmlFile("resistance_xml/HIVDB_invalidDoubleResultRuleActionType.xml");
+            transformer = new XmlAsiTransformer(this.validateXml);
+            geneMap = transformer.transform(this.asiXmlFileStream);
+        } catch (ASIParsingException e) {
+            System.out.println("testInvalidRuleActionTye ASIParsingException:" + e.getMessage());
+            Assert.fail(e.getMessage());
+        } catch (Exception ex) {
+            System.out.println("testInvalidRuleActionTye Exception:" + ex.getMessage());
+            Assert.fail(ex.getMessage());
+        }
+
+        Gene gene = geneMap.get(this.geneName);
+        Set<DrugClass> drugClasses = gene.getDrugClasses();
+        DrugClass drugClass = null;
+        for (Iterator<DrugClass> iterator = drugClasses.iterator(); iterator.hasNext();) {
+            drugClass = (DrugClass) iterator.next();
+            if (drugClass.getClassName().equals("NNRTI")) {
+                break;
+            }
+        }
+        Drug drug = null;
+        for (Iterator<Drug> iterator = drugClass.getDrugs().iterator(); iterator.hasNext();) {
+            drug = (Drug) iterator.next();
+            if (drug.getDrugName().equals("ETR")) {
+                break;
+            }
+        }
+
+        Rule drugRule = (Rule) drug.getDrugRules().get(0);
+        drugRule.getActions()
+                .add(new CommentAction(new CommentDefinition("test", "used in JUnit tests", Integer.valueOf(1))));
+
+        try {
+            gene.evaluate(this.mutations, this.mutationComparator);
+        } catch (ASIEvaluationException e) {
+            System.out.println("the action does not support a result of type:" + "\n\t" + e.getMessage());
+            int actualErrMessage = e.getMessage().indexOf("does not support a result of type:");
+            Assert.assertEquals(true, (actualErrMessage > -1));
+        }
+    }
+
+    public void testResultOutOfRange() {
+        /*
+         * for ETR drug, drug class NNRTI, for the second rule, which is a boolean
+         * condition the actions contain a SCORRANGE action
+         */
+        Map<String, Gene> geneMap = new HashMap<>();
+        XmlAsiTransformer transformer = null;
+        try {
+            setAsiXmlFile("resistance_xml/HIVDB_evaluationExceptioScoreRangeAction.xml");
+            transformer = new XmlAsiTransformer(this.validateXml);
+            geneMap = transformer.transform(this.asiXmlFileStream);
+        } catch (ASIParsingException e) {
+            System.out.println("testInvalidRuleActionTye ASIParsingException:" + e.getMessage());
+            Assert.fail(e.getMessage());
+        } catch (Exception ex) {
+            System.out.println("testInvalidRuleActionTye Exception:" + ex.getMessage());
+            Assert.fail(ex.getMessage());
+        }
+
+        Gene gene = (Gene) geneMap.get(this.geneName);
+
+        try {
+            gene.evaluate(this.mutations, this.mutationComparator);
+        } catch (ASIEvaluationException e) {
+            System.out.println("No score range has been defined for a score of:" + "\n\t" + e.getMessage());
+            int actualErrMessage = e.getMessage().indexOf("No score range has been defined for a score of:");
+            Assert.assertEquals(true, (actualErrMessage > -1));
+        }
+    }
 
 }

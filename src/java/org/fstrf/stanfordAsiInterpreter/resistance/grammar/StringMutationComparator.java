@@ -32,9 +32,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import org.fstrf.stanfordAsiInterpreter.resistance.regex.Matcher;
-import org.fstrf.stanfordAsiInterpreter.resistance.regex.Pattern;
 
+import org.fstrf.stanfordAsiInterpreter.resistance.compatregex.Matcher;
+import org.fstrf.stanfordAsiInterpreter.resistance.compatregex.Pattern;
 import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.TAminoAcid;
 import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.TInteger;
 

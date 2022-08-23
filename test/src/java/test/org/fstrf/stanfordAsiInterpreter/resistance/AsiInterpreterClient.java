@@ -23,8 +23,6 @@ was developed solely for use in medical and public health research, and
 was not intended, designed, or validated to guide patient care.
 */
 
-
-
 package test.org.fstrf.stanfordAsiInterpreter.resistance;
 
 import java.io.BufferedWriter;
@@ -60,12 +58,15 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.StringMutationCompara
 import org.fstrf.stanfordAsiInterpreter.resistance.xml.XmlAsiTransformer;
 
 /**
- * The main class for running ASI Interpreter. Specify a resistance file, gene, and list of mutations to receive output of the analysis.
+ * The main class for running ASI Interpreter. Specify a resistance file, gene,
+ * and list of mutations to receive output of the analysis.
  *
  */
-@SuppressWarnings("all") public class AsiInterpreterClient {
+@SuppressWarnings("all")
+public class AsiInterpreterClient {
 
-    private static Option ASI_FILE_OPTION, MUTATION_LIST_OPTION, STRICT_COMPARISON_OPTION, VALIDATE_XML_OPTION, GENE_OPTION;
+    private static Option ASI_FILE_OPTION, MUTATION_LIST_OPTION, STRICT_COMPARISON_OPTION, VALIDATE_XML_OPTION,
+            GENE_OPTION;
     private static Options OPTIONS;
 
     /**
@@ -79,7 +80,8 @@ import org.fstrf.stanfordAsiInterpreter.resistance.xml.XmlAsiTransformer;
         ASI_FILE_OPTION.setRequired(true);
         OPTIONS.addOption(ASI_FILE_OPTION);
 
-        GENE_OPTION = new Option("g", "gene", true, "name of the gene that the mutations represent, this must match the gene name specified in the asi xml file");
+        GENE_OPTION = new Option("g", "gene", true,
+                "name of the gene that the mutations represent, this must match the gene name specified in the asi xml file");
         GENE_OPTION.setArgName("gene");
         GENE_OPTION.setRequired(true);
         OPTIONS.addOption(GENE_OPTION);
@@ -89,10 +91,12 @@ import org.fstrf.stanfordAsiInterpreter.resistance.xml.XmlAsiTransformer;
         MUTATION_LIST_OPTION.setRequired(false);
         OPTIONS.addOption(MUTATION_LIST_OPTION);
 
-        STRICT_COMPARISON_OPTION = new Option("s", "strict-comparison", false, "mutation amino acids sets must be exact matches");
+        STRICT_COMPARISON_OPTION = new Option("s", "strict-comparison", false,
+                "mutation amino acids sets must be exact matches");
         OPTIONS.addOption(STRICT_COMPARISON_OPTION);
 
-        VALIDATE_XML_OPTION = new Option("v", "validate-xml", false, "DTD file - validate the asi file by checking it against its dtd");
+        VALIDATE_XML_OPTION = new Option("v", "validate-xml", false,
+                "DTD file - validate the asi file by checking it against its dtd");
         VALIDATE_XML_OPTION.setArgName("DTD file");
         OPTIONS.addOption(VALIDATE_XML_OPTION);
     }
@@ -106,79 +110,85 @@ import org.fstrf.stanfordAsiInterpreter.resistance.xml.XmlAsiTransformer;
     private String arguments;
 
     private AsiInterpreterClient(CommandLine commands, String argumentString) {
-    	this.strictComparison = commands.hasOption(STRICT_COMPARISON_OPTION.getOpt());
-    	this.validateXml = commands.hasOption(VALIDATE_XML_OPTION.getOpt());
-    	this.geneName = commands.getOptionValue(GENE_OPTION.getOpt());
+        this.strictComparison = commands.hasOption(STRICT_COMPARISON_OPTION.getOpt());
+        this.validateXml = commands.hasOption(VALIDATE_XML_OPTION.getOpt());
+        this.geneName = commands.getOptionValue(GENE_OPTION.getOpt());
 
-    	this.mutationComparator = new StringMutationComparator(this.strictComparison);
+        this.mutationComparator = new StringMutationComparator(this.strictComparison);
 
-    	setAsiXmlFile(commands.getOptionValue(ASI_FILE_OPTION.getOpt()));
+        setAsiXmlFile(commands.getOptionValue(ASI_FILE_OPTION.getOpt()));
 
-    	setMutations(commands.hasOption(MUTATION_LIST_OPTION.getOpt()) ? commands.getOptionValue(MUTATION_LIST_OPTION.getOpt()): null, this.mutationComparator);
+        setMutations(commands.hasOption(MUTATION_LIST_OPTION.getOpt())
+                ? commands.getOptionValue(MUTATION_LIST_OPTION.getOpt())
+                : null, this.mutationComparator);
 
-    	this.arguments = argumentString;
+        this.arguments = argumentString;
     }
 
     private void setAsiXmlFile(String filePath) {
-    	try {
-    		this.asiXmlFile = new File(filePath);
-    	} catch(RuntimeException re) {
-    		System.err.println("The following ASI XML file does not exisit: " + filePath);
-    		throw re;
-    	}
+        try {
+            this.asiXmlFile = new File(filePath);
+        } catch (RuntimeException re) {
+            System.err.println("The following ASI XML file does not exisit: " + filePath);
+            throw re;
+        }
     }
 
     private void setMutations(String mutationsString, MutationComparator comparator) {
-    	if (mutationsString == null || mutationsString.trim() == ""){
-    	    this.mutations = new ArrayList<String>();}
-    	else {
+        if (mutationsString == null || mutationsString.trim() == "") {
+            this.mutations = new ArrayList<String>();
+        } else {
             this.mutations = Arrays.asList(mutationsString.split(","));
 
-    	}
-    	if(!comparator.areMutationsValid(this.mutations)) {
+        }
+        if (!comparator.areMutationsValid(this.mutations)) {
             throw new RuntimeException("Mutations are not valid: " + mutationsString);
         }
     }
 
     /**
-     * Analyzes the gene based on the given mutation file and mutation list, then renders the output
+     * Analyzes the gene based on the given mutation file and mutation list, then
+     * renders the output
      *
      */
     private void run() throws Exception {
-    	AsiTransformer transformer = new XmlAsiTransformer(this.validateXml);
+        AsiTransformer transformer = new XmlAsiTransformer(this.validateXml);
 
-    	Map	geneMap = transformer.transform(new FileInputStream(this.asiXmlFile));
+        Map geneMap = transformer.transform(new FileInputStream(this.asiXmlFile));
 
-    	Gene gene =  (Gene) geneMap.get(this.geneName);
-    	if(gene == null) {
-    		throw new Exception("Gene: " + this.geneName + ", has not be defined within the XML file: " + this.asiXmlFile);
-    	}
+        Gene gene = (Gene) geneMap.get(this.geneName);
+        if (gene == null) {
+            throw new Exception(
+                    "Gene: " + this.geneName + ", has not be defined within the XML file: " + this.asiXmlFile);
+        }
 
-    	MutationComparator mutationCompator = new StringMutationComparator(false);
-    	if (!mutationComparator.areMutationsValid(this.mutations)){
-    	    throw new RuntimeException("Invalid list of mutations: " + this.mutations.toString());
-    	}
-    	EvaluatedGene evaluatedGene = gene.evaluate(this.mutations, this.mutationComparator);
+        MutationComparator mutationCompator = new StringMutationComparator(false);
+        if (!mutationComparator.areMutationsValid(this.mutations)) {
+            throw new RuntimeException("Invalid list of mutations: " + this.mutations.toString());
+        }
+        EvaluatedGene evaluatedGene = gene.evaluate(this.mutations, this.mutationComparator);
 
-    	String buffer = renderEvaluatedGene(evaluatedGene);
+        String buffer = renderEvaluatedGene(evaluatedGene);
 
-    	Map algoInfo = (Map) transformer.getAlgorithmInfo(new FileInputStream(this.asiXmlFile)).get("ALGNAME_ALGVERSION_ALGDATE");
-    	System.out.println("ALGNAME:" + (algoInfo.get("ALGNAME") == null? "NA":algoInfo.get("ALGNAME")) + "\n");
-    	System.out.println("ALGVERSION:" + (algoInfo.get("ALGVERSION") == null ? "NA":algoInfo.get("ALGVERSION"))+ "\n");
-    	System.out.println("ALGDATE:" + (algoInfo.get("ALGDATE") == null ? "NA":algoInfo.get("ALGDATE")) + "\n");
-    	System.out.println("\n\n");
-    	System.out.println(buffer);
+        Map algoInfo = (Map) transformer.getAlgorithmInfo(new FileInputStream(this.asiXmlFile))
+                .get("ALGNAME_ALGVERSION_ALGDATE");
+        System.out.println("ALGNAME:" + (algoInfo.get("ALGNAME") == null ? "NA" : algoInfo.get("ALGNAME")) + "\n");
+        System.out.println(
+                "ALGVERSION:" + (algoInfo.get("ALGVERSION") == null ? "NA" : algoInfo.get("ALGVERSION")) + "\n");
+        System.out.println("ALGDATE:" + (algoInfo.get("ALGDATE") == null ? "NA" : algoInfo.get("ALGDATE")) + "\n");
+        System.out.println("\n\n");
+        System.out.println(buffer);
 
-    	BufferedWriter outputStream = new BufferedWriter(new FileWriter("evaluatedGene.txt"));
-    	outputStream.write("Arguments: " + this.arguments);
-    	outputStream.write("\n");
-    	outputStream.write("ALGNAME:" + algoInfo.get("ALGNAME")+ "\n");
-    	outputStream.write("ALGVERSION:" + algoInfo.get("ALGVERSION")+ "\n");
-    	outputStream.write("ALGDATE:" + algoInfo.get("ALGDATE")+ "\n");
-    	outputStream.write("\n\n");
-		outputStream.write(buffer.toString());
-		outputStream.flush();
-		outputStream.close();
+        BufferedWriter outputStream = new BufferedWriter(new FileWriter("evaluatedGene.txt"));
+        outputStream.write("Arguments: " + this.arguments);
+        outputStream.write("\n");
+        outputStream.write("ALGNAME:" + algoInfo.get("ALGNAME") + "\n");
+        outputStream.write("ALGVERSION:" + algoInfo.get("ALGVERSION") + "\n");
+        outputStream.write("ALGDATE:" + algoInfo.get("ALGDATE") + "\n");
+        outputStream.write("\n\n");
+        outputStream.write(buffer.toString());
+        outputStream.flush();
+        outputStream.close();
 
     }
 
@@ -189,87 +199,98 @@ import org.fstrf.stanfordAsiInterpreter.resistance.xml.XmlAsiTransformer;
      * @return String output of the results of the gene analysis
      */
     private String renderEvaluatedGene(EvaluatedGene gene) {
-    	StringBuffer buffer = new StringBuffer();
-    	buffer.append("Gene: " + gene.getGene()).append('\n');
-    	buffer.append("Evaluated Drug Classes:").append('\n');
-    	for(Iterator iter = gene.getEvaluatedDrugClasses().iterator(); iter.hasNext();) {
-			EvaluatedDrugClass drugClass = (EvaluatedDrugClass) iter.next();
-			buffer.append("\t").append("Drug Class: " + drugClass.getDrugClass()).append('\n');
-			buffer.append("\t").append("Evaluated Drugs:").append('\n');
-			for(Iterator iter1 = drugClass.getEvaluatedDrugs().iterator(); iter1.hasNext();) {
-				EvaluatedDrug drug = (EvaluatedDrug) iter1.next();
-				buffer.append("\t\t").append("Drug: " + drug.getDrug()).append('\n');
-				buffer.append("\t\t").append("Drug Full Name: " + drug.getDrug().getDrugFullName()).append('\n');
-				if(drug.getDrug().getMutationTypes() != null) {
-				    for(MutationType mt : drug.getDrug().getMutationTypes()) {
-    				    buffer.append("\t\t").append("Mutation Type: " + mt.getName()).append('\n');
+        StringBuffer buffer = new StringBuffer();
+        buffer.append("Gene: " + gene.getGene()).append('\n');
+        buffer.append("Evaluated Drug Classes:").append('\n');
+        for (Iterator iter = gene.getEvaluatedDrugClasses().iterator(); iter.hasNext();) {
+            EvaluatedDrugClass drugClass = (EvaluatedDrugClass) iter.next();
+            buffer.append("\t").append("Drug Class: " + drugClass.getDrugClass()).append('\n');
+            buffer.append("\t").append("Evaluated Drugs:").append('\n');
+            for (Iterator iter1 = drugClass.getEvaluatedDrugs().iterator(); iter1.hasNext();) {
+                EvaluatedDrug drug = (EvaluatedDrug) iter1.next();
+                buffer.append("\t\t").append("Drug: " + drug.getDrug()).append('\n');
+                buffer.append("\t\t").append("Drug Full Name: " + drug.getDrug().getDrugFullName()).append('\n');
+                if (drug.getDrug().getMutationTypes() != null) {
+                    for (MutationType mt : drug.getDrug().getMutationTypes()) {
+                        buffer.append("\t\t").append("Mutation Type: " + mt.getName()).append('\n');
                         buffer.append("\t\t\t").append("Mutations: ").append('\n');
-    				    List<String> mutations = mt.getMutations();
-    				    for(String s : mutations) {
-    				        buffer.append("\t\t\t\t").append(s).append('\n');
-    				    }
-				    }
-				}
-				buffer.append("\t\t").append("Scored Mutations: " + drug.getScoredMutations()).append('\n');
-				String level = (drug.getHighestLevelDefinition() != null) ? drug.getHighestLevelDefinition().getResistance() : "" ;
-				buffer.append("\t\t").append("Level: " + ((drug.getHighestLevelDefinition() != null) ? drug.getHighestLevelDefinition().toString() : drug.getDrug().getDefaultLevel())).append('\n');
-				buffer.append("\t\t").append("Comments:").append('\n');
-				for(Iterator iter2 = drug.getCommentDefinitions().iterator(); iter2.hasNext();) {
-					CommentDefinition definition = (CommentDefinition) iter2.next();
-					buffer.append("\t\t\t").append("Comment: " + definition.toString()).append('\n');
-				}
-				buffer.append("\t\t").append("Evaluated Conditions:").append('\n');
-				for(Iterator iter2 = drug.getEvaluatedConditions().iterator(); iter2.hasNext();) {
-					EvaluatedCondition condition = (EvaluatedCondition) iter2.next();
-					buffer.append("\t\t\t").append("Condition: " + condition.getRuleCondition()).append('\n');
-					buffer.append("\t\t\t").append("Result: " + condition.getEvaluator().getResult()).append('\n');
-					if(!condition.getEvaluator().getResult().getClass().equals(Boolean.class)) {
-						buffer.append("\t\t\t").append("Scored Items: ").append('\n');
-						for(Iterator iter3 = condition.getEvaluator().getScoredItems().iterator(); iter3.hasNext();) {
-							ScoredItem scoredItem = (ScoredItem) iter3.next();
-							buffer.append("\t\t\t\t").append("Scored Item: " + scoredItem.getValue()).append('\n');
-							buffer.append("\t\t\t\t").append("Scored Item Mutations: " + scoredItem.getMutations()).append('\n');
-						}
-						buffer.append('\n');
-					}
-				}
-				buffer.append('\n');
-			}
-			buffer.append('\n');
-		}
-    	buffer.append("Gene Comments:").append('\n');
-    	for(Iterator iter = gene.getGeneEvaluatedConditions().iterator(); iter.hasNext();) {
-			EvaluatedCondition condition = (EvaluatedCondition) iter.next();
-			if(condition.getDefinitions().size() == 0)
-				continue;
-			buffer.append("\t").append("Condition: " + condition.getRuleCondition()).append('\n');
-			buffer.append("\t").append("Scored Mutations: " + condition.getEvaluator().getScoredMutations()).append('\n');
-			buffer.append("\t").append("Definitions: ").append('\n');
-			for(Iterator iter2 = condition.getDefinitions().iterator(); iter2.hasNext();) {
-				CommentDefinition definition = (CommentDefinition) iter2.next();
-				buffer.append("\t\t").append("Comment: " + definition.toString()).append('\n');
-			}
-			buffer.append('\n');
-		}
-    	buffer.append("Result Comments:").append('\n');
-    	for (EvaluatedResultCommentRule evaluatedResultCommentRule: gene.getEvaluatedResultCommentRules()) {
-    		//skip rules that don't apply (no definitions means the rule conditions were not met)
-    		if (evaluatedResultCommentRule.getDefinitions().size() == 0) {
-    			continue;
-    		}
-    		buffer.append("\t").append("Drug Level Conditions:").append("\n");
-    		for (EvaluatedDrugLevelCondition condition: evaluatedResultCommentRule.getEvaluatedDrugLevelConditions()) {
-    			buffer.append("\t\t").append("Condition: "+condition.getDrugLevelCondition()).append("\n");
-    			buffer.append("\t\t\t").append("Scored Level for "+condition.getDrug()+": "+condition.getScoredLevel().toString()).append('\n');
-    		}
-    		buffer.append("\t").append("Definitions:").append("\n");
-    		for(Definition definition: evaluatedResultCommentRule.getDefinitions()) {
-				buffer.append("\t\t").append("Comment: " + definition.toString()).append('\n');
-			}
-			buffer.append('\n');
-    	}
+                        List<String> mutations = mt.getMutations();
+                        for (String s : mutations) {
+                            buffer.append("\t\t\t\t").append(s).append('\n');
+                        }
+                    }
+                }
+                buffer.append("\t\t").append("Scored Mutations: " + drug.getScoredMutations()).append('\n');
+                String level = (drug.getHighestLevelDefinition() != null)
+                        ? drug.getHighestLevelDefinition().getResistance()
+                        : "";
+                buffer.append("\t\t")
+                        .append("Level: " + ((drug.getHighestLevelDefinition() != null)
+                                ? drug.getHighestLevelDefinition().toString()
+                                : drug.getDrug().getDefaultLevel()))
+                        .append('\n');
+                buffer.append("\t\t").append("Comments:").append('\n');
+                for (Iterator iter2 = drug.getCommentDefinitions().iterator(); iter2.hasNext();) {
+                    CommentDefinition definition = (CommentDefinition) iter2.next();
+                    buffer.append("\t\t\t").append("Comment: " + definition.toString()).append('\n');
+                }
+                buffer.append("\t\t").append("Evaluated Conditions:").append('\n');
+                for (Iterator iter2 = drug.getEvaluatedConditions().iterator(); iter2.hasNext();) {
+                    EvaluatedCondition condition = (EvaluatedCondition) iter2.next();
+                    buffer.append("\t\t\t").append("Condition: " + condition.getRuleCondition()).append('\n');
+                    buffer.append("\t\t\t").append("Result: " + condition.getEvaluator().getResult()).append('\n');
+                    if (!condition.getEvaluator().getResult().getClass().equals(Boolean.class)) {
+                        buffer.append("\t\t\t").append("Scored Items: ").append('\n');
+                        for (Iterator iter3 = condition.getEvaluator().getScoredItems().iterator(); iter3.hasNext();) {
+                            ScoredItem scoredItem = (ScoredItem) iter3.next();
+                            buffer.append("\t\t\t\t").append("Scored Item: " + scoredItem.getValue()).append('\n');
+                            buffer.append("\t\t\t\t").append("Scored Item Mutations: " + scoredItem.getMutations())
+                                    .append('\n');
+                        }
+                        buffer.append('\n');
+                    }
+                }
+                buffer.append('\n');
+            }
+            buffer.append('\n');
+        }
+        buffer.append("Gene Comments:").append('\n');
+        for (Iterator iter = gene.getGeneEvaluatedConditions().iterator(); iter.hasNext();) {
+            EvaluatedCondition condition = (EvaluatedCondition) iter.next();
+            if (condition.getDefinitions().size() == 0)
+                continue;
+            buffer.append("\t").append("Condition: " + condition.getRuleCondition()).append('\n');
+            buffer.append("\t").append("Scored Mutations: " + condition.getEvaluator().getScoredMutations())
+                    .append('\n');
+            buffer.append("\t").append("Definitions: ").append('\n');
+            for (Iterator iter2 = condition.getDefinitions().iterator(); iter2.hasNext();) {
+                CommentDefinition definition = (CommentDefinition) iter2.next();
+                buffer.append("\t\t").append("Comment: " + definition.toString()).append('\n');
+            }
+            buffer.append('\n');
+        }
+        buffer.append("Result Comments:").append('\n');
+        for (EvaluatedResultCommentRule evaluatedResultCommentRule : gene.getEvaluatedResultCommentRules()) {
+            // skip rules that don't apply (no definitions means the rule conditions were
+            // not met)
+            if (evaluatedResultCommentRule.getDefinitions().size() == 0) {
+                continue;
+            }
+            buffer.append("\t").append("Drug Level Conditions:").append("\n");
+            for (EvaluatedDrugLevelCondition condition : evaluatedResultCommentRule.getEvaluatedDrugLevelConditions()) {
+                buffer.append("\t\t").append("Condition: " + condition.getDrugLevelCondition()).append("\n");
+                buffer.append("\t\t\t").append(
+                        "Scored Level for " + condition.getDrug() + ": " + condition.getScoredLevel().toString())
+                        .append('\n');
+            }
+            buffer.append("\t").append("Definitions:").append("\n");
+            for (Definition definition : evaluatedResultCommentRule.getDefinitions()) {
+                buffer.append("\t\t").append("Comment: " + definition.toString()).append('\n');
+            }
+            buffer.append('\n');
+        }
 
-    	return buffer.toString();
+        return buffer.toString();
     }
 
     /**
@@ -282,22 +303,23 @@ import org.fstrf.stanfordAsiInterpreter.resistance.xml.XmlAsiTransformer;
         formatter.printHelp("ASI Interpreter", options, true);
     }
 
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
+    /**
+     * @param args
+     */
+    public static void main(String[] args) {
         try {
             System.out.println("Testing mutations");
             CommandLine commands = new GnuParser().parse(OPTIONS, args);
-            AsiInterpreterClient asiInterpreterClient = new AsiInterpreterClient(commands, Arrays.asList(args).toString());
+            AsiInterpreterClient asiInterpreterClient = new AsiInterpreterClient(commands,
+                    Arrays.asList(args).toString());
             asiInterpreterClient.run();
-        } catch(ParseException pe) {
+        } catch (ParseException pe) {
             System.err.println("Invalid parameter list.");
             printHelp(OPTIONS);
-        } catch(Exception e) {
-        	System.err.println(e.getMessage());
-        	e.printStackTrace(System.err);
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            e.printStackTrace(System.err);
         }
-	}
+    }
 
 }

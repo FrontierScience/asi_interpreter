@@ -21,38 +21,36 @@ that governs the use and development of this software, Frontier Science
 this software for patient care or in clinical settings. This software 
 was developed solely for use in medical and public health research, and 
 was not intended, designed, or validated to guide patient care.
-*/ 
-
-
+*/
 
 package test.org.fstrf.stanfordAsiInterpreter.resistance.grammar;
 
-import java.io.PushbackReader;
-import java.io.StringReader;
 import java.util.List;
 
-import junit.framework.TestCase;
-
 import org.fstrf.stanfordAsiInterpreter.resistance.grammar.AsiGrammarAdapter;
-import org.fstrf.stanfordAsiInterpreter.resistance.grammar.MutationComparator;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.StringMutationComparator;
 import org.fstrf.stanfordAsiInterpreter.resistance.grammar.lexer.Lexer;
 import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.Start;
 import org.fstrf.stanfordAsiInterpreter.resistance.grammar.parser.Parser;
 
-@SuppressWarnings("all") public class AsiGrammarTestHelper {
+import junit.framework.TestCase;
 
-	private AsiGrammarTestHelper() {}
-	
-	public static AsiGrammarAdapter applyStatement(String statement, List mutations, MutationComparator comparator) {
-		try {
-			Parser parser = new Parser(new Lexer(new PushbackReader(new StringReader(statement), 1024)));
-			Start tree = parser.parse();
-			AsiGrammarAdapter adapter = new AsiGrammarAdapter(mutations, comparator);
-			tree.apply(adapter);
-			return adapter;
-		} catch(Exception e) {
-			TestCase.fail("An exception was thrown when applying the statment: " + e.getMessage());
-			throw new RuntimeException(e);
-		}
-	}
+public class AsiGrammarTestHelper {
+
+    private AsiGrammarTestHelper() {
+    }
+
+    public static AsiGrammarAdapter<StringMutationComparator> applyStatement(String statement, List<String> mutations,
+            StringMutationComparator comparator) {
+        try {
+            Parser parser = new Parser(new Lexer(statement));
+            Start tree = parser.parse();
+            AsiGrammarAdapter<StringMutationComparator> adapter = new AsiGrammarAdapter<>(mutations, comparator);
+            tree.apply(adapter);
+            return adapter;
+        } catch (Exception e) {
+            TestCase.fail("An exception was thrown when applying the statment: " + e.getMessage());
+            throw new RuntimeException(e);
+        }
+    }
 }
