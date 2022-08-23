@@ -10,7 +10,7 @@ plugins {
 }
 
 group = 'java.org.fstrf.stanfordAsiInterpreter.resistance'
-version = '1.6.0.0-hivdb2'
+version = '1.6.1'
 
 sourceCompatibility = 15
 targetCompatibility = 15

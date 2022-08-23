@@ -1,6 +1,6 @@
 {
   "name": "asi_interpreter",
-  "version": "1.6.0.0-hivdb2",
+  "version": "1.6.1",
   "description": "ASI (Algorithm Specification Interface) Interpreter",
   "main": "dist/asi-js.js",
   "repository": "https://github.com/hivdb/asi_interpreter.git",
