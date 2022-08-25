@@ -30,8 +30,10 @@ package org.fstrf.stanfordAsiInterpreter.resistance.grammar;
 import java.util.Collection;
 import java.util.Set;
 
-@SuppressWarnings("all") public interface AsiGrammarEvaluator {
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.AsiGrammarAdapter.ScoredItem;
+
+public interface AsiGrammarEvaluator {
     public Object getResult();
-    public Set<?> getScoredMutations();
-    public Collection<?> getScoredItems();
+    public Set<String> getScoredMutations();
+    public Collection<ScoredItem> getScoredItems();
 }

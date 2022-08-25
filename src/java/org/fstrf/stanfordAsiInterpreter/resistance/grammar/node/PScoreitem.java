@@ -29,6 +29,6 @@ was not intended, designed, or validated to guide patient care.
 
 package org.fstrf.stanfordAsiInterpreter.resistance.grammar.node;
 
-@SuppressWarnings("all") public abstract class PScoreitem extends Node
+public abstract class PScoreitem<T extends PScoreitem<T>> extends Node<T>
 {
 }

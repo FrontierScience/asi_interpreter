@@ -23,15 +23,20 @@ was developed solely for use in medical and public health research, and
 was not intended, designed, or validated to guide patient care.
 */
 
-
-
 package org.fstrf.stanfordAsiInterpreter.resistance;
 
 import java.io.InputStream;
 import java.util.Map;
 
-@SuppressWarnings("all") public interface AsiTransformer {
+import org.fstrf.stanfordAsiInterpreter.resistance.definition.Gene;
 
-	public Map<?, ?> transform(InputStream is) throws Exception;
-	public Map<?, ?> getAlgorithmInfo(InputStream is) throws Exception;
+public interface AsiTransformer {
+
+    public Map<String, Gene> transform(String messageXml) throws ASIParsingException;
+
+    public Map<String, Gene> transform(InputStream is) throws ASIParsingException;
+
+    public Map<String, Map<String, ?>> getAlgorithmInfo(String messageXml) throws ASIParsingException;
+
+    public Map<String, Map<String, ?>> getAlgorithmInfo(InputStream is) throws ASIParsingException;
 }

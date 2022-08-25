@@ -29,13 +29,12 @@ was not intended, designed, or validated to guide patient care.
 
 package org.fstrf.stanfordAsiInterpreter.resistance.grammar.node;
 
-import java.util.*;
-import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.Analysis;
 
-@SuppressWarnings("all") public final class AScoreitems extends PScoreitems
+public final class AScoreitems extends PScoreitems<AScoreitems>
 {
     private TComma _comma_;
-    private PScoreitem _scoreitem_;
+    private PScoreitem<?> _scoreitem_;
 
     public AScoreitems()
     {
@@ -43,21 +42,24 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
 
     public AScoreitems(
         TComma _comma_,
-        PScoreitem _scoreitem_)
+        PScoreitem<?> _scoreitem_)
     {
         setComma(_comma_);
 
         setScoreitem(_scoreitem_);
 
     }
-    public Object clone()
+
+	@Override
+    public AScoreitems clone()
     {
         return new AScoreitems(
             (TComma) cloneNode(_comma_),
-            (PScoreitem) cloneNode(_scoreitem_));
+            (PScoreitem<?>) cloneNode(_scoreitem_));
     }
 
-    public void apply(Switch sw)
+    @Override
+	public void apply(Switch sw)
     {
         ((Analysis) sw).caseAScoreitems(this);
     }
@@ -87,12 +89,12 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
         _comma_ = node;
     }
 
-    public PScoreitem getScoreitem()
+    public PScoreitem<?> getScoreitem()
     {
         return _scoreitem_;
     }
 
-    public void setScoreitem(PScoreitem node)
+    public void setScoreitem(PScoreitem<?> node)
     {
         if(_scoreitem_ != null)
         {
@@ -112,6 +114,7 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
         _scoreitem_ = node;
     }
 
+	@Override
     public String toString()
     {
         return ""
@@ -119,7 +122,8 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
             + toString(_scoreitem_);
     }
 
-    void removeChild(Node child)
+    @Override
+	void removeChild(Node<?> child)
     {
         if(_comma_ == child)
         {
@@ -135,7 +139,8 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
 
     }
 
-    void replaceChild(Node oldChild, Node newChild)
+    @Override
+	<U extends Node<U>> void replaceChild(U oldChild, U newChild)
     {
         if(_comma_ == oldChild)
         {
@@ -145,7 +150,7 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
 
         if(_scoreitem_ == oldChild)
         {
-            setScoreitem((PScoreitem) newChild);
+            setScoreitem((PScoreitem<?>) newChild);
             return;
         }
 

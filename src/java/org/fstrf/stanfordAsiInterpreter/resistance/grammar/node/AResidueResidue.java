@@ -29,14 +29,17 @@ was not intended, designed, or validated to guide patient care.
 
 package org.fstrf.stanfordAsiInterpreter.resistance.grammar.node;
 
-import java.util.*;
-import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
 
-@SuppressWarnings("all") public final class AResidueResidue extends PResidue
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.Analysis;
+
+public final class AResidueResidue extends PResidue<AResidueResidue>
 {
     private TAminoAcid _originalaminoacid_;
     private TInteger _integer_;
-    private final LinkedList _mutatedaminoacid_ = new TypedLinkedList(new Mutatedaminoacid_Cast());
+    private final LinkedList<TAminoAcid> _mutatedaminoacid_ = new TypedLinkedList<TAminoAcid>(new Mutatedaminoacid_Cast());
 
     public AResidueResidue()
     {
@@ -45,7 +48,7 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
     public AResidueResidue(
         TAminoAcid _originalaminoacid_,
         TInteger _integer_,
-        List _mutatedaminoacid_)
+        List<TAminoAcid> _mutatedaminoacid_)
     {
         setOriginalaminoacid(_originalaminoacid_);
 
@@ -57,14 +60,18 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
         }
 
     }
-    public Object clone()
+    
+    @SuppressWarnings("unchecked")
+    @Override
+	public AResidueResidue clone()
     {
         return new AResidueResidue(
             (TAminoAcid) cloneNode(_originalaminoacid_),
             (TInteger) cloneNode(_integer_),
-            cloneList(_mutatedaminoacid_));
+            (List<TAminoAcid>) cloneList(_mutatedaminoacid_));
     }
 
+    @Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseAResidueResidue(this);
@@ -120,17 +127,18 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
         _integer_ = node;
     }
 
-    public LinkedList getMutatedaminoacid()
+    public LinkedList<TAminoAcid> getMutatedaminoacid()
     {
         return _mutatedaminoacid_;
     }
 
-    public void setMutatedaminoacid(List list)
+    public void setMutatedaminoacid(List<TAminoAcid> list)
     {
         _mutatedaminoacid_.clear();
         _mutatedaminoacid_.addAll(list);
     }
 
+    @Override
     public String toString()
     {
         return ""
@@ -139,7 +147,8 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
             + toString(_mutatedaminoacid_);
     }
 
-    void removeChild(Node child)
+    @Override
+    void removeChild(Node<?> child)
     {
         if(_originalaminoacid_ == child)
         {
@@ -160,7 +169,8 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
 
     }
 
-    void replaceChild(Node oldChild, Node newChild)
+    @Override
+    <U extends Node<U>> void replaceChild(U oldChild, U newChild)
     {
         if(_originalaminoacid_ == oldChild)
         {
@@ -174,13 +184,13 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
             return;
         }
 
-        for(ListIterator i = _mutatedaminoacid_.listIterator(); i.hasNext();)
+        for(ListIterator<TAminoAcid> i = _mutatedaminoacid_.listIterator(); i.hasNext();)
         {
             if(i.next() == oldChild)
             {
                 if(newChild != null)
                 {
-                    i.set(newChild);
+                    i.set((TAminoAcid) newChild);
                     oldChild.parent(null);
                     return;
                 }
@@ -193,9 +203,10 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
 
     }
 
-    private class Mutatedaminoacid_Cast implements Cast
+    private class Mutatedaminoacid_Cast implements Cast<TAminoAcid>
     {
-        public Object cast(Object o)
+    	@Override
+        public TAminoAcid cast(Object o)
         {
             TAminoAcid node = (TAminoAcid) o;
 

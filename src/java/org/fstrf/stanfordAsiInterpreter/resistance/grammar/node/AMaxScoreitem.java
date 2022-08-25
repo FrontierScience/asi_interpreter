@@ -29,14 +29,13 @@ was not intended, designed, or validated to guide patient care.
 
 package org.fstrf.stanfordAsiInterpreter.resistance.grammar.node;
 
-import java.util.*;
-import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.Analysis;
 
-@SuppressWarnings("all") public final class AMaxScoreitem extends PScoreitem
+public final class AMaxScoreitem extends PScoreitem<AMaxScoreitem>
 {
     private TMax _max_;
     private TLPar _lPar_;
-    private PScorelist _scorelist_;
+    private PScorelist<?> _scorelist_;
     private TRPar _rPar_;
 
     public AMaxScoreitem()
@@ -46,7 +45,7 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
     public AMaxScoreitem(
         TMax _max_,
         TLPar _lPar_,
-        PScorelist _scorelist_,
+        PScorelist<?> _scorelist_,
         TRPar _rPar_)
     {
         setMax(_max_);
@@ -58,15 +57,18 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
         setRPar(_rPar_);
 
     }
-    public Object clone()
+    
+	@Override
+    public AMaxScoreitem clone()
     {
         return new AMaxScoreitem(
             (TMax) cloneNode(_max_),
             (TLPar) cloneNode(_lPar_),
-            (PScorelist) cloneNode(_scorelist_),
+            (PScorelist<?>) cloneNode(_scorelist_),
             (TRPar) cloneNode(_rPar_));
     }
 
+	@Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseAMaxScoreitem(this);
@@ -122,12 +124,12 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
         _lPar_ = node;
     }
 
-    public PScorelist getScorelist()
+    public PScorelist<?> getScorelist()
     {
         return _scorelist_;
     }
 
-    public void setScorelist(PScorelist node)
+    public void setScorelist(PScorelist<?> node)
     {
         if(_scorelist_ != null)
         {
@@ -172,6 +174,7 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
         _rPar_ = node;
     }
 
+	@Override
     public String toString()
     {
         return ""
@@ -181,7 +184,8 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
             + toString(_rPar_);
     }
 
-    void removeChild(Node child)
+	@Override
+    void removeChild(Node<?> child)
     {
         if(_max_ == child)
         {
@@ -209,7 +213,8 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
 
     }
 
-    void replaceChild(Node oldChild, Node newChild)
+	@Override
+    <U extends Node<U>>void replaceChild(U oldChild, U newChild)
     {
         if(_max_ == oldChild)
         {
@@ -225,7 +230,7 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
 
         if(_scorelist_ == oldChild)
         {
-            setScorelist((PScorelist) newChild);
+            setScorelist((PScorelist<?>) newChild);
             return;
         }
 

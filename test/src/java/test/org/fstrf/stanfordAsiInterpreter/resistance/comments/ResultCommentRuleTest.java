@@ -28,6 +28,7 @@ package test.org.fstrf.stanfordAsiInterpreter.resistance.comments;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -48,222 +49,190 @@ import org.fstrf.stanfordAsiInterpreter.resistance.xml.XmlAsiTransformer;
 import junit.framework.TestCase;
 
 /**
- * This class tests that the logic for evaluating Result Comment Rules
- * returns result comments as expected
+ * This class tests that the logic for evaluating Result Comment Rules returns
+ * result comments as expected
  *
  * @author Kyle Lambert
  */
-@SuppressWarnings("all") public class ResultCommentRuleTest extends TestCase
-{
+@SuppressWarnings("all")
+public class ResultCommentRuleTest extends TestCase {
 
-	/*
-	 * Test LTE,GTE,...
-	 */
-	public void testComparisons() throws FileNotFoundException, Exception {
-		AsiTransformer transformer = new XmlAsiTransformer(true);
-    	File algorithmFile = new File("test/files/result_based_comments/ComparisonTest.xml");
-    	Map<String,Gene> geneMap = (Map<String, Gene>) transformer.transform(new FileInputStream(algorithmFile));
-    	Gene gene = geneMap.get("PR");
-    	List<String> mutations = Arrays.asList("20T");
-    	MutationComparator mutationComparator = new StringMutationComparator(false);
+    /*
+     * Test LTE,GTE,...
+     */
+    public void testComparisons() throws FileNotFoundException, Exception {
+        AsiTransformer transformer = new XmlAsiTransformer(true);
+        InputStream algorithmFileStream = ResultCommentRuleTest.class.getClassLoader()
+                .getResourceAsStream("result_based_comments/ComparisonTest.xml");
+        Map<String, Gene> geneMap = (Map<String, Gene>) transformer.transform(algorithmFileStream);
+        Gene gene = geneMap.get("PR");
+        List<String> mutations = Arrays.asList("20T");
+        MutationComparator mutationComparator = new StringMutationComparator(false);
 
-    	EvaluatedGene evaluatedGene = gene.evaluate(mutations, mutationComparator);
+        EvaluatedGene evaluatedGene = gene.evaluate(mutations, mutationComparator);
 
-    	/*
-    	 * In the ComparisonTest file, ATV/r will evaluate to level 3, so ONLY the following comments are expected
-    	 * 	- GTE2
-    	 * 	- GTE3
-    	 * 	- GT2
-    	 * 	- LTE3
-    	 * 	- LTE4
-    	 * 	- LT4
-    	 * 	- EQ3
-    	 * 	- NEQ2
-    	 * 	- NEQ4
-    	 *
-    	 * The following comments are in the algorithm, but should evaluate to false and not be included in the output
-    	 * 	- GTE4
-    	 * 	- GT3
-    	 * 	- GT4
-    	 * 	- LTE2
-    	 * 	- LT2
-    	 * 	- LT3
-    	 * 	- EQ2
-    	 * 	- EQ4
-    	 * 	- NEQ3
-    	 *
-    	 */
-    	Set<String> expectedCommentIds = new HashSet<String>(Arrays.asList(
-    			"GTE2","GTE3",
-    			"GT2",
-    			"LTE3","LTE4",
-    			"LT4",
-    			"EQ3",
-    			"NEQ2","NEQ4"));
+        /*
+         * In the ComparisonTest file, ATV/r will evaluate to level 3, so ONLY the
+         * following comments are expected - GTE2 - GTE3 - GT2 - LTE3 - LTE4 - LT4 - EQ3
+         * - NEQ2 - NEQ4
+         *
+         * The following comments are in the algorithm, but should evaluate to false and
+         * not be included in the output - GTE4 - GT3 - GT4 - LTE2 - LT2 - LT3 - EQ2 -
+         * EQ4 - NEQ3
+         *
+         */
+        Set<String> expectedCommentIds = new HashSet<String>(
+                Arrays.asList("GTE2", "GTE3", "GT2", "LTE3", "LTE4", "LT4", "EQ3", "NEQ2", "NEQ4"));
 
-    	Set<String> actualCommentIds = new HashSet<String>();
+        Set<String> actualCommentIds = new HashSet<String>();
 
-    	Collection<EvaluatedResultCommentRule> evaluatedResultCommentRules = evaluatedGene.getEvaluatedResultCommentRules();
+        Collection<EvaluatedResultCommentRule> evaluatedResultCommentRules = evaluatedGene
+                .getEvaluatedResultCommentRules();
 
-    	System.out.println("Comments: ");
-    	for (EvaluatedResultCommentRule evaluatedResultCommentRule: evaluatedResultCommentRules) {
-    		for (Definition definition: evaluatedResultCommentRule.getDefinitions()) {
-    			CommentDefinition comment = (CommentDefinition) definition;
-    			actualCommentIds.add(comment.getId());
-    			System.out.println(comment.toString());
-    		}
-    	}
-    	System.out.println();
-    	//Comment sets should be exactly the same
-    	assert(expectedCommentIds.equals(actualCommentIds));
+        System.out.println("Comments: ");
+        for (EvaluatedResultCommentRule evaluatedResultCommentRule : evaluatedResultCommentRules) {
+            for (Definition definition : evaluatedResultCommentRule.getDefinitions()) {
+                CommentDefinition comment = (CommentDefinition) definition;
+                actualCommentIds.add(comment.getId());
+                System.out.println(comment.toString());
+            }
+        }
+        System.out.println();
+        // Comment sets should be exactly the same
+        assert (expectedCommentIds.equals(actualCommentIds));
 
-	}
+    }
 
+    /*
+     * Test <LTE> and <GT> together and in different order uses
+     * ComplexResultComments.xml
+     */
+    public void testMultipleComparisons() throws FileNotFoundException, Exception {
+        AsiTransformer transformer = new XmlAsiTransformer(true);
+        InputStream algorithmFileStream = ResultCommentRuleTest.class.getClassLoader()
+                .getResourceAsStream("result_based_comments/ComplexResultComments.xml");
+        Map<String, Gene> geneMap = (Map<String, Gene>) transformer.transform(algorithmFileStream);
+        Gene gene = geneMap.get("PR");
+        List<String> mutations = Arrays.asList("10F", "33F", "88S", "90M");
+        MutationComparator mutationComparator = new StringMutationComparator(false);
 
-	/*
-	 * Test <LTE> and <GT> together and in different order
-	 * uses ComplexResultComments.xml
-	 */
-	public void testMultipleComparisons() throws FileNotFoundException, Exception {
-		AsiTransformer transformer = new XmlAsiTransformer(true);
-    	File algorithmFile = new File("test/files/result_based_comments/ComplexResultComments.xml");
-    	Map<String,Gene> geneMap = (Map<String, Gene>) transformer.transform(new FileInputStream(algorithmFile));
-    	Gene gene = geneMap.get("PR");
-    	List<String> mutations = Arrays.asList("10F","33F","88S","90M");
-    	MutationComparator mutationComparator = new StringMutationComparator(false);
+        EvaluatedGene evaluatedGene = gene.evaluate(mutations, mutationComparator);
 
-    	EvaluatedGene evaluatedGene = gene.evaluate(mutations, mutationComparator);
+        /*
+         * The drugs in the algorithm should have the following level assignments:
+         * FPV/r: 1 IDV/r: 2 LPV/r: 3 NFV: 4 SQV/r: 5
+         *
+         * Therefore, only IDV/r, LPV/r, and NFV should have the result comment
+         * "BetweenTwoAndFour", which has the logic GTE2 and LTE4
+         */
 
-    	/*
-    	 * The drugs in the algorithm should have the following level assignments:
-    	 * 	FPV/r: 	1
-    	 * 	IDV/r: 	2
-    	 * 	LPV/r: 	3
-    	 * 	NFV: 	4
-    	 * 	SQV/r: 	5
-    	 *
-    	 * Therefore, only IDV/r, LPV/r, and NFV should have the result comment "BetweenTwoAndFour",
-    	 * which has the logic GTE2 and LTE4
-    	 */
+        Set<String> expectedCommentIds = new HashSet<String>(
+                Arrays.asList("IDV_BetweenTwoAndFour", "LPV_BetweenTwoAndFour", "NFV_BetweenTwoAndFour"));
 
-    	Set<String> expectedCommentIds = new HashSet<String>(Arrays.asList(
-    			"IDV_BetweenTwoAndFour",
-    			"LPV_BetweenTwoAndFour",
-    			"NFV_BetweenTwoAndFour"));
+        Set<String> actualCommentIds = new HashSet<String>();
 
-    	Set<String> actualCommentIds = new HashSet<String>();
+        Collection<EvaluatedResultCommentRule> evaluatedResultCommentRules = evaluatedGene
+                .getEvaluatedResultCommentRules();
 
-    	Collection<EvaluatedResultCommentRule> evaluatedResultCommentRules = evaluatedGene.getEvaluatedResultCommentRules();
+        System.out.println("BetweenTwoAndFour Comments: ");
+        for (EvaluatedResultCommentRule evaluatedResultCommentRule : evaluatedResultCommentRules) {
+            for (Definition definition : evaluatedResultCommentRule.getDefinitions()) {
+                CommentDefinition comment = (CommentDefinition) definition;
+                // Just filter for the BetweenTwoAndFour comments
+                if (comment.getId().contains("BetweenTwoAndFour")) {
+                    actualCommentIds.add(comment.getId());
+                    System.out.println(comment.toString());
+                }
+            }
+        }
+        System.out.println();
+        // Comment sets should be exactly the same
+        assert (expectedCommentIds.equals(actualCommentIds));
+    }
 
-    	System.out.println("BetweenTwoAndFour Comments: ");
-    	for (EvaluatedResultCommentRule evaluatedResultCommentRule: evaluatedResultCommentRules) {
-    		for (Definition definition: evaluatedResultCommentRule.getDefinitions()) {
-    			CommentDefinition comment = (CommentDefinition) definition;
-    			//Just filter for the BetweenTwoAndFour comments
-    			if (comment.getId().contains("BetweenTwoAndFour")) {
-    				actualCommentIds.add(comment.getId());
-    				System.out.println(comment.toString());
-    			}
-    		}
-    	}
-    	System.out.println();
-    	//Comment sets should be exactly the same
-    	assert(expectedCommentIds.equals(actualCommentIds));
-	}
+    /*
+     * Test "OR" with multiple Level Rules uses ComplexResultComments.xml
+     */
+    public void testOR() throws FileNotFoundException, Exception {
+        AsiTransformer transformer = new XmlAsiTransformer(true);
+        InputStream algorithmFileStream = ResultCommentRuleTest.class.getClassLoader()
+                .getResourceAsStream("result_based_comments/ComplexResultComments.xml");
+        Map<String, Gene> geneMap = (Map<String, Gene>) transformer.transform(algorithmFileStream);
+        Gene gene = geneMap.get("PR");
+        List<String> mutations = Arrays.asList("10F", "33F", "88S", "90M");
+        MutationComparator mutationComparator = new StringMutationComparator(false);
 
-	/*
-	 * Test "OR" with multiple Level Rules
-	 * uses ComplexResultComments.xml
-	 */
-	public void testOR() throws FileNotFoundException, Exception {
-		AsiTransformer transformer = new XmlAsiTransformer(true);
-    	File algorithmFile = new File("test/files/result_based_comments/ComplexResultComments.xml");
-    	Map<String,Gene> geneMap = (Map<String, Gene>) transformer.transform(new FileInputStream(algorithmFile));
-    	Gene gene = geneMap.get("PR");
-    	List<String> mutations = Arrays.asList("10F","33F","88S","90M");
-    	MutationComparator mutationComparator = new StringMutationComparator(false);
+        EvaluatedGene evaluatedGene = gene.evaluate(mutations, mutationComparator);
 
-    	EvaluatedGene evaluatedGene = gene.evaluate(mutations, mutationComparator);
+        /*
+         * The drugs in the algorithm should have the following level assignments:
+         * FPV/r: 1 IDV/r: 2 LPV/r: 3 NFV: 4 SQV/r: 5
+         *
+         * Therefore, only IDV/r and SQV/r should be assigned the "IsTwoOrFive" comment,
+         * which is defined by two LevelRule blocks - one with EQ2 and one with EQ5
+         */
 
-    	/*
-    	 * The drugs in the algorithm should have the following level assignments:
-    	 * 	FPV/r: 	1
-    	 * 	IDV/r: 	2
-    	 * 	LPV/r: 	3
-    	 * 	NFV: 	4
-    	 * 	SQV/r: 	5
-    	 *
-    	 * Therefore, only IDV/r and SQV/r should be assigned the "IsTwoOrFive" comment,
-    	 * which is defined by two LevelRule blocks - one with EQ2 and one with EQ5
-    	 */
+        Set<String> expectedCommentIds = new HashSet<String>(Arrays.asList("IDV_IsTwoOrFive", "SQV_IsTwoOrFive"));
 
-    	Set<String> expectedCommentIds = new HashSet<String>(Arrays.asList(
-    			"IDV_IsTwoOrFive",
-    			"SQV_IsTwoOrFive"));
+        Set<String> actualCommentIds = new HashSet<String>();
 
-    	Set<String> actualCommentIds = new HashSet<String>();
+        Collection<EvaluatedResultCommentRule> evaluatedResultCommentRules = evaluatedGene
+                .getEvaluatedResultCommentRules();
 
-    	Collection<EvaluatedResultCommentRule> evaluatedResultCommentRules = evaluatedGene.getEvaluatedResultCommentRules();
+        System.out.println("IsTwoOrFive Comments: ");
+        for (EvaluatedResultCommentRule evaluatedResultCommentRule : evaluatedResultCommentRules) {
+            for (Definition definition : evaluatedResultCommentRule.getDefinitions()) {
+                CommentDefinition comment = (CommentDefinition) definition;
+                // Just filter for the IsTwoOrFive comments
+                if (comment.getId().contains("IsTwoOrFive")) {
+                    actualCommentIds.add(comment.getId());
+                    System.out.println(comment.toString());
+                }
+            }
+        }
+        System.out.println();
+        // Comment sets should be exactly the same
+        assert (expectedCommentIds.equals(actualCommentIds));
+    }
 
-    	System.out.println("IsTwoOrFive Comments: ");
-    	for (EvaluatedResultCommentRule evaluatedResultCommentRule: evaluatedResultCommentRules) {
-    		for (Definition definition: evaluatedResultCommentRule.getDefinitions()) {
-    			CommentDefinition comment = (CommentDefinition) definition;
-    			//Just filter for the IsTwoOrFive comments
-    			if (comment.getId().contains("IsTwoOrFive")) {
-    				actualCommentIds.add(comment.getId());
-    				System.out.println(comment.toString());
-    			}
-    		}
-    	}
-    	System.out.println();
-    	//Comment sets should be exactly the same
-    	assert(expectedCommentIds.equals(actualCommentIds));
-	}
+    public void testMultiDrugResultCommentRule() throws FileNotFoundException, Exception {
+        AsiTransformer transformer = new XmlAsiTransformer(true);
+        File algorithmFile = new File("test/files/result_based_comments/ComplexResultComments.xml");
+        Map<String, Gene> geneMap = (Map<String, Gene>) transformer.transform(new FileInputStream(algorithmFile));
+        Gene gene = geneMap.get("PR");
+        List<String> mutations = Arrays.asList("10F", "33F", "88S", "90M");
+        MutationComparator mutationComparator = new StringMutationComparator(false);
 
-	public void testMultiDrugResultCommentRule() throws FileNotFoundException, Exception{
-		AsiTransformer transformer = new XmlAsiTransformer(true);
-    	File algorithmFile = new File("test/files/result_based_comments/ComplexResultComments.xml");
-    	Map<String,Gene> geneMap = (Map<String, Gene>) transformer.transform(new FileInputStream(algorithmFile));
-    	Gene gene = geneMap.get("PR");
-    	List<String> mutations = Arrays.asList("10F","33F","88S","90M");
-    	MutationComparator mutationComparator = new StringMutationComparator(false);
+        EvaluatedGene evaluatedGene = gene.evaluate(mutations, mutationComparator);
 
-    	EvaluatedGene evaluatedGene = gene.evaluate(mutations, mutationComparator);
+        /*
+         * The drugs in the algorithm should have the following level assignments:
+         * FPV/r: 1 IDV/r: 2 LPV/r: 3 NFV: 4 SQV/r: 5
+         *
+         * Therefore, NFV and SQV/r are both GTE 4 and the multidrug comment
+         * NFV_SQV_BothHigh should be triggered
+         */
+        Set<String> expectedCommentIds = new HashSet<String>(Arrays.asList("MultiDrug_NFV_SQV_BothHigh"));
 
-    	/*
-    	 * The drugs in the algorithm should have the following level assignments:
-    	 * 	FPV/r: 	1
-    	 * 	IDV/r: 	2
-    	 * 	LPV/r: 	3
-    	 * 	NFV: 	4
-    	 * 	SQV/r: 	5
-    	 *
-    	 * Therefore, NFV and SQV/r are both GTE 4 and the multidrug comment NFV_SQV_BothHigh
-    	 * should be triggered
-    	 */
-    	Set<String> expectedCommentIds = new HashSet<String>(Arrays.asList(
-    			"MultiDrug_NFV_SQV_BothHigh"));
+        Set<String> actualCommentIds = new HashSet<String>();
 
-    	Set<String> actualCommentIds = new HashSet<String>();
+        Collection<EvaluatedResultCommentRule> evaluatedResultCommentRules = evaluatedGene
+                .getEvaluatedResultCommentRules();
 
-    	Collection<EvaluatedResultCommentRule> evaluatedResultCommentRules = evaluatedGene.getEvaluatedResultCommentRules();
-
-    	System.out.println("MultiDrug Comments: ");
-    	for (EvaluatedResultCommentRule evaluatedResultCommentRule: evaluatedResultCommentRules) {
-    		for (Definition definition: evaluatedResultCommentRule.getDefinitions()) {
-    			CommentDefinition comment = (CommentDefinition) definition;
-    			//Just filter for the IsTwoOrFive comments
-    			if (comment.getId().contains("MultiDrug")) {
-    				actualCommentIds.add(comment.getId());
-    				System.out.println(comment.toString());
-    			}
-    		}
-    	}
-    	System.out.println();
-    	//Comment sets should be exactly the same
-    	assert(expectedCommentIds.equals(actualCommentIds));
-	}
+        System.out.println("MultiDrug Comments: ");
+        for (EvaluatedResultCommentRule evaluatedResultCommentRule : evaluatedResultCommentRules) {
+            for (Definition definition : evaluatedResultCommentRule.getDefinitions()) {
+                CommentDefinition comment = (CommentDefinition) definition;
+                // Just filter for the IsTwoOrFive comments
+                if (comment.getId().contains("MultiDrug")) {
+                    actualCommentIds.add(comment.getId());
+                    System.out.println(comment.toString());
+                }
+            }
+        }
+        System.out.println();
+        // Comment sets should be exactly the same
+        assert (expectedCommentIds.equals(actualCommentIds));
+    }
 
 }
-

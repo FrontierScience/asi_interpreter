@@ -29,16 +29,19 @@ was not intended, designed, or validated to guide patient care.
 
 package org.fstrf.stanfordAsiInterpreter.resistance.grammar.node;
 
-import java.util.*;
-import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
 
-@SuppressWarnings("all") public final class AResidueinvertResidue extends PResidue
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.Analysis;
+
+public final class AResidueinvertResidue extends PResidue<AResidueinvertResidue>
 {
     private TAminoAcid _originalaminoacid_;
     private TInteger _integer_;
     private TLPar _lPar_;
     private TNot _not_;
-    private final LinkedList _mutatedaminoacid_ = new TypedLinkedList(new Mutatedaminoacid_Cast());
+    private final LinkedList<TAminoAcid> _mutatedaminoacid_ = new TypedLinkedList<>(new Mutatedaminoacid_Cast());
     private TRPar _rPar_;
 
     public AResidueinvertResidue()
@@ -50,7 +53,7 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
         TInteger _integer_,
         TLPar _lPar_,
         TNot _not_,
-        List _mutatedaminoacid_,
+        List<TAminoAcid> _mutatedaminoacid_,
         TRPar _rPar_)
     {
         setOriginalaminoacid(_originalaminoacid_);
@@ -69,17 +72,21 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
         setRPar(_rPar_);
 
     }
-    public Object clone()
+    
+    @SuppressWarnings("unchecked")
+	@Override
+    public AResidueinvertResidue clone()
     {
         return new AResidueinvertResidue(
             (TAminoAcid) cloneNode(_originalaminoacid_),
             (TInteger) cloneNode(_integer_),
             (TLPar) cloneNode(_lPar_),
             (TNot) cloneNode(_not_),
-            cloneList(_mutatedaminoacid_),
+            (List<TAminoAcid>) cloneList(_mutatedaminoacid_),
             (TRPar) cloneNode(_rPar_));
     }
 
+   	@Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseAResidueinvertResidue(this);
@@ -185,12 +192,12 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
         _not_ = node;
     }
 
-    public LinkedList getMutatedaminoacid()
+    public LinkedList<TAminoAcid> getMutatedaminoacid()
     {
         return _mutatedaminoacid_;
     }
 
-    public void setMutatedaminoacid(List list)
+    public void setMutatedaminoacid(List<TAminoAcid> list)
     {
         _mutatedaminoacid_.clear();
         _mutatedaminoacid_.addAll(list);
@@ -221,6 +228,7 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
         _rPar_ = node;
     }
 
+   	@Override
     public String toString()
     {
         return ""
@@ -232,7 +240,8 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
             + toString(_rPar_);
     }
 
-    void removeChild(Node child)
+   	@Override
+    void removeChild(Node<?> child)
     {
         if(_originalaminoacid_ == child)
         {
@@ -271,7 +280,8 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
 
     }
 
-    void replaceChild(Node oldChild, Node newChild)
+   	@Override
+    <U extends Node<U>> void replaceChild(U oldChild, U newChild)
     {
         if(_originalaminoacid_ == oldChild)
         {
@@ -297,13 +307,13 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
             return;
         }
 
-        for(ListIterator i = _mutatedaminoacid_.listIterator(); i.hasNext();)
+        for(ListIterator<TAminoAcid> i = _mutatedaminoacid_.listIterator(); i.hasNext();)
         {
             if(i.next() == oldChild)
             {
                 if(newChild != null)
                 {
-                    i.set(newChild);
+                    i.set((TAminoAcid) newChild);
                     oldChild.parent(null);
                     return;
                 }
@@ -322,9 +332,10 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
 
     }
 
-    private class Mutatedaminoacid_Cast implements Cast
+    private class Mutatedaminoacid_Cast implements Cast<TAminoAcid>
     {
-        public Object cast(Object o)
+    	@Override
+        public TAminoAcid cast(Object o)
         {
             TAminoAcid node = (TAminoAcid) o;
 

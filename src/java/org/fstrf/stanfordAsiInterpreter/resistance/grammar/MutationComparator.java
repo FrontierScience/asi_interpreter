@@ -31,10 +31,13 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 
-@SuppressWarnings("all") public interface MutationComparator extends Comparator<Object>
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.TAminoAcid;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.TInteger;
+
+public interface MutationComparator<T> extends Comparator<T>
 {
-    public Object createMutation(Object codonNumber, Collection<?> aminoAcidCollection) throws IllegalArgumentException;
-    public Object invertMutation(Object mutation) throws IllegalArgumentException;
-    public boolean isMutationValid(Object mutation);
-    public boolean areMutationsValid(List<?> mutations);
+    public T createMutation(TInteger codonNumber, Collection<TAminoAcid> aminoAcidCollection) throws IllegalArgumentException;
+    public T invertMutation(T mutation) throws IllegalArgumentException;
+    public boolean isMutationValid(T mutation);
+    public boolean areMutationsValid(List<T> mutations);
 }

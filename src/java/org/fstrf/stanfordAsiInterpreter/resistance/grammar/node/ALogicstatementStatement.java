@@ -29,40 +29,42 @@ was not intended, designed, or validated to guide patient care.
 
 package org.fstrf.stanfordAsiInterpreter.resistance.grammar.node;
 
-import java.util.*;
-import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.Analysis;
 
-@SuppressWarnings("all") public final class ALogicstatementStatement extends PStatement
+public final class ALogicstatementStatement extends PStatement<ALogicstatementStatement>
 {
-    private PBooleancondition _booleancondition_;
+    private PBooleancondition<?> _booleancondition_;
 
     public ALogicstatementStatement()
     {
     }
 
     public ALogicstatementStatement(
-        PBooleancondition _booleancondition_)
+        PBooleancondition<?> _booleancondition_)
     {
         setBooleancondition(_booleancondition_);
 
     }
-    public Object clone()
+    
+	@Override
+    public ALogicstatementStatement clone()
     {
         return new ALogicstatementStatement(
-            (PBooleancondition) cloneNode(_booleancondition_));
+            (PBooleancondition<?>) cloneNode(_booleancondition_));
     }
 
+	@Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseALogicstatementStatement(this);
     }
 
-    public PBooleancondition getBooleancondition()
+    public PBooleancondition<?> getBooleancondition()
     {
         return _booleancondition_;
     }
 
-    public void setBooleancondition(PBooleancondition node)
+    public void setBooleancondition(PBooleancondition<?> node)
     {
         if(_booleancondition_ != null)
         {
@@ -82,13 +84,15 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
         _booleancondition_ = node;
     }
 
+	@Override
     public String toString()
     {
         return ""
             + toString(_booleancondition_);
     }
 
-    void removeChild(Node child)
+	@Override
+    void removeChild(Node<?> child)
     {
         if(_booleancondition_ == child)
         {
@@ -98,11 +102,12 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
 
     }
 
-    void replaceChild(Node oldChild, Node newChild)
+	@Override
+    <U extends Node<U>> void replaceChild(U oldChild, U newChild)
     {
         if(_booleancondition_ == oldChild)
         {
-            setBooleancondition((PBooleancondition) newChild);
+            setBooleancondition((PBooleancondition<?>) newChild);
             return;
         }
 

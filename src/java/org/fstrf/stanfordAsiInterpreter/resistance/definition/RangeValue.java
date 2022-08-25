@@ -28,7 +28,7 @@ was not intended, designed, or validated to guide patient care.
 package org.fstrf.stanfordAsiInterpreter.resistance.definition;
 
 
-@SuppressWarnings("all") public class RangeValue {
+public class RangeValue {
 
 	private double min;
 	private double max;

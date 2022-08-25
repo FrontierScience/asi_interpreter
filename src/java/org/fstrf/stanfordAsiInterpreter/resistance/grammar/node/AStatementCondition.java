@@ -29,13 +29,12 @@ was not intended, designed, or validated to guide patient care.
 
 package org.fstrf.stanfordAsiInterpreter.resistance.grammar.node;
 
-import java.util.*;
-import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.Analysis;
 
-@SuppressWarnings("all") public final class AStatementCondition extends PCondition
+public final class AStatementCondition extends PCondition<AStatementCondition>
 {
     private TLPar _lPar_;
-    private PBooleancondition _booleancondition_;
+    private PBooleancondition<?> _booleancondition_;
     private TRPar _rPar_;
 
     public AStatementCondition()
@@ -44,7 +43,7 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
 
     public AStatementCondition(
         TLPar _lPar_,
-        PBooleancondition _booleancondition_,
+        PBooleancondition<?> _booleancondition_,
         TRPar _rPar_)
     {
         setLPar(_lPar_);
@@ -54,14 +53,17 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
         setRPar(_rPar_);
 
     }
-    public Object clone()
+
+    @Override
+    public AStatementCondition clone()
     {
         return new AStatementCondition(
             (TLPar) cloneNode(_lPar_),
-            (PBooleancondition) cloneNode(_booleancondition_),
+            (PBooleancondition<?>) cloneNode(_booleancondition_),
             (TRPar) cloneNode(_rPar_));
     }
 
+    @Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseAStatementCondition(this);
@@ -92,12 +94,12 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
         _lPar_ = node;
     }
 
-    public PBooleancondition getBooleancondition()
+    public PBooleancondition<?> getBooleancondition()
     {
         return _booleancondition_;
     }
 
-    public void setBooleancondition(PBooleancondition node)
+    public void setBooleancondition(PBooleancondition<?> node)
     {
         if(_booleancondition_ != null)
         {
@@ -142,6 +144,7 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
         _rPar_ = node;
     }
 
+    @Override
     public String toString()
     {
         return ""
@@ -150,7 +153,8 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
             + toString(_rPar_);
     }
 
-    void removeChild(Node child)
+    @Override
+    void removeChild(Node<?> child)
     {
         if(_lPar_ == child)
         {
@@ -172,7 +176,8 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
 
     }
 
-    void replaceChild(Node oldChild, Node newChild)
+    @Override
+    <U extends Node<U>> void replaceChild(U oldChild, U newChild)
     {
         if(_lPar_ == oldChild)
         {
@@ -182,7 +187,7 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
 
         if(_booleancondition_ == oldChild)
         {
-            setBooleancondition((PBooleancondition) newChild);
+            setBooleancondition((PBooleancondition<?>) newChild);
             return;
         }
 

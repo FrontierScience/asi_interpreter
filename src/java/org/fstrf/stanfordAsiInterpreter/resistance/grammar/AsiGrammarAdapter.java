@@ -52,27 +52,28 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AResiduenotResid
 import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AScorelist;
 import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.ASelectlist;
 import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AStatementScoreitem;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.TAminoAcid;
 
-@SuppressWarnings("all") public class AsiGrammarAdapter extends DepthFirstAdapter implements AsiGrammarEvaluator
+public class AsiGrammarAdapter<T extends MutationComparator<String>> extends DepthFirstAdapter implements AsiGrammarEvaluator
 {
 	/**
 	 * An Integer value representing true
 	 */
-	public static final Double TRUE_VALUE = new Double(1);
+	public static final Double TRUE_VALUE = Double.valueOf(1);
 
     /**
      * An Integer value representing false
      */
-    public static final Double FALSE_VALUE = new Double(0);
+    public static final Double FALSE_VALUE = Double.valueOf(0);
 
-    private static final Double NOT_SCORED = new Double(Double.NaN);
+    private static final Double NOT_SCORED = Double.valueOf(Double.NaN);
 
-    private Stack stack;
-    private Set allScoredMutations;
-    private Set scoredItemMutations;
-    private Collection scoredItems;
-	private MutationComparator comparator;
-	private List mutationList;
+    private Stack<Double> stack;
+    private Set<String> allScoredMutations;
+    private Set<String> scoredItemMutations;
+    private Collection<ScoredItem> scoredItems;
+	private T comparator;
+	private List<String> mutationList;
 	private boolean isBooleanResult;
 
 	/**
@@ -82,12 +83,12 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AStatementScorei
 	 * @param mutationList the mutation list to compare against
 	 * @param comparator the comparator used to determine whether or not mutations are equal
 	 */
-	public AsiGrammarAdapter(List mutationList, MutationComparator comparator)
+	public AsiGrammarAdapter(List<String> mutationList, T comparator)
     {
-        this.stack = new Stack();
-        this.allScoredMutations = new HashSet();
-        this.scoredItemMutations = new HashSet();
-        this.scoredItems = new ArrayList();
+        this.stack = new Stack<>();
+        this.allScoredMutations = new HashSet<>();
+        this.scoredItemMutations = new HashSet<>();
+        this.scoredItems = new ArrayList<>();
         this.mutationList = mutationList;
         this.comparator = comparator;
         this.isBooleanResult = true;
@@ -107,21 +108,21 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AStatementScorei
 	 */
 	@Override
     public Object getResult() {
-		Double score = (Double) this.stack.peek();
+		Double score = this.stack.peek();
 		if(this.isBooleanResult) {
-			return new Boolean(score.equals(TRUE_VALUE));
+			return Boolean.valueOf(score.equals(TRUE_VALUE));
 		} else {
 			return score;
 		}
 	}
 
 	@Override
-    public Set getScoredMutations() {
+    public Set<String> getScoredMutations() {
 		return this.allScoredMutations;
 	}
 
 	@Override
-    public Collection getScoredItems() {
+    public Collection<ScoredItem> getScoredItems() {
 		return this.scoredItems;
 	}
 
@@ -140,11 +141,11 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AStatementScorei
     public void caseAResidueResidue(AResidueResidue node)
     {
         super.caseAResidueResidue(node);
-        Object residue = this.comparator.createMutation(node.getInteger(), node.getMutatedaminoacid());
+        String residue = this.comparator.createMutation(node.getInteger(), node.getMutatedaminoacid());
         int index = Collections.binarySearch(this.mutationList, residue, this.comparator);
         if(index >= 0) {
         	this.stack.push(TRUE_VALUE);
-        	Object mutation = this.mutationList.get(index);
+        	String mutation = this.mutationList.get(index);
         	this.allScoredMutations.add(mutation);
         	this.scoredItemMutations.add(mutation);
         } else {
@@ -172,14 +173,14 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AStatementScorei
 
         //Set mutations = new HashSet();
         boolean foundMutation = false;
-        Iterator iterator = node.getMutatedaminoacid().iterator();
+        Iterator<TAminoAcid> iterator = node.getMutatedaminoacid().iterator();
         while (iterator.hasNext()) {
 
-			Object mutatedAminoacid = iterator.next();
-			Collection mutatedAminoacidList = new HashSet();
+			TAminoAcid mutatedAminoacid = iterator.next();
+			Collection<TAminoAcid> mutatedAminoacidList = new HashSet<>();
 			mutatedAminoacidList.add(mutatedAminoacid);
 
-			Object residue = this.comparator.createMutation(node.getInteger(), mutatedAminoacidList);
+			String residue = this.comparator.createMutation(node.getInteger(), mutatedAminoacidList);
 
 	        int index = Collections.binarySearch(this.mutationList, residue, this.comparator);
 	        if(index < 0) {
@@ -218,12 +219,12 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AStatementScorei
     public void caseAResidueinvertResidue(AResidueinvertResidue node)
     {
         super.caseAResidueinvertResidue(node);
-        Object residue = this.comparator.createMutation(node.getInteger(), node.getMutatedaminoacid());
+        String residue = this.comparator.createMutation(node.getInteger(), node.getMutatedaminoacid());
         residue = this.comparator.invertMutation(residue);
         int index = Collections.binarySearch(this.mutationList, residue, this.comparator);
         if(index >= 0) {
         	this.stack.push(TRUE_VALUE);
-        	Object mutation = this.mutationList.get(index);
+        	String mutation = this.mutationList.get(index);
         	this.allScoredMutations.add(mutation);
         	this.scoredItemMutations.add(mutation);
         } else {
@@ -249,7 +250,7 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AStatementScorei
          * The size of the select list is going to be one (as there must always be
          * at least one residue) plus the size of the optional trailing residue list.
          */
-        this.stack.push(new Double(this.sumValuesFromStack(node.getListitems().size() + 1)));
+        this.stack.push(Double.valueOf(this.sumValuesFromStack(node.getListitems().size() + 1)));
 	}
 
     /**
@@ -373,15 +374,15 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AStatementScorei
 		this.isBooleanResult = false;
 		int size = node.getScoreitems().size() + 1;
 		double value = (node.parent() instanceof AMaxScoreitem) ? this.maxValueFromStack(size) : this.sumValuesFromStack(size);
-		this.stack.push(new Double(value));
+		this.stack.push(Double.valueOf(value));
 	}
-
+	
 	/**
      * If the score item's residue has evaluated to TRUE, push on the score associated
      * with this item, otherwise push on a score of 0.
-     *
-	 * Node: e.g. 41L => -45
-	 *
+     * 
+	 * Node: e.g. 41L =&gt; -45
+	 * 
 	 * @see org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.DepthFirstAdapter#caseAStatementScoreitem(org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AStatementScoreitem)
 	 */
     @Override
@@ -391,14 +392,14 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AStatementScorei
     	double value = ((Double) this.stack.pop()).doubleValue();
         if(value != FALSE_VALUE.doubleValue()) {
         	double number = Double.parseDouble(node.getNumber().toString());
-        	Double score = (node.getMin() == null) ? new Double(number) : new Double(number*-1);
+        	Double score = (node.getMin() == null) ? Double.valueOf(number) : Double.valueOf(number*-1);
             this.stack.push(score);
             this.scoredItems.add(new ScoredItem(node.toString(), this.scoredItemMutations, score));
         }
         else {
-        	this.stack.push(new Double(Double.NaN));
+        	this.stack.push(NOT_SCORED);
         }
-        this.scoredItemMutations = new HashSet();
+        this.scoredItemMutations = new HashSet<>();
     }
 
     /**
@@ -412,8 +413,8 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AStatementScorei
     {
         super.caseAExcludestatement(node);
 
-        int inverted = ((Double) this.stack.pop()).intValue() ^ TRUE_VALUE.intValue();
-        this.stack.push(new Double(inverted));
+        int inverted = this.stack.pop().intValue() ^ TRUE_VALUE.intValue();
+        this.stack.push(Double.valueOf(inverted));
     }
 
     /**
@@ -427,15 +428,15 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AStatementScorei
     {
         super.caseACondition2(node);
 
-        int first = ((Double) this.stack.pop()).intValue();
-        int second = ((Double) this.stack.pop()).intValue();
+        int first = this.stack.pop().intValue();
+        int second = this.stack.pop().intValue();
 
         if(node.getLogicsymbol() instanceof AAndLogicsymbol)
         {
-            this.stack.push(new Double(first & second));
+            this.stack.push(Double.valueOf(first & second));
         } else if(node.getLogicsymbol() instanceof AOrLogicsymbol)
         {
-            this.stack.push(new Double(first | second));
+            this.stack.push(Double.valueOf(first | second));
         } else
         {
             throw new RuntimeException("Logic symbol " + node.getLogicsymbol() + " was not expected.");
@@ -451,8 +452,8 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AStatementScorei
     private double sumValuesFromStack(int n) {
         double summation = 0;
         for(int i=0; i<n; i++) {
-            Double value = (new Double(this.stack.pop().toString()));
-            if (!(value.equals(NOT_SCORED))){
+            Double value = (Double.valueOf(this.stack.pop().toString()));
+            if (!Double.isNaN(value)) {
             	summation += value.doubleValue();
             }
         }
@@ -468,8 +469,8 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AStatementScorei
     private double maxValueFromStack(int n) {
     	double max = Double.NEGATIVE_INFINITY;
     	for(int i=0; i<n; i++) {
-    		Double value = (new Double(this.stack.pop().toString()));
-    		if( !(value.equals(NOT_SCORED)) && value.doubleValue() > max ) {
+    		Double value = (Double.valueOf(this.stack.pop().toString()));
+    		if( !Double.isNaN(value) && value.doubleValue() > max ) {
     			max = value.doubleValue();
     		}
     	}
@@ -481,10 +482,10 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AStatementScorei
 
     public static class ScoredItem {
     	private String value;
-    	private Set mutations;
+    	private Set<String> mutations;
     	private Double score;
 
-    	public ScoredItem(String value, Set mutations, Double score) {
+    	public ScoredItem(String value, Set<String> mutations, Double score) {
     		this.value = value;
     		this.mutations = mutations;
     		this.score = score;
@@ -494,7 +495,7 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AStatementScorei
     		return this.value;
     	}
 
-    	public Set getMutations() {
+    	public Set<String> getMutations() {
     		return this.mutations;
     	}
 

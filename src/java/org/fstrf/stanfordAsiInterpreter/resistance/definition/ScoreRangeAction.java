@@ -27,26 +27,23 @@ was not intended, designed, or validated to guide patient care.
 
 package org.fstrf.stanfordAsiInterpreter.resistance.definition;
 
-import java.util.Iterator;
 import java.util.List;
 
 import org.fstrf.stanfordAsiInterpreter.resistance.ASIEvaluationException;
 import org.fstrf.stanfordAsiInterpreter.resistance.ASIParsingException;
 
-@SuppressWarnings("all") public class ScoreRangeAction implements RuleAction {
+public class ScoreRangeAction implements RuleAction<ScoreRangeAction, LevelDefinition> {
 
-	private List rangeValues;
+	private List<RangeValue> rangeValues;
 
-	public ScoreRangeAction(List rangeValues) throws ASIParsingException {
+	public ScoreRangeAction(List<RangeValue> rangeValues) throws ASIParsingException {
 		this.checkForOverlappingRanges(rangeValues);
 		this.rangeValues = rangeValues;
 	}
 
-	private void checkForOverlappingRanges(List rangeValues) throws ASIParsingException {
-		for(Iterator iter1 = rangeValues.iterator(); iter1.hasNext();) {
-			RangeValue rangeValue1 = (RangeValue) iter1.next();
-			for(Iterator iter2 = rangeValues.iterator(); iter2.hasNext();) {
-				RangeValue rangeValue2 = (RangeValue) iter2.next();
+	private void checkForOverlappingRanges(List<RangeValue> rangeValues) throws ASIParsingException {
+		for(RangeValue rangeValue1 : rangeValues) {
+			for(RangeValue rangeValue2 : rangeValues) {
 				if(!rangeValue1.equals(rangeValue2) && rangeValue1.isOverlapping(rangeValue2)) {
 					throw new ASIParsingException("Score range values overlap: " + rangeValue1 + ", " + rangeValue2);
 				}
@@ -55,10 +52,9 @@ import org.fstrf.stanfordAsiInterpreter.resistance.ASIParsingException;
 	}
 
 	@Override
-    public Definition evaluate(Object result) throws ASIEvaluationException {
+    public LevelDefinition evaluate(Object result) throws ASIEvaluationException {
 		Double reslt = (Double) result;
-		for(Iterator iterator = rangeValues.iterator(); iterator.hasNext();) {
-			RangeValue rangeValue = (RangeValue) iterator.next();
+		for(RangeValue rangeValue : rangeValues) {
 			if(rangeValue.withinRange(reslt.doubleValue())) {
 				return rangeValue.getLevel();
 			}
@@ -67,7 +63,7 @@ import org.fstrf.stanfordAsiInterpreter.resistance.ASIParsingException;
 	}
 
 	@Override
-    public boolean supports(Class resultType) {
+    public boolean supports(Class<?> resultType) {
 		return resultType.equals(Double.class);
 	}
 }

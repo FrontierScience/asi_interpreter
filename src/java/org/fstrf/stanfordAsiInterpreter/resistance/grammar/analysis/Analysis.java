@@ -31,12 +31,12 @@ package org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis;
 
 import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.*;
 
-@SuppressWarnings("all") public interface Analysis extends Switch
+public interface Analysis extends Switch
 {
-    Object getIn(Node node);
-    void setIn(Node node, Object in);
-    Object getOut(Node node);
-    void setOut(Node node, Object out);
+    Object getIn(Node<?> node);
+    void setIn(Node<?> node, Object in);
+    Object getOut(Node<?> node);
+    void setOut(Node<?> node, Object out);
 
     void caseStart(Start node);
     void caseALogicstatementStatement(ALogicstatementStatement node);

@@ -29,10 +29,9 @@ was not intended, designed, or validated to guide patient care.
 
 package org.fstrf.stanfordAsiInterpreter.resistance.grammar.node;
 
-import java.util.*;
-import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.Analysis;
 
-@SuppressWarnings("all") public final class AAndLogicsymbol extends PLogicsymbol
+public final class AAndLogicsymbol extends PLogicsymbol<AAndLogicsymbol>
 {
     private TAnd _and_;
 
@@ -46,13 +45,15 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
         setAnd(_and_);
 
     }
-    public Object clone()
+    @Override
+	public AAndLogicsymbol clone()
     {
         return new AAndLogicsymbol(
             (TAnd) cloneNode(_and_));
     }
 
-    public void apply(Switch sw)
+    @Override
+	public void apply(Switch sw)
     {
         ((Analysis) sw).caseAAndLogicsymbol(this);
     }
@@ -82,13 +83,15 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
         _and_ = node;
     }
 
-    public String toString()
+    @Override
+	public String toString()
     {
         return ""
             + toString(_and_);
     }
 
-    void removeChild(Node child)
+    @Override
+    void removeChild(Node<?> child)
     {
         if(_and_ == child)
         {
@@ -98,7 +101,8 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
 
     }
 
-    void replaceChild(Node oldChild, Node newChild)
+    @Override
+    <U extends Node<U>> void replaceChild(U oldChild, U newChild)
     {
         if(_and_ == oldChild)
         {

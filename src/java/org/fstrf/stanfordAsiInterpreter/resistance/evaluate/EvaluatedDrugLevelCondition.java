@@ -25,15 +25,14 @@ was not intended, designed, or validated to guide patient care.
 
 package org.fstrf.stanfordAsiInterpreter.resistance.evaluate;
 
-import java.text.MessageFormat;
-
 import org.fstrf.stanfordAsiInterpreter.resistance.definition.DrugLevelCondition;
 import org.fstrf.stanfordAsiInterpreter.resistance.definition.LevelDefinition;
 
-@SuppressWarnings("all") public class EvaluatedDrugLevelCondition {
+import com.google.common.base.Strings;
 
-	private static final MessageFormat FORMAT =
-			new MessageFormat("{0}drug: {1},{0}level condition: {2},{0}result: {3},{0}scored level: {4}");
+public class EvaluatedDrugLevelCondition {
+
+	private static final String FORMAT = "\n\t\tdrug: %s,\n\t\tlevel condition: %s,\n\t\tresult: %s,\n\t\tscored level: %s";
 
 	private String drugName;
 	private DrugLevelCondition drugLevelCondition;
@@ -66,7 +65,6 @@ import org.fstrf.stanfordAsiInterpreter.resistance.definition.LevelDefinition;
 
 	@Override
 	public String toString() {
-		Object[] objs = { "\n\t\t", this.drugName,this.drugLevelCondition, this.evaluationResult,this.scoredLevel };
-		return FORMAT.format(objs);
+		return Strings.lenientFormat(FORMAT, drugName, drugLevelCondition, evaluationResult, scoredLevel);
 	}
 }

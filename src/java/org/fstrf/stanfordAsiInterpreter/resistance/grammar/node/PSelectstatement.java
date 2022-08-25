@@ -29,6 +29,6 @@ was not intended, designed, or validated to guide patient care.
 
 package org.fstrf.stanfordAsiInterpreter.resistance.grammar.node;
 
-@SuppressWarnings("all") public abstract class PSelectstatement extends Node
+public abstract class PSelectstatement<T extends PSelectstatement<T>> extends Node<T>
 {
 }

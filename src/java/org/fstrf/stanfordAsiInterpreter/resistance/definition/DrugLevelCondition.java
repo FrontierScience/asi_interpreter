@@ -31,7 +31,7 @@ import java.util.List;
 import org.fstrf.stanfordAsiInterpreter.resistance.ASIParsingException;
 import org.fstrf.stanfordAsiInterpreter.resistance.evaluate.EvaluatedDrugLevelCondition;
 
-@SuppressWarnings("all") public class DrugLevelCondition {
+public class DrugLevelCondition {
 
     private String drugName;
     private List<LevelConditionComparison> comparisons;

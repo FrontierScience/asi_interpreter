@@ -30,8 +30,8 @@ package org.fstrf.stanfordAsiInterpreter.resistance.definition;
 import org.fstrf.stanfordAsiInterpreter.resistance.ASIEvaluationException;
 
 
-@SuppressWarnings("all") public interface RuleAction {
+public interface RuleAction<T extends RuleAction<T, U>, U extends Definition> {
 
 	public boolean supports(Class<?> resultType);
-	public Definition evaluate(Object result) throws ASIEvaluationException;
+	public U evaluate(Object result) throws ASIEvaluationException;
 }

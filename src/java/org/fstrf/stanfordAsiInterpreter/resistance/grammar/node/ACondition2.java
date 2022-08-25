@@ -29,45 +29,47 @@ was not intended, designed, or validated to guide patient care.
 
 package org.fstrf.stanfordAsiInterpreter.resistance.grammar.node;
 
-import java.util.*;
 import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
 
-@SuppressWarnings("all") public final class ACondition2 extends PCondition2
+public final class ACondition2 extends PCondition2<ACondition2>
 {
-    private PLogicsymbol _logicsymbol_;
-    private PCondition _condition_;
+    private PLogicsymbol<?> _logicsymbol_;
+    private PCondition<?> _condition_;
 
     public ACondition2()
     {
     }
 
     public ACondition2(
-        PLogicsymbol _logicsymbol_,
-        PCondition _condition_)
+        PLogicsymbol<?> _logicsymbol_,
+        PCondition<?> _condition_)
     {
         setLogicsymbol(_logicsymbol_);
 
         setCondition(_condition_);
 
     }
-    public Object clone()
+    
+	@Override
+    public ACondition2 clone()
     {
         return new ACondition2(
-            (PLogicsymbol) cloneNode(_logicsymbol_),
-            (PCondition) cloneNode(_condition_));
+        	(PLogicsymbol<?>) cloneNode(_logicsymbol_),
+        	(PCondition<?>) cloneNode(_condition_));
     }
 
+	@Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseACondition2(this);
     }
 
-    public PLogicsymbol getLogicsymbol()
+    public PLogicsymbol<?> getLogicsymbol()
     {
         return _logicsymbol_;
     }
 
-    public void setLogicsymbol(PLogicsymbol node)
+    public void setLogicsymbol(PLogicsymbol<?> node)
     {
         if(_logicsymbol_ != null)
         {
@@ -87,12 +89,12 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
         _logicsymbol_ = node;
     }
 
-    public PCondition getCondition()
+    public PCondition<?> getCondition()
     {
         return _condition_;
     }
 
-    public void setCondition(PCondition node)
+    public void setCondition(PCondition<?> node)
     {
         if(_condition_ != null)
         {
@@ -112,14 +114,14 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
         _condition_ = node;
     }
 
-    public String toString()
+	public String toString()
     {
         return ""
             + toString(_logicsymbol_)
             + toString(_condition_);
     }
 
-    void removeChild(Node child)
+    void removeChild(Node<?> child)
     {
         if(_logicsymbol_ == child)
         {
@@ -135,17 +137,17 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
 
     }
 
-    void replaceChild(Node oldChild, Node newChild)
+    <U extends Node<U>> void replaceChild(U oldChild, U newChild)
     {
         if(_logicsymbol_ == oldChild)
         {
-            setLogicsymbol((PLogicsymbol) newChild);
+            setLogicsymbol((PLogicsymbol<?>) newChild);
             return;
         }
 
         if(_condition_ == oldChild)
         {
-            setCondition((PCondition) newChild);
+            setCondition((PCondition<?>) newChild);
             return;
         }
 
