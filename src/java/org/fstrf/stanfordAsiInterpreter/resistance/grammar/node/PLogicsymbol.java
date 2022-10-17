@@ -29,6 +29,6 @@ was not intended, designed, or validated to guide patient care.
 
 package org.fstrf.stanfordAsiInterpreter.resistance.grammar.node;
 
-public abstract class PLogicsymbol extends Node
+public abstract class PLogicsymbol<T extends PLogicsymbol<T>> extends Node<T>
 {
 }

@@ -29,10 +29,9 @@ was not intended, designed, or validated to guide patient care.
 
 package org.fstrf.stanfordAsiInterpreter.resistance.grammar.node;
 
-import java.util.*;
-import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.Analysis;
 
-public final class AOrLogicsymbol extends PLogicsymbol
+public final class AOrLogicsymbol extends PLogicsymbol<AOrLogicsymbol>
 {
     private TOr _or_;
 
@@ -46,12 +45,15 @@ public final class AOrLogicsymbol extends PLogicsymbol
         setOr(_or_);
 
     }
-    public Object clone()
+
+    @Override
+    public AOrLogicsymbol clone()
     {
         return new AOrLogicsymbol(
             (TOr) cloneNode(_or_));
     }
 
+    @Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseAOrLogicsymbol(this);
@@ -82,13 +84,15 @@ public final class AOrLogicsymbol extends PLogicsymbol
         _or_ = node;
     }
 
+    @Override
     public String toString()
     {
         return ""
             + toString(_or_);
     }
 
-    void removeChild(Node child)
+    @Override
+    void removeChild(Node<?> child)
     {
         if(_or_ == child)
         {
@@ -98,7 +102,8 @@ public final class AOrLogicsymbol extends PLogicsymbol
 
     }
 
-    void replaceChild(Node oldChild, Node newChild)
+    @Override
+    <U extends Node<U>> void replaceChild(U oldChild, U newChild)
     {
         if(_or_ == oldChild)
         {

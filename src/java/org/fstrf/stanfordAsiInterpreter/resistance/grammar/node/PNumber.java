@@ -29,6 +29,6 @@ was not intended, designed, or validated to guide patient care.
 
 package org.fstrf.stanfordAsiInterpreter.resistance.grammar.node;
 
-public abstract class PNumber extends Node
+public abstract class PNumber<T extends PNumber<T>> extends Node<T>
 {
 }

@@ -29,10 +29,9 @@ was not intended, designed, or validated to guide patient care.
 
 package org.fstrf.stanfordAsiInterpreter.resistance.grammar.node;
 
-import java.util.*;
-import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.Analysis;
 
-public final class AIntegerNumber extends PNumber
+public final class AIntegerNumber extends PNumber<AIntegerNumber>
 {
     private TInteger _integer_;
 
@@ -46,12 +45,14 @@ public final class AIntegerNumber extends PNumber
         setInteger(_integer_);
 
     }
-    public Object clone()
+    
+    @Override
+    public AIntegerNumber clone()
     {
-        return new AIntegerNumber(
-            (TInteger) cloneNode(_integer_));
+        return new AIntegerNumber((TInteger) cloneNode(_integer_));
     }
 
+    @Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseAIntegerNumber(this);
@@ -82,13 +83,15 @@ public final class AIntegerNumber extends PNumber
         _integer_ = node;
     }
 
+    @Override
     public String toString()
     {
         return ""
             + toString(_integer_);
     }
 
-    void removeChild(Node child)
+    @Override
+    void removeChild(Node<?> child)
     {
         if(_integer_ == child)
         {
@@ -98,7 +101,8 @@ public final class AIntegerNumber extends PNumber
 
     }
 
-    void replaceChild(Node oldChild, Node newChild)
+    @Override
+    <U extends Node<U>> void replaceChild(U oldChild, U newChild)
     {
         if(_integer_ == oldChild)
         {

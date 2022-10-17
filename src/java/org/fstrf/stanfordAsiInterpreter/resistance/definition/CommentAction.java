@@ -30,7 +30,7 @@ package org.fstrf.stanfordAsiInterpreter.resistance.definition;
 import org.fstrf.stanfordAsiInterpreter.resistance.ASIEvaluationException;
 
 
-public class CommentAction implements RuleAction {
+public class CommentAction implements RuleAction<CommentAction, CommentDefinition> {
 
 	private CommentDefinition comment;
 	
@@ -42,12 +42,14 @@ public class CommentAction implements RuleAction {
 		return this.comment;
 	}
 
-	public Definition evaluate(Object result) throws ASIEvaluationException {
+	@Override
+	public CommentDefinition evaluate(Object result) throws ASIEvaluationException {
 		Boolean reslt = (Boolean) result;
 		return reslt.booleanValue() ? this.comment : null;
 	}
 
-	public boolean supports(Class resultType) {
+	@Override
+	public boolean supports(Class<?> resultType) {
 		return resultType.equals(Boolean.class);
 	}
 }

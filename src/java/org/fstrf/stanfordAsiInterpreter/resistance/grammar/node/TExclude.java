@@ -29,9 +29,9 @@ was not intended, designed, or validated to guide patient care.
 
 package org.fstrf.stanfordAsiInterpreter.resistance.grammar.node;
 
-import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.Analysis;
 
-public final class TExclude extends Token
+public final class TExclude extends Token<TExclude>
 {
     public TExclude()
     {
@@ -45,16 +45,19 @@ public final class TExclude extends Token
         setPos(pos);
     }
 
-    public Object clone()
+    @Override
+    public TExclude clone()
     {
       return new TExclude(getLine(), getPos());
     }
 
+    @Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseTExclude(this);
     }
 
+    @Override
     public void setText(String text)
     {
         throw new RuntimeException("Cannot change TExclude text.");

@@ -35,7 +35,7 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.StringMutationCompara
 
 import junit.framework.TestCase;
 
-public class ResidueTest extends TestCase {
+@SuppressWarnings("all") public class ResidueTest extends TestCase {
 	
 	private StringMutationComparator comparator;
 	private List mutations;

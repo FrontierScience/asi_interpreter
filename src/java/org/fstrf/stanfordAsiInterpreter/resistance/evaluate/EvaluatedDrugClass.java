@@ -14,48 +14,49 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 ADDITIONAL DISCLAIMER:
-In addition to the standard warranty exclusions and limitations of 
-liability set forth in sections 7, 8 and 9 of the Apache 2.0 license 
-that governs the use and development of this software, Frontier Science 
-& Technology Research Foundation disclaims any liability for use of 
-this software for patient care or in clinical settings. This software 
-was developed solely for use in medical and public health research, and 
+In addition to the standard warranty exclusions and limitations of
+liability set forth in sections 7, 8 and 9 of the Apache 2.0 license
+that governs the use and development of this software, Frontier Science
+& Technology Research Foundation disclaims any liability for use of
+this software for patient care or in clinical settings. This software
+was developed solely for use in medical and public health research, and
 was not intended, designed, or validated to guide patient care.
-*/ 
+*/
 
 
 
 package org.fstrf.stanfordAsiInterpreter.resistance.evaluate;
 
-import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import org.fstrf.stanfordAsiInterpreter.resistance.definition.DrugClass;
 
+import com.google.common.base.Strings;
+
 public class EvaluatedDrugClass {
-	
-	private static final MessageFormat FORMAT = 
-		new MessageFormat("'{'Drug Class: {0}, Evaluated Drugs: {1}'}'");
-	
+
+	private static final String FORMAT = "{Drug Class: %s, Evaluated Drugs: %s}";
+
 	private DrugClass drugClass;
-	private List evaluatedDrugs;
-	
-	public EvaluatedDrugClass(DrugClass drugClass, Collection evaluatedDrugs) {
+	private List<EvaluatedDrug> evaluatedDrugs;
+
+	public EvaluatedDrugClass(DrugClass drugClass, Collection<EvaluatedDrug> evaluatedDrugs) {
 		this.drugClass = drugClass;
-		this.evaluatedDrugs = (List) evaluatedDrugs;
+		this.evaluatedDrugs = new ArrayList<>(evaluatedDrugs);
 	}
-	
+
 	public DrugClass getDrugClass() {
 		return this.drugClass;
 	}
-	
-	public Collection getEvaluatedDrugs() {
+
+	public Collection<EvaluatedDrug> getEvaluatedDrugs() {
 		return this.evaluatedDrugs;
 	}
-	
-	public String toString() {
-		Object[] objs = { this.drugClass, this.evaluatedDrugs };
-		return FORMAT.format(objs);
+
+	@Override
+    public String toString() {
+		return Strings.lenientFormat(FORMAT, drugClass, evaluatedDrugs);
 	}
 }

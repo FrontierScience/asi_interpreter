@@ -29,40 +29,41 @@ was not intended, designed, or validated to guide patient care.
 
 package org.fstrf.stanfordAsiInterpreter.resistance.grammar.node;
 
-import java.util.*;
-import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.Analysis;
 
-public final class AScoreStatement extends PStatement
+public final class AScoreStatement extends PStatement<AScoreStatement>
 {
-    private PScorecondition _scorecondition_;
+    private PScorecondition<?> _scorecondition_;
 
     public AScoreStatement()
     {
     }
 
     public AScoreStatement(
-        PScorecondition _scorecondition_)
+        PScorecondition<?> _scorecondition_)
     {
         setScorecondition(_scorecondition_);
 
     }
-    public Object clone()
+    @Override
+	public AScoreStatement clone()
     {
         return new AScoreStatement(
-            (PScorecondition) cloneNode(_scorecondition_));
+            (PScorecondition<?>) cloneNode(_scorecondition_));
     }
 
-    public void apply(Switch sw)
+    @Override
+	public void apply(Switch sw)
     {
         ((Analysis) sw).caseAScoreStatement(this);
     }
 
-    public PScorecondition getScorecondition()
+    public PScorecondition<?> getScorecondition()
     {
         return _scorecondition_;
     }
 
-    public void setScorecondition(PScorecondition node)
+    public void setScorecondition(PScorecondition<?> node)
     {
         if(_scorecondition_ != null)
         {
@@ -82,13 +83,15 @@ public final class AScoreStatement extends PStatement
         _scorecondition_ = node;
     }
 
-    public String toString()
+    @Override
+	public String toString()
     {
         return ""
             + toString(_scorecondition_);
     }
 
-    void removeChild(Node child)
+    @Override
+	void removeChild(Node<?> child)
     {
         if(_scorecondition_ == child)
         {
@@ -98,11 +101,12 @@ public final class AScoreStatement extends PStatement
 
     }
 
-    void replaceChild(Node oldChild, Node newChild)
+    @Override
+	<U extends Node<U>> void replaceChild(U oldChild, U newChild)
     {
         if(_scorecondition_ == oldChild)
         {
-            setScorecondition((PScorecondition) newChild);
+            setScorecondition((PScorecondition<?>) newChild);
             return;
         }
 

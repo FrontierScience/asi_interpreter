@@ -29,15 +29,18 @@ was not intended, designed, or validated to guide patient care.
 
 package org.fstrf.stanfordAsiInterpreter.resistance.grammar.node;
 
-import java.util.*;
-import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
 
-public final class AResiduenotResidue extends PResidue
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.Analysis;
+
+public final class AResiduenotResidue extends PResidue<AResiduenotResidue>
 {
     private TNot _not_;
     private TAminoAcid _originalaminoacid_;
     private TInteger _integer_;
-    private final LinkedList _mutatedaminoacid_ = new TypedLinkedList(new Mutatedaminoacid_Cast());
+    private final LinkedList<TAminoAcid> _mutatedaminoacid_ = new TypedLinkedList<>(new Mutatedaminoacid_Cast());
 
     public AResiduenotResidue()
     {
@@ -47,7 +50,7 @@ public final class AResiduenotResidue extends PResidue
         TNot _not_,
         TAminoAcid _originalaminoacid_,
         TInteger _integer_,
-        List _mutatedaminoacid_)
+        List<TAminoAcid> _mutatedaminoacid_)
     {
         setNot(_not_);
 
@@ -61,16 +64,20 @@ public final class AResiduenotResidue extends PResidue
         }
 
     }
-    public Object clone()
+    
+    @SuppressWarnings("unchecked")
+	@Override
+    public AResiduenotResidue clone()
     {
         return new AResiduenotResidue(
             (TNot) cloneNode(_not_),
             (TAminoAcid) cloneNode(_originalaminoacid_),
             (TInteger) cloneNode(_integer_),
-            cloneList(_mutatedaminoacid_));
+            (List<TAminoAcid>) cloneList(_mutatedaminoacid_));
     }
 
-    public void apply(Switch sw)
+    @Override
+	public void apply(Switch sw)
     {
         ((Analysis) sw).caseAResiduenotResidue(this);
     }
@@ -150,17 +157,18 @@ public final class AResiduenotResidue extends PResidue
         _integer_ = node;
     }
 
-    public LinkedList getMutatedaminoacid()
+    public LinkedList<TAminoAcid> getMutatedaminoacid()
     {
         return _mutatedaminoacid_;
     }
 
-    public void setMutatedaminoacid(List list)
+    public void setMutatedaminoacid(List<TAminoAcid> list)
     {
         _mutatedaminoacid_.clear();
         _mutatedaminoacid_.addAll(list);
     }
 
+    @Override
     public String toString()
     {
         return ""
@@ -170,7 +178,8 @@ public final class AResiduenotResidue extends PResidue
             + toString(_mutatedaminoacid_);
     }
 
-    void removeChild(Node child)
+    @Override
+    void removeChild(Node<?> child)
     {
         if(_not_ == child)
         {
@@ -197,7 +206,8 @@ public final class AResiduenotResidue extends PResidue
 
     }
 
-    void replaceChild(Node oldChild, Node newChild)
+    @Override
+    <U extends Node<U>> void replaceChild(U oldChild, U newChild)
     {
         if(_not_ == oldChild)
         {
@@ -217,13 +227,13 @@ public final class AResiduenotResidue extends PResidue
             return;
         }
 
-        for(ListIterator i = _mutatedaminoacid_.listIterator(); i.hasNext();)
+        for(ListIterator<TAminoAcid> i = _mutatedaminoacid_.listIterator(); i.hasNext();)
         {
             if(i.next() == oldChild)
             {
                 if(newChild != null)
                 {
-                    i.set(newChild);
+                    i.set((TAminoAcid) newChild);
                     oldChild.parent(null);
                     return;
                 }
@@ -236,9 +246,10 @@ public final class AResiduenotResidue extends PResidue
 
     }
 
-    private class Mutatedaminoacid_Cast implements Cast
+    private class Mutatedaminoacid_Cast implements Cast<TAminoAcid>
     {
-        public Object cast(Object o)
+        @Override
+		public TAminoAcid cast(Object o)
         {
             TAminoAcid node = (TAminoAcid) o;
 

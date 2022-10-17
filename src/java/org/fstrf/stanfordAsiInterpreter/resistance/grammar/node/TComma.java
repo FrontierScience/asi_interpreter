@@ -29,9 +29,9 @@ was not intended, designed, or validated to guide patient care.
 
 package org.fstrf.stanfordAsiInterpreter.resistance.grammar.node;
 
-import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.Analysis;
 
-public final class TComma extends Token
+public final class TComma extends Token<TComma>
 {
     public TComma()
     {
@@ -45,16 +45,19 @@ public final class TComma extends Token
         setPos(pos);
     }
 
-    public Object clone()
+    @Override
+    public TComma clone()
     {
       return new TComma(getLine(), getPos());
     }
 
+    @Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseTComma(this);
     }
 
+    @Override
     public void setText(String text)
     {
         throw new RuntimeException("Cannot change TComma text.");

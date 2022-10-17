@@ -27,7 +27,6 @@ was not intended, designed, or validated to guide patient care.
 
 package org.fstrf.stanfordAsiInterpreter.resistance.evaluate;
 
-import java.text.MessageFormat;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -35,19 +34,20 @@ import org.fstrf.stanfordAsiInterpreter.resistance.definition.Definition;
 import org.fstrf.stanfordAsiInterpreter.resistance.definition.RuleCondition;
 import org.fstrf.stanfordAsiInterpreter.resistance.grammar.AsiGrammarEvaluator;
 
+import com.google.common.base.Strings;
+
 public class EvaluatedCondition {
 
-	private static final MessageFormat FORMAT = 
-		new MessageFormat("{0}statement: {1},{0}definitions: {2}'}'");
+	private static final String FORMAT = "\n\t\tstatement: %s,\n\t\tdefinitions: %s}";
 	
 	private RuleCondition ruleCondition;
 	private AsiGrammarEvaluator evaluator;
-	private Set definitions;
+	private Set<Definition> definitions;
 	
 	public EvaluatedCondition(RuleCondition ruleCondition, AsiGrammarEvaluator evaluator) {
 		this.ruleCondition = ruleCondition;
 		this.evaluator = evaluator;
-		this.definitions = new HashSet();
+		this.definitions = new HashSet<>();
 	}
 	
 	public void addDefinition(Definition definition) {
@@ -64,12 +64,11 @@ public class EvaluatedCondition {
 		return this.evaluator;
 	}
 
-	public Set getDefinitions() {
+	public Set<Definition> getDefinitions() {
 		return this.definitions;
 	}
 	
 	public String toString() {
-		Object[] objs = { "\n\t\t", this.ruleCondition, this.definitions };
-		return FORMAT.format(objs);
+		return Strings.lenientFormat(FORMAT, ruleCondition, definitions);
 	}
 }

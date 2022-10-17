@@ -29,16 +29,15 @@ was not intended, designed, or validated to guide patient care.
 
 package org.fstrf.stanfordAsiInterpreter.resistance.grammar.node;
 
-import java.util.*;
-import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.Analysis;
 
-public final class AAtleastSelectstatement2 extends PSelectstatement2
+public final class AAtleastSelectstatement2 extends PSelectstatement2<AAtleastSelectstatement2>
 {
     private TAtleast _atleast_;
     private TInteger _integer_;
     private TFrom _from_;
     private TLPar _lPar_;
-    private PSelectlist _selectlist_;
+    private PSelectlist<?> _selectlist_;
     private TRPar _rPar_;
 
     public AAtleastSelectstatement2()
@@ -50,7 +49,7 @@ public final class AAtleastSelectstatement2 extends PSelectstatement2
         TInteger _integer_,
         TFrom _from_,
         TLPar _lPar_,
-        PSelectlist _selectlist_,
+        PSelectlist<?> _selectlist_,
         TRPar _rPar_)
     {
         setAtleast(_atleast_);
@@ -66,18 +65,21 @@ public final class AAtleastSelectstatement2 extends PSelectstatement2
         setRPar(_rPar_);
 
     }
-    public Object clone()
+    
+	@Override
+    public AAtleastSelectstatement2 clone()
     {
         return new AAtleastSelectstatement2(
             (TAtleast) cloneNode(_atleast_),
             (TInteger) cloneNode(_integer_),
             (TFrom) cloneNode(_from_),
             (TLPar) cloneNode(_lPar_),
-            (PSelectlist) cloneNode(_selectlist_),
+            (PSelectlist<?>) cloneNode(_selectlist_),
             (TRPar) cloneNode(_rPar_));
     }
 
-    public void apply(Switch sw)
+    @Override
+	public void apply(Switch sw)
     {
         ((Analysis) sw).caseAAtleastSelectstatement2(this);
     }
@@ -182,12 +184,12 @@ public final class AAtleastSelectstatement2 extends PSelectstatement2
         _lPar_ = node;
     }
 
-    public PSelectlist getSelectlist()
+    public PSelectlist<?> getSelectlist()
     {
         return _selectlist_;
     }
 
-    public void setSelectlist(PSelectlist node)
+    public void setSelectlist(PSelectlist<?> node)
     {
         if(_selectlist_ != null)
         {
@@ -232,6 +234,7 @@ public final class AAtleastSelectstatement2 extends PSelectstatement2
         _rPar_ = node;
     }
 
+	@Override
     public String toString()
     {
         return ""
@@ -243,7 +246,8 @@ public final class AAtleastSelectstatement2 extends PSelectstatement2
             + toString(_rPar_);
     }
 
-    void removeChild(Node child)
+    @Override
+    void removeChild(Node<?> child)
     {
         if(_atleast_ == child)
         {
@@ -283,7 +287,8 @@ public final class AAtleastSelectstatement2 extends PSelectstatement2
 
     }
 
-    void replaceChild(Node oldChild, Node newChild)
+    @Override
+    <U extends Node<U>>void replaceChild(U oldChild, U newChild)
     {
         if(_atleast_ == oldChild)
         {
@@ -311,7 +316,7 @@ public final class AAtleastSelectstatement2 extends PSelectstatement2
 
         if(_selectlist_ == oldChild)
         {
-            setSelectlist((PSelectlist) newChild);
+            setSelectlist((PSelectlist<?>) newChild);
             return;
         }
 

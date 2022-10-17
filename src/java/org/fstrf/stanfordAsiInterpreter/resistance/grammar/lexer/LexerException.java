@@ -31,7 +31,9 @@ package org.fstrf.stanfordAsiInterpreter.resistance.grammar.lexer;
 
 public class LexerException extends Exception
 {
-    public LexerException(String message)
+	private static final long serialVersionUID = -9044917329245959132L;
+
+	public LexerException(String message)
     {
         super(message);
     }

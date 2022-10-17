@@ -32,15 +32,18 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import org.apache.commons.collections.CollectionUtils;
+import org.fstrf.stanfordAsiInterpreter.resistance.compatregex.Matcher;
+import org.fstrf.stanfordAsiInterpreter.resistance.compatregex.Pattern;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.TAminoAcid;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.TInteger;
 
-public class StringMutationComparator implements MutationComparator {
+import com.google.common.collect.Sets;
+
+public class StringMutationComparator implements MutationComparator<String> {
 	
     private static final String AMINO_ACIDS = new String("ACDEFGHIKLMNPQRSTVWYZdi");
-    private static final SortedSet AMINO_ACIDS_SET = stringToSortedCharacterSet(AMINO_ACIDS);
+    private static final SortedSet<Character> AMINO_ACIDS_SET = stringToSortedCharacterSet(AMINO_ACIDS);
     private static final Pattern MUTATION_PATTERN = Pattern.compile("(?:[A-Z]?)(\\d+)([" + AMINO_ACIDS + "]+)");
     private static final int CODON_GROUP = 1;
     private static final int AMINO_ACIDS_GROUP = 2;
@@ -73,11 +76,11 @@ public class StringMutationComparator implements MutationComparator {
      * @param str the String to convert
      * @return a SortedSet of Characters
      */
-    private static SortedSet stringToSortedCharacterSet(String str)
+    private static SortedSet<Character> stringToSortedCharacterSet(String str)
     {
-        SortedSet set = new TreeSet();
+        SortedSet<Character> set = new TreeSet<>();
         for(int i = 0; i < str.length(); i++ ) { 
-            set.add(new Character(str.charAt(i)));
+            set.add(Character.valueOf(str.charAt(i)));
         }
         return set;
     }
@@ -88,10 +91,10 @@ public class StringMutationComparator implements MutationComparator {
      * @param col the Collection to concatenate
      * @return a concatenated String representation of the elements
      */
-    private static String collectionToString(Collection col)
+    private static String collectionToString(Collection<Character> col)
     {
         StringBuffer buffer = new StringBuffer();
-        for(Iterator iter = col.iterator(); iter.hasNext();)
+        for(Iterator<Character> iter = col.iterator(); iter.hasNext();)
         {
             buffer.append(iter.next().toString());
         }
@@ -103,7 +106,8 @@ public class StringMutationComparator implements MutationComparator {
      * 
 	 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
 	 */
-	public int compare(Object o1, Object o2)
+    @Override
+	public int compare(String o1, String o2)
     {
 		Matcher matcher1=MUTATION_PATTERN.matcher((String) o1);
 		Matcher matcher2=MUTATION_PATTERN.matcher((String) o2);
@@ -116,8 +120,8 @@ public class StringMutationComparator implements MutationComparator {
 			throw new RuntimeException("Invalid String formated mutations: " + o1 + ", " + o2);
 		}
         
-		Integer codon1 = new Integer(matcher1.group(CODON_GROUP));
-        Integer codon2 = new Integer(matcher2.group(CODON_GROUP));
+		Integer codon1 = Integer.valueOf(matcher1.group(CODON_GROUP));
+        Integer codon2 = Integer.valueOf(matcher2.group(CODON_GROUP));
 		if (!codon1.equals(codon2)){
 			// if the codons are different then the mutations are not equal
 			return codon1.compareTo(codon2);
@@ -127,10 +131,10 @@ public class StringMutationComparator implements MutationComparator {
          * amino acid collections need to be translated into a sorted character set so
          * duplicate amino acids can be removed, and so they can be easily evaluated
          */
-        SortedSet aminoAcidsSet1 = stringToSortedCharacterSet(matcher1.group(AMINO_ACIDS_GROUP));
-        SortedSet aminoAcidsSet2 = stringToSortedCharacterSet(matcher2.group(AMINO_ACIDS_GROUP));
+        SortedSet<Character> aminoAcidsSet1 = stringToSortedCharacterSet(matcher1.group(AMINO_ACIDS_GROUP));
+        SortedSet<Character> aminoAcidsSet2 = stringToSortedCharacterSet(matcher2.group(AMINO_ACIDS_GROUP));
 		
-		Collection intersection=CollectionUtils.intersection(aminoAcidsSet1, aminoAcidsSet2);
+		Collection<Character> intersection = Sets.intersection(aminoAcidsSet1, aminoAcidsSet2);
 		if(!this.strictComparision) {	
 			if (intersection.size()>0) {
 				// NOT strictComparison and the two have at least one acid in common, therefore they are equal
@@ -156,13 +160,14 @@ public class StringMutationComparator implements MutationComparator {
      * @return a String representation of the mutation
 	 * @see org.fstrf.stanfordAsiInterpreter.resistance.grammar.MutationComparator#createMutation(java.lang.Object, java.util.Collection)
 	 */
-	public Object createMutation(Object codonNumber, Collection aminoAcidCollection)
+	@Override
+	public String createMutation(TInteger codonNumber, Collection<TAminoAcid> aminoAcidCollection)
         throws IllegalArgumentException
     {
         StringBuffer mutation = new StringBuffer(codonNumber.toString().trim());
-        for(Iterator iter = aminoAcidCollection.iterator(); iter.hasNext();)
+        for(Object aminoAcid : aminoAcidCollection)
         {
-            mutation.append(iter.next().toString().trim());
+            mutation.append(aminoAcid.toString().trim());
         }
         
         if(!MUTATION_PATTERN.matcher(mutation.toString()).matches())
@@ -177,34 +182,37 @@ public class StringMutationComparator implements MutationComparator {
     /**
      * Return this String mutation with its amino acid list inverted.
      * 
-     * e.g. 41LF -> 41ACDEGHIKMNPQRSTVWYZdi
+     * e.g. 41LF -&gt; 41ACDEGHIKMNPQRSTVWYZdi
      * 
      * @param mutation the String mutation to invert
      * @return a String representation of an inverted mutation
      * 
      * @see org.fstrf.stanfordAsiInterpreter.resistance.grammar.MutationComparator#invertMutation(java.lang.Object)
      */
-    public Object invertMutation(Object mutation)
+	@Override
+    public String invertMutation(String mutation)
         throws IllegalArgumentException
     {
-        Matcher matcher = MUTATION_PATTERN.matcher(mutation.toString());
+        Matcher matcher = MUTATION_PATTERN.matcher(mutation);
         if(!matcher.find())
         {
             throw new IllegalArgumentException("Invalid invertMutation paramter: " + mutation);
         }
         
-        SortedSet foundAcids = stringToSortedCharacterSet(matcher.group(AMINO_ACIDS_GROUP));
-        Collection notFoundAcids = CollectionUtils.subtract(AMINO_ACIDS_SET, foundAcids);
+        SortedSet<Character> foundAcids = stringToSortedCharacterSet(matcher.group(AMINO_ACIDS_GROUP));
+        Collection<Character> notFoundAcids = Sets.difference(AMINO_ACIDS_SET, foundAcids);
         
         return matcher.group(CODON_GROUP) + collectionToString(notFoundAcids);
     }
     
-    public boolean isMutationValid(Object mutation) {
+	@Override
+    public boolean isMutationValid(String mutation) {
     	return MUTATION_PATTERN.matcher(mutation.toString()).matches();
     }
     
-    public boolean areMutationsValid(List mutations) {
-    	for(Iterator iterator = mutations.iterator(); iterator.hasNext();) {
+	@Override
+    public boolean areMutationsValid(List<String> mutations) {
+    	for(Iterator<String> iterator = mutations.iterator(); iterator.hasNext();) {
 			if(!isMutationValid(iterator.next())) {
 				return false;
 			}

@@ -29,12 +29,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.fstrf.stanfordAsiInterpreter.resistance.ASIEvaluationException;
+import org.fstrf.stanfordAsiInterpreter.resistance.evaluate.EvaluatedCondition;
 import org.fstrf.stanfordAsiInterpreter.resistance.evaluate.EvaluatedDrug;
 import org.fstrf.stanfordAsiInterpreter.resistance.evaluate.EvaluatedDrugClass;
 import org.fstrf.stanfordAsiInterpreter.resistance.evaluate.EvaluatedGene;
@@ -46,39 +46,63 @@ public class Gene {
     private String name;
 
     //drugClassList of DrugClass objects
-    private Set drugClasses;
-    private List geneRules;
+    private Set<DrugClass> drugClasses;
+    private List<Rule> geneRules;
     private List<ResultCommentRule> resultCommentRules;
+    private IndelRangeDefinition indelRange;
+    private int defaultLevel;
 
-    public Gene(String name, Set drugClasses, List geneRules, List<ResultCommentRule> resultCommentRules) {
+    public Gene(String name, Set<DrugClass> drugClasses, List<Rule> geneRules, List<ResultCommentRule> resultCommentRules, IndelRangeDefinition indelRange, int defaultLevel) {
         this.name = name;
         this.drugClasses = drugClasses;
         this.geneRules = geneRules;
         this.resultCommentRules = resultCommentRules;
+        this.indelRange = indelRange;
+        this.defaultLevel = defaultLevel;
     }
 
-    public Gene(String name, Set drugClasses, List geneRules) {
+    public Gene(String name, Set<DrugClass> drugClasses, List<Rule> geneRules, List<ResultCommentRule> resultCommentRules, IndelRangeDefinition indelRange) {
+        this(name, drugClasses, geneRules, resultCommentRules, indelRange, 0);
+    }
+
+    public Gene(String name, Set<DrugClass> drugClasses, List<Rule> geneRules, List<ResultCommentRule> resultCommentRules) {
+        this(name, drugClasses, geneRules, resultCommentRules, null);
+    }
+
+    public Gene(String name, Set<DrugClass> drugClasses, List<Rule> geneRules) {
         this(name, drugClasses, geneRules, new ArrayList<ResultCommentRule>());
     }
 
-    public Gene(String name, Set drugClasses) {
-        this(name, drugClasses, new ArrayList());
+    public Gene(String name, Set<DrugClass> drugClasses, IndelRangeDefinition indelRange) {
+        this(name, drugClasses, new ArrayList<>(), new ArrayList<ResultCommentRule>(), indelRange);
     }
 
-    public Gene(String name, List geneRules) {
-        this(name, new HashSet(), geneRules);
+    public Gene(String name, Set<DrugClass> drugClasses) {
+        this(name, drugClasses, new ArrayList<>());
+    }
+
+    public Gene(String name, List<Rule> geneRules) {
+        this(name, new HashSet<>(), geneRules);
     }
 
     public String getName() {
         return this.name;
     }
 
-    public Set getDrugClasses() {
+    public Set<DrugClass> getDrugClasses() {
         return this.drugClasses;
     }
 
-    public List getRules() {
+    public List<Rule> getRules() {
         return this.geneRules;
+    }
+
+    public IndelRangeDefinition getIndelRangeDefinition() {
+        return this.indelRange;
+    }
+
+    public int getDefaultLevel() {
+        return this.defaultLevel;
     }
 
     @Override
@@ -94,17 +118,16 @@ public class Gene {
      * @return
      * @throws ASIEvaluationException
      */
-    public EvaluatedGene evaluate(List mutations, MutationComparator comparator) throws ASIEvaluationException {
-        Collection evaluatedGeneRules = new ArrayList();
-        for (Iterator iter = this.geneRules.iterator(); iter.hasNext();) {
-            Rule geneRule = (Rule) iter.next();
-            evaluatedGeneRules.add(geneRule.evaluate(mutations, comparator));
+    public <T extends MutationComparator<String>> EvaluatedGene evaluate(List<String> mutations, T comparator) throws ASIEvaluationException {
+        List<String> updatedMutations = this.indelRange != null ? replaceMutationsInRange(mutations, this.indelRange) : mutations;
+        Collection<EvaluatedCondition> evaluatedGeneRules = new ArrayList<>();
+        for (Rule geneRule : geneRules) {
+            evaluatedGeneRules.add(geneRule.evaluate(updatedMutations, comparator));
         }
 
-        Collection evaluatedDrugClasses = new ArrayList();
-        for (Iterator iter = this.drugClasses.iterator(); iter.hasNext();) {
-            DrugClass drugClass = (DrugClass) iter.next();
-            evaluatedDrugClasses.add(drugClass.evaluate(mutations, comparator));
+        Collection<EvaluatedDrugClass> evaluatedDrugClasses = new ArrayList<>();
+        for (DrugClass drugClass : drugClasses) {
+            evaluatedDrugClasses.add(drugClass.evaluate(updatedMutations, comparator));
         }
 
         // create a map of drug names to result level definitions for the result
@@ -114,7 +137,9 @@ public class Gene {
             EvaluatedDrugClass evaluatedDrugClass = (EvaluatedDrugClass) evaluatedDrugClassObj;
             for (Object evaluatedDrugObj : evaluatedDrugClass.getEvaluatedDrugs()) {
                 EvaluatedDrug evaluatedDrug = (EvaluatedDrug) evaluatedDrugObj;
-                drugLevelResults.put(evaluatedDrug.getDrug().getDrugName(), evaluatedDrug.getHighestLevelDefinition());
+                LevelDefinition finalLevel = evaluatedDrug.getHighestLevelDefinition() != null ? evaluatedDrug.getHighestLevelDefinition()
+                        : new LevelDefinition(evaluatedDrug.getDrug().getDefaultLevel(), "", "");
+                drugLevelResults.put(evaluatedDrug.getDrug().getDrugName(), finalLevel);
             }
         }
 
@@ -124,5 +149,29 @@ public class Gene {
         }
 
         return new EvaluatedGene(this, evaluatedGeneRules, evaluatedDrugClasses, evaluatedResultComments);
+    }
+
+    /**
+     * For all mutations in the given list that appear in the given indel range input, replaces it with the indel range output
+     *
+     * @param mutationList the mutation list to update
+     * @param indelRange the indel range that defines the mutation updates
+     * @return the updated mutation list
+     */
+    private static List<String> replaceMutationsInRange(List<String> mutationList, IndelRangeDefinition indelRange)
+    {
+        List<String> res = new ArrayList<>();
+
+        for(Object o : mutationList) {
+            String mut = o.toString();
+            if(indelRange.getInput().contains(mut)){
+                res.add(indelRange.getOutput());
+            }
+            else {
+                res.add(mut);
+            }
+        }
+
+        return res;
     }
 }

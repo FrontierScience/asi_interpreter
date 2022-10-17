@@ -29,7 +29,7 @@ package org.fstrf.stanfordAsiInterpreter.resistance.definition;
 
 import java.util.Comparator;
 
-public class LevelDefinitionComparator implements Comparator {
+public class LevelDefinitionComparator implements Comparator<LevelDefinition> {
 	
 	/*
 	 * returns:
@@ -37,11 +37,8 @@ public class LevelDefinitionComparator implements Comparator {
 	 * 			 pozitiv number if the level1 greater than level2
 	 * 			 negativ number if the level1 less than level2
 	*/
-	public int compare(Object o1, Object o2){
-		
-		LevelDefinition level1 = (LevelDefinition) o1;
-		LevelDefinition level2 = (LevelDefinition) o2;
-
+	@Override
+	public int compare(LevelDefinition level1, LevelDefinition level2){
 		return (level1.getOrder().compareTo(level2.getOrder()));
 	}
 

@@ -14,14 +14,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 ADDITIONAL DISCLAIMER:
-In addition to the standard warranty exclusions and limitations of 
-liability set forth in sections 7, 8 and 9 of the Apache 2.0 license 
-that governs the use and development of this software, Frontier Science 
-& Technology Research Foundation disclaims any liability for use of 
-this software for patient care or in clinical settings. This software 
-was developed solely for use in medical and public health research, and 
+In addition to the standard warranty exclusions and limitations of
+liability set forth in sections 7, 8 and 9 of the Apache 2.0 license
+that governs the use and development of this software, Frontier Science
+& Technology Research Foundation disclaims any liability for use of
+this software for patient care or in clinical settings. This software
+was developed solely for use in medical and public health research, and
 was not intended, designed, or validated to guide patient care.
-*/ 
+*/
 
 
 
@@ -30,8 +30,10 @@ package org.fstrf.stanfordAsiInterpreter.resistance.grammar;
 import java.util.Collection;
 import java.util.Set;
 
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.AsiGrammarAdapter.ScoredItem;
+
 public interface AsiGrammarEvaluator {
     public Object getResult();
-    public Set getScoredMutations();
-    public Collection getScoredItems();
+    public Set<String> getScoredMutations();
+    public Collection<ScoredItem> getScoredItems();
 }

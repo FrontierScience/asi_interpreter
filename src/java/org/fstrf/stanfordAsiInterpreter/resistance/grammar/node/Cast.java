@@ -29,7 +29,7 @@ was not intended, designed, or validated to guide patient care.
 
 package org.fstrf.stanfordAsiInterpreter.resistance.grammar.node;
 
-public interface Cast
+public interface Cast<T>
 {
-    Object cast(Object o);
+    T cast(Object o);
 }

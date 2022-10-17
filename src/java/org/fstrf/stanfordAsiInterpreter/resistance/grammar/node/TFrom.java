@@ -29,9 +29,9 @@ was not intended, designed, or validated to guide patient care.
 
 package org.fstrf.stanfordAsiInterpreter.resistance.grammar.node;
 
-import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.Analysis;
 
-public final class TFrom extends Token
+public final class TFrom extends Token<TFrom>
 {
     public TFrom()
     {
@@ -45,16 +45,19 @@ public final class TFrom extends Token
         setPos(pos);
     }
 
-    public Object clone()
+    @Override
+    public TFrom clone()
     {
       return new TFrom(getLine(), getPos());
     }
 
+    @Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseTFrom(this);
     }
 
+    @Override
     public void setText(String text)
     {
         throw new RuntimeException("Cannot change TFrom text.");

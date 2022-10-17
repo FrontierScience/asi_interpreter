@@ -29,8 +29,40 @@ was not intended, designed, or validated to guide patient care.
 
 package org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis;
 
-import java.util.*;
-import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.*;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AAndLogicsymbol;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AAtleastSelectstatement2;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AAtleastnotmorethanSelectstatement2;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.ABooleancondition;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.ACondition2;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AExactlySelectstatement2;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AExcludeCondition;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AExcludestatement;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AFloatNumber;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AIntegerNumber;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AListitems;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.ALogicstatementStatement;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AMaxScoreitem;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.ANotmorethanSelectstatement2;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AOrLogicsymbol;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AResidueCondition;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AResidueResidue;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AResidueinvertResidue;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AResiduenotResidue;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AScoreStatement;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AScorecondition;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AScoreitems;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AScorelist;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.ASelectCondition;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.ASelectlist;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.ASelectstatement;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AStatementCondition;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.AStatementScoreitem;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.Node;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.PCondition2;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.PListitems;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.PScoreitems;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.Start;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.TAminoAcid;
 
 public class DepthFirstAdapter extends AnalysisAdapter
 {
@@ -44,14 +76,15 @@ public class DepthFirstAdapter extends AnalysisAdapter
         defaultOut(node);
     }
 
-    public void defaultIn(Node node)
+    public void defaultIn(Node<?> node)
     {
     }
 
-    public void defaultOut(Node node)
+    public void defaultOut(Node<?> node)
     {
     }
 
+    @Override
     public void caseStart(Start node)
     {
         inStart(node);
@@ -70,6 +103,7 @@ public class DepthFirstAdapter extends AnalysisAdapter
         defaultOut(node);
     }
 
+    @Override
     public void caseALogicstatementStatement(ALogicstatementStatement node)
     {
         inALogicstatementStatement(node);
@@ -90,6 +124,7 @@ public class DepthFirstAdapter extends AnalysisAdapter
         defaultOut(node);
     }
 
+    @Override
     public void caseAScoreStatement(AScoreStatement node)
     {
         inAScoreStatement(node);
@@ -110,6 +145,7 @@ public class DepthFirstAdapter extends AnalysisAdapter
         defaultOut(node);
     }
 
+    @Override
     public void caseABooleancondition(ABooleancondition node)
     {
         inABooleancondition(node);
@@ -121,7 +157,7 @@ public class DepthFirstAdapter extends AnalysisAdapter
             Object temp[] = node.getCondition2().toArray();
             for(int i = 0; i < temp.length; i++)
             {
-                ((PCondition2) temp[i]).apply(this);
+                ((PCondition2<?>) temp[i]).apply(this);
             }
         }
         outABooleancondition(node);
@@ -137,6 +173,7 @@ public class DepthFirstAdapter extends AnalysisAdapter
         defaultOut(node);
     }
 
+    @Override
     public void caseAStatementCondition(AStatementCondition node)
     {
         inAStatementCondition(node);
@@ -165,6 +202,7 @@ public class DepthFirstAdapter extends AnalysisAdapter
         defaultOut(node);
     }
 
+    @Override
     public void caseAResidueCondition(AResidueCondition node)
     {
         inAResidueCondition(node);
@@ -185,6 +223,7 @@ public class DepthFirstAdapter extends AnalysisAdapter
         defaultOut(node);
     }
 
+    @Override
     public void caseAExcludeCondition(AExcludeCondition node)
     {
         inAExcludeCondition(node);
@@ -205,6 +244,7 @@ public class DepthFirstAdapter extends AnalysisAdapter
         defaultOut(node);
     }
 
+    @Override
     public void caseASelectCondition(ASelectCondition node)
     {
         inASelectCondition(node);
@@ -225,6 +265,7 @@ public class DepthFirstAdapter extends AnalysisAdapter
         defaultOut(node);
     }
 
+    @Override
     public void caseACondition2(ACondition2 node)
     {
         inACondition2(node);
@@ -249,6 +290,7 @@ public class DepthFirstAdapter extends AnalysisAdapter
         defaultOut(node);
     }
 
+    @Override
     public void caseAAndLogicsymbol(AAndLogicsymbol node)
     {
         inAAndLogicsymbol(node);
@@ -269,6 +311,7 @@ public class DepthFirstAdapter extends AnalysisAdapter
         defaultOut(node);
     }
 
+    @Override
     public void caseAOrLogicsymbol(AOrLogicsymbol node)
     {
         inAOrLogicsymbol(node);
@@ -289,6 +332,7 @@ public class DepthFirstAdapter extends AnalysisAdapter
         defaultOut(node);
     }
 
+    @Override
     public void caseAResidueResidue(AResidueResidue node)
     {
         inAResidueResidue(node);
@@ -320,6 +364,7 @@ public class DepthFirstAdapter extends AnalysisAdapter
         defaultOut(node);
     }
 
+    @Override
     public void caseAResiduenotResidue(AResiduenotResidue node)
     {
         inAResiduenotResidue(node);
@@ -355,6 +400,7 @@ public class DepthFirstAdapter extends AnalysisAdapter
         defaultOut(node);
     }
 
+    @Override
     public void caseAResidueinvertResidue(AResidueinvertResidue node)
     {
         inAResidueinvertResidue(node);
@@ -398,6 +444,7 @@ public class DepthFirstAdapter extends AnalysisAdapter
         defaultOut(node);
     }
 
+    @Override
     public void caseAExcludestatement(AExcludestatement node)
     {
         inAExcludestatement(node);
@@ -422,6 +469,7 @@ public class DepthFirstAdapter extends AnalysisAdapter
         defaultOut(node);
     }
 
+    @Override
     public void caseASelectstatement(ASelectstatement node)
     {
         inASelectstatement(node);
@@ -446,6 +494,7 @@ public class DepthFirstAdapter extends AnalysisAdapter
         defaultOut(node);
     }
 
+    @Override
     public void caseAExactlySelectstatement2(AExactlySelectstatement2 node)
     {
         inAExactlySelectstatement2(node);
@@ -486,6 +535,7 @@ public class DepthFirstAdapter extends AnalysisAdapter
         defaultOut(node);
     }
 
+    @Override
     public void caseAAtleastSelectstatement2(AAtleastSelectstatement2 node)
     {
         inAAtleastSelectstatement2(node);
@@ -526,6 +576,7 @@ public class DepthFirstAdapter extends AnalysisAdapter
         defaultOut(node);
     }
 
+    @Override
     public void caseANotmorethanSelectstatement2(ANotmorethanSelectstatement2 node)
     {
         inANotmorethanSelectstatement2(node);
@@ -566,6 +617,7 @@ public class DepthFirstAdapter extends AnalysisAdapter
         defaultOut(node);
     }
 
+    @Override
     public void caseAAtleastnotmorethanSelectstatement2(AAtleastnotmorethanSelectstatement2 node)
     {
         inAAtleastnotmorethanSelectstatement2(node);
@@ -618,6 +670,7 @@ public class DepthFirstAdapter extends AnalysisAdapter
         defaultOut(node);
     }
 
+    @Override
     public void caseASelectlist(ASelectlist node)
     {
         inASelectlist(node);
@@ -629,7 +682,7 @@ public class DepthFirstAdapter extends AnalysisAdapter
             Object temp[] = node.getListitems().toArray();
             for(int i = 0; i < temp.length; i++)
             {
-                ((PListitems) temp[i]).apply(this);
+                ((PListitems<?>) temp[i]).apply(this);
             }
         }
         outASelectlist(node);
@@ -645,6 +698,7 @@ public class DepthFirstAdapter extends AnalysisAdapter
         defaultOut(node);
     }
 
+    @Override
     public void caseAListitems(AListitems node)
     {
         inAListitems(node);
@@ -669,6 +723,7 @@ public class DepthFirstAdapter extends AnalysisAdapter
         defaultOut(node);
     }
 
+    @Override
     public void caseAScorecondition(AScorecondition node)
     {
         inAScorecondition(node);
@@ -705,7 +760,8 @@ public class DepthFirstAdapter extends AnalysisAdapter
         defaultOut(node);
     }
 
-    public void caseAScorelist(AScorelist node)
+    @Override
+	public void caseAScorelist(AScorelist node)
     {
         inAScorelist(node);
         if(node.getScoreitem() != null)
@@ -716,7 +772,7 @@ public class DepthFirstAdapter extends AnalysisAdapter
             Object temp[] = node.getScoreitems().toArray();
             for(int i = 0; i < temp.length; i++)
             {
-                ((PScoreitems) temp[i]).apply(this);
+                ((PScoreitems<?>) temp[i]).apply(this);
             }
         }
         outAScorelist(node);
@@ -732,6 +788,7 @@ public class DepthFirstAdapter extends AnalysisAdapter
         defaultOut(node);
     }
 
+    @Override
     public void caseAStatementScoreitem(AStatementScoreitem node)
     {
         inAStatementScoreitem(node);
@@ -764,6 +821,7 @@ public class DepthFirstAdapter extends AnalysisAdapter
         defaultOut(node);
     }
 
+    @Override
     public void caseAMaxScoreitem(AMaxScoreitem node)
     {
         inAMaxScoreitem(node);
@@ -796,6 +854,7 @@ public class DepthFirstAdapter extends AnalysisAdapter
         defaultOut(node);
     }
 
+    @Override
     public void caseAScoreitems(AScoreitems node)
     {
         inAScoreitems(node);
@@ -820,6 +879,7 @@ public class DepthFirstAdapter extends AnalysisAdapter
         defaultOut(node);
     }
 
+    @Override
     public void caseAIntegerNumber(AIntegerNumber node)
     {
         inAIntegerNumber(node);
@@ -840,6 +900,7 @@ public class DepthFirstAdapter extends AnalysisAdapter
         defaultOut(node);
     }
 
+    @Override
     public void caseAFloatNumber(AFloatNumber node)
     {
         inAFloatNumber(node);

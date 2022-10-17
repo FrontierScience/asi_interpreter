@@ -14,14 +14,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 ADDITIONAL DISCLAIMER:
-In addition to the standard warranty exclusions and limitations of 
-liability set forth in sections 7, 8 and 9 of the Apache 2.0 license 
-that governs the use and development of this software, Frontier Science 
-& Technology Research Foundation disclaims any liability for use of 
-this software for patient care or in clinical settings. This software 
-was developed solely for use in medical and public health research, and 
+In addition to the standard warranty exclusions and limitations of
+liability set forth in sections 7, 8 and 9 of the Apache 2.0 license
+that governs the use and development of this software, Frontier Science
+& Technology Research Foundation disclaims any liability for use of
+this software for patient care or in clinical settings. This software
+was developed solely for use in medical and public health research, and
 was not intended, designed, or validated to guide patient care.
-*/ 
+*/
 
 
 
@@ -34,9 +34,9 @@ import java.util.ArrayList;
 final class State
 {
     int state;
-    ArrayList nodes;
+    ArrayList<?> nodes;
 
-    State(int state, ArrayList nodes)
+    State(int state, ArrayList<?> nodes)
     {
         this.state = state;
         this.nodes = nodes;

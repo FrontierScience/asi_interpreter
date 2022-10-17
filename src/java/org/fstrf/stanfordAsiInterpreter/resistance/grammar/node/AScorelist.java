@@ -29,21 +29,24 @@ was not intended, designed, or validated to guide patient care.
 
 package org.fstrf.stanfordAsiInterpreter.resistance.grammar.node;
 
-import java.util.*;
-import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
 
-public final class AScorelist extends PScorelist
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.Analysis;
+
+public final class AScorelist extends PScorelist<AScorelist>
 {
-    private PScoreitem _scoreitem_;
-    private final LinkedList _scoreitems_ = new TypedLinkedList(new Scoreitems_Cast());
+    private PScoreitem<?> _scoreitem_;
+    private final LinkedList<PScoreitems<?>> _scoreitems_ = new TypedLinkedList<>(new Scoreitems_Cast());
 
     public AScorelist()
     {
     }
 
     public AScorelist(
-        PScoreitem _scoreitem_,
-        List _scoreitems_)
+        PScoreitem<?> _scoreitem_,
+        List<PScoreitems<?>> _scoreitems_)
     {
         setScoreitem(_scoreitem_);
 
@@ -53,24 +56,27 @@ public final class AScorelist extends PScorelist
         }
 
     }
-    public Object clone()
+    @SuppressWarnings("unchecked")
+    @Override
+	public AScorelist clone()
     {
         return new AScorelist(
-            (PScoreitem) cloneNode(_scoreitem_),
-            cloneList(_scoreitems_));
+            (PScoreitem<?>) cloneNode(_scoreitem_),
+            (List<PScoreitems<?>>) cloneList(_scoreitems_));
     }
 
+    @Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseAScorelist(this);
     }
 
-    public PScoreitem getScoreitem()
+    public PScoreitem<?> getScoreitem()
     {
         return _scoreitem_;
     }
 
-    public void setScoreitem(PScoreitem node)
+    public void setScoreitem(PScoreitem<?> node)
     {
         if(_scoreitem_ != null)
         {
@@ -90,17 +96,18 @@ public final class AScorelist extends PScorelist
         _scoreitem_ = node;
     }
 
-    public LinkedList getScoreitems()
+    public LinkedList<PScoreitems<?>> getScoreitems()
     {
         return _scoreitems_;
     }
 
-    public void setScoreitems(List list)
+    public void setScoreitems(List<PScoreitems<?>> list)
     {
         _scoreitems_.clear();
         _scoreitems_.addAll(list);
     }
 
+    @Override
     public String toString()
     {
         return ""
@@ -108,7 +115,8 @@ public final class AScorelist extends PScorelist
             + toString(_scoreitems_);
     }
 
-    void removeChild(Node child)
+    @Override
+    void removeChild(Node<?> child)
     {
         if(_scoreitem_ == child)
         {
@@ -123,21 +131,22 @@ public final class AScorelist extends PScorelist
 
     }
 
-    void replaceChild(Node oldChild, Node newChild)
+    @Override
+    <U extends Node<U>> void replaceChild(U oldChild, U newChild)
     {
         if(_scoreitem_ == oldChild)
         {
-            setScoreitem((PScoreitem) newChild);
+            setScoreitem((PScoreitem<?>) newChild);
             return;
         }
 
-        for(ListIterator i = _scoreitems_.listIterator(); i.hasNext();)
+        for(ListIterator<PScoreitems<?>> i = _scoreitems_.listIterator(); i.hasNext();)
         {
             if(i.next() == oldChild)
             {
                 if(newChild != null)
                 {
-                    i.set(newChild);
+                    i.set((PScoreitems<?>) newChild);
                     oldChild.parent(null);
                     return;
                 }
@@ -150,11 +159,12 @@ public final class AScorelist extends PScorelist
 
     }
 
-    private class Scoreitems_Cast implements Cast
+    private class Scoreitems_Cast implements Cast<PScoreitems<?>>
     {
-        public Object cast(Object o)
+        @Override
+		public PScoreitems<?> cast(Object o)
         {
-            PScoreitems node = (PScoreitems) o;
+            PScoreitems<?> node = (PScoreitems<?>) o;
 
             if((node.parent() != null) &&
                 (node.parent() != AScorelist.this))

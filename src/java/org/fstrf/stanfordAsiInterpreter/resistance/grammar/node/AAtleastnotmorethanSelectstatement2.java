@@ -29,19 +29,18 @@ was not intended, designed, or validated to guide patient care.
 
 package org.fstrf.stanfordAsiInterpreter.resistance.grammar.node;
 
-import java.util.*;
-import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.Analysis;
 
-public final class AAtleastnotmorethanSelectstatement2 extends PSelectstatement2
+public final class AAtleastnotmorethanSelectstatement2 extends PSelectstatement2<AAtleastnotmorethanSelectstatement2>
 {
     private TAtleast _atleast_;
     private TInteger _atleastnumber_;
-    private PLogicsymbol _logicsymbol_;
+    private PLogicsymbol<?> _logicsymbol_;
     private TNotmorethan _notmorethan_;
     private TInteger _notmorethannumber_;
     private TFrom _from_;
     private TLPar _lPar_;
-    private PSelectlist _selectlist_;
+    private PSelectlist<?> _selectlist_;
     private TRPar _rPar_;
 
     public AAtleastnotmorethanSelectstatement2()
@@ -51,12 +50,12 @@ public final class AAtleastnotmorethanSelectstatement2 extends PSelectstatement2
     public AAtleastnotmorethanSelectstatement2(
         TAtleast _atleast_,
         TInteger _atleastnumber_,
-        PLogicsymbol _logicsymbol_,
+        PLogicsymbol<?> _logicsymbol_,
         TNotmorethan _notmorethan_,
         TInteger _notmorethannumber_,
         TFrom _from_,
         TLPar _lPar_,
-        PSelectlist _selectlist_,
+        PSelectlist<?> _selectlist_,
         TRPar _rPar_)
     {
         setAtleast(_atleast_);
@@ -78,21 +77,24 @@ public final class AAtleastnotmorethanSelectstatement2 extends PSelectstatement2
         setRPar(_rPar_);
 
     }
-    public Object clone()
+    
+	@Override
+    public AAtleastnotmorethanSelectstatement2 clone()
     {
         return new AAtleastnotmorethanSelectstatement2(
             (TAtleast) cloneNode(_atleast_),
             (TInteger) cloneNode(_atleastnumber_),
-            (PLogicsymbol) cloneNode(_logicsymbol_),
+            (PLogicsymbol<?>) cloneNode(_logicsymbol_),
             (TNotmorethan) cloneNode(_notmorethan_),
             (TInteger) cloneNode(_notmorethannumber_),
             (TFrom) cloneNode(_from_),
             (TLPar) cloneNode(_lPar_),
-            (PSelectlist) cloneNode(_selectlist_),
+            (PSelectlist<?>) cloneNode(_selectlist_),
             (TRPar) cloneNode(_rPar_));
     }
 
-    public void apply(Switch sw)
+    @Override
+	public void apply(Switch sw)
     {
         ((Analysis) sw).caseAAtleastnotmorethanSelectstatement2(this);
     }
@@ -147,12 +149,12 @@ public final class AAtleastnotmorethanSelectstatement2 extends PSelectstatement2
         _atleastnumber_ = node;
     }
 
-    public PLogicsymbol getLogicsymbol()
+    public PLogicsymbol<?> getLogicsymbol()
     {
         return _logicsymbol_;
     }
 
-    public void setLogicsymbol(PLogicsymbol node)
+    public void setLogicsymbol(PLogicsymbol<?> node)
     {
         if(_logicsymbol_ != null)
         {
@@ -272,12 +274,12 @@ public final class AAtleastnotmorethanSelectstatement2 extends PSelectstatement2
         _lPar_ = node;
     }
 
-    public PSelectlist getSelectlist()
+    public PSelectlist<?> getSelectlist()
     {
         return _selectlist_;
     }
 
-    public void setSelectlist(PSelectlist node)
+    public void setSelectlist(PSelectlist<?> node)
     {
         if(_selectlist_ != null)
         {
@@ -322,6 +324,7 @@ public final class AAtleastnotmorethanSelectstatement2 extends PSelectstatement2
         _rPar_ = node;
     }
 
+	@Override
     public String toString()
     {
         return ""
@@ -336,7 +339,8 @@ public final class AAtleastnotmorethanSelectstatement2 extends PSelectstatement2
             + toString(_rPar_);
     }
 
-    void removeChild(Node child)
+    @Override
+	void removeChild(Node<?> child)
     {
         if(_atleast_ == child)
         {
@@ -394,7 +398,8 @@ public final class AAtleastnotmorethanSelectstatement2 extends PSelectstatement2
 
     }
 
-    void replaceChild(Node oldChild, Node newChild)
+    @Override
+	<U extends Node<U>>void replaceChild(U oldChild, U newChild)
     {
         if(_atleast_ == oldChild)
         {
@@ -410,7 +415,7 @@ public final class AAtleastnotmorethanSelectstatement2 extends PSelectstatement2
 
         if(_logicsymbol_ == oldChild)
         {
-            setLogicsymbol((PLogicsymbol) newChild);
+            setLogicsymbol((PLogicsymbol<?>) newChild);
             return;
         }
 
@@ -440,7 +445,7 @@ public final class AAtleastnotmorethanSelectstatement2 extends PSelectstatement2
 
         if(_selectlist_ == oldChild)
         {
-            setSelectlist((PSelectlist) newChild);
+            setSelectlist((PSelectlist<?>) newChild);
             return;
         }
 

@@ -29,21 +29,25 @@ was not intended, designed, or validated to guide patient care.
 
 package org.fstrf.stanfordAsiInterpreter.resistance.grammar.node;
 
-import java.util.*;
-import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
 
-public final class ASelectlist extends PSelectlist
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.analysis.Analysis;
+
+
+public final class ASelectlist extends PSelectlist<ASelectlist>
 {
-    private PResidue _residue_;
-    private final LinkedList _listitems_ = new TypedLinkedList(new Listitems_Cast());
+    private PResidue<?> _residue_;
+    private final LinkedList<PListitems<?>> _listitems_ = new TypedLinkedList<>(new Listitems_Cast());
 
     public ASelectlist()
     {
     }
 
     public ASelectlist(
-        PResidue _residue_,
-        List _listitems_)
+        PResidue<?> _residue_,
+        List<PListitems<?>> _listitems_)
     {
         setResidue(_residue_);
 
@@ -53,24 +57,28 @@ public final class ASelectlist extends PSelectlist
         }
 
     }
-    public Object clone()
+    
+    @SuppressWarnings("unchecked")
+	@Override
+    public ASelectlist clone()
     {
         return new ASelectlist(
-            (PResidue) cloneNode(_residue_),
-            cloneList(_listitems_));
+            (PResidue<?>) cloneNode(_residue_),
+            (List<PListitems<?>>) cloneList(_listitems_));
     }
 
-    public void apply(Switch sw)
+    @Override
+	public void apply(Switch sw)
     {
         ((Analysis) sw).caseASelectlist(this);
     }
 
-    public PResidue getResidue()
+    public PResidue<?> getResidue()
     {
         return _residue_;
     }
 
-    public void setResidue(PResidue node)
+    public void setResidue(PResidue<?> node)
     {
         if(_residue_ != null)
         {
@@ -90,17 +98,18 @@ public final class ASelectlist extends PSelectlist
         _residue_ = node;
     }
 
-    public LinkedList getListitems()
+    public LinkedList<PListitems<?>> getListitems()
     {
         return _listitems_;
     }
 
-    public void setListitems(List list)
+    public void setListitems(List<PListitems<?>> list)
     {
         _listitems_.clear();
         _listitems_.addAll(list);
     }
 
+    @Override
     public String toString()
     {
         return ""
@@ -108,7 +117,8 @@ public final class ASelectlist extends PSelectlist
             + toString(_listitems_);
     }
 
-    void removeChild(Node child)
+    @Override
+    void removeChild(Node<?> child)
     {
         if(_residue_ == child)
         {
@@ -123,21 +133,22 @@ public final class ASelectlist extends PSelectlist
 
     }
 
-    void replaceChild(Node oldChild, Node newChild)
+    @Override
+    <U extends Node<U>> void replaceChild(U oldChild, U newChild)
     {
         if(_residue_ == oldChild)
         {
-            setResidue((PResidue) newChild);
+            setResidue((PResidue<?>) newChild);
             return;
         }
 
-        for(ListIterator i = _listitems_.listIterator(); i.hasNext();)
+        for(ListIterator<PListitems<?>> i = _listitems_.listIterator(); i.hasNext();)
         {
             if(i.next() == oldChild)
             {
                 if(newChild != null)
                 {
-                    i.set(newChild);
+                    i.set((PListitems<?>) newChild);
                     oldChild.parent(null);
                     return;
                 }
@@ -150,11 +161,12 @@ public final class ASelectlist extends PSelectlist
 
     }
 
-    private class Listitems_Cast implements Cast
+    private class Listitems_Cast implements Cast<PListitems<?>>
     {
-        public Object cast(Object o)
+    	@Override
+        public PListitems<?> cast(Object o)
         {
-            PListitems node = (PListitems) o;
+            PListitems<?> node = (PListitems<?>) o;
 
             if((node.parent() != null) &&
                 (node.parent() != ASelectlist.this))

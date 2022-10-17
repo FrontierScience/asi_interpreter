@@ -30,7 +30,7 @@ package test.org.fstrf.stanfordAsiInterpreter.resistance.grammar;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-public class AsiGrammarTestSuite extends TestSuite {
+@SuppressWarnings("all") public class AsiGrammarTestSuite extends TestSuite {
 
 	public static Test suite() {
         TestSuite suite = new TestSuite();

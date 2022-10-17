@@ -38,7 +38,7 @@ import org.fstrf.stanfordAsiInterpreter.resistance.grammar.parser.ParserExceptio
 
 import junit.framework.TestCase;
 
-public class ExcludeTest extends TestCase {
+@SuppressWarnings("all") public class ExcludeTest extends TestCase {
 
 	private StringMutationComparator comparator;
 	private List mutations;

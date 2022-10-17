@@ -14,14 +14,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 ADDITIONAL DISCLAIMER:
-In addition to the standard warranty exclusions and limitations of 
-liability set forth in sections 7, 8 and 9 of the Apache 2.0 license 
-that governs the use and development of this software, Frontier Science 
-& Technology Research Foundation disclaims any liability for use of 
-this software for patient care or in clinical settings. This software 
-was developed solely for use in medical and public health research, and 
+In addition to the standard warranty exclusions and limitations of
+liability set forth in sections 7, 8 and 9 of the Apache 2.0 license
+that governs the use and development of this software, Frontier Science
+& Technology Research Foundation disclaims any liability for use of
+this software for patient care or in clinical settings. This software
+was developed solely for use in medical and public health research, and
 was not intended, designed, or validated to guide patient care.
-*/ 
+*/
 
 
 
@@ -31,10 +31,13 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 
-public interface MutationComparator extends Comparator
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.TAminoAcid;
+import org.fstrf.stanfordAsiInterpreter.resistance.grammar.node.TInteger;
+
+public interface MutationComparator<T> extends Comparator<T>
 {
-    public Object createMutation(Object codonNumber, Collection aminoAcidCollection) throws IllegalArgumentException;
-    public Object invertMutation(Object mutation) throws IllegalArgumentException;
-    public boolean isMutationValid(Object mutation);
-    public boolean areMutationsValid(List mutations);
+    public T createMutation(TInteger codonNumber, Collection<TAminoAcid> aminoAcidCollection) throws IllegalArgumentException;
+    public T invertMutation(T mutation) throws IllegalArgumentException;
+    public boolean isMutationValid(T mutation);
+    public boolean areMutationsValid(List<T> mutations);
 }

@@ -23,22 +23,18 @@ was developed solely for use in medical and public health research, and
 was not intended, designed, or validated to guide patient care.
 */
 
-
-
 package test.org.fstrf.stanfordAsiInterpreter.resistance.xml;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-public class XmlAsiTransformerTestSuite  extends TestSuite{
-	public static Test suite() {
+public class XmlAsiTransformerTestSuite extends TestSuite {
+    public static Test suite() {
         TestSuite suite = new TestSuite();
         suite.addTestSuite(XMLDefinitionsTest.class);
         suite.addTestSuite(DrugTest.class);
         suite.addTestSuite(RuleTest.class);
         suite.addTestSuite(XMLResultCommentsTest.class);
         return suite;
-	}
+    }
 }
-
-

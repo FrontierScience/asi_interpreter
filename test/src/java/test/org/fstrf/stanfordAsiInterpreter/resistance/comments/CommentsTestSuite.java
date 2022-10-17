@@ -30,7 +30,7 @@ package test.org.fstrf.stanfordAsiInterpreter.resistance.comments;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-public class CommentsTestSuite  extends TestSuite{
+@SuppressWarnings("all") public class CommentsTestSuite  extends TestSuite{
 	public static Test suite() {
         TestSuite suite = new TestSuite();
         suite.addTestSuite(ResultCommentRuleTest.class);
